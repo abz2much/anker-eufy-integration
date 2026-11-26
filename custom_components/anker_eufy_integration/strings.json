@@ -542,6 +542,15 @@
     },
     "doorbell_siren_duration": {
       "message": "The doorbell siren sounds for 1 to {max} seconds. Choose a duration in that range."
+    },
+    "quick_response_not_a_doorbell": {
+      "message": "Quick response plays only on an E340 doorbell. Choose the doorbell's camera."
+    },
+    "quick_response_rejected": {
+      "message": "{station} refused the quick response. Check in the eufy app that the doorbell is shared with this eufy account."
+    },
+    "quick_response_no_answer": {
+      "message": "{station} did not answer the quick response. Check that it is online and on the same network as Home Assistant."
     }
   },
   "entity": {
@@ -772,6 +781,15 @@
       },
       "restart": {
         "name": "Restart"
+      },
+      "quick_response_1": {
+        "name": "Quick response: Excuse me, can I help you"
+      },
+      "quick_response_2": {
+        "name": "Quick response: Please leave it at the door"
+      },
+      "quick_response_3": {
+        "name": "Quick response: We will be right there"
       }
     },
     "update": {
@@ -919,6 +937,16 @@
     "stop_recording": {
       "name": "Stop recording",
       "description": "Ends the clip the camera is recording now. The part recorded so far is saved in the event history as a complete clip, and the Record clip action returns."
+    },
+    "quick_response": {
+      "name": "Quick response",
+      "description": "Plays a saved reply at the doorbell: 1-3 are eufy's built-in replies, custom recordings are 100 and up.",
+      "fields": {
+        "voice_id": {
+          "name": "Reply",
+          "description": "The reply's id: 1 Excuse me, can I help you; 2 Please leave it at the door; 3 We will be right there; 100 and up your own recordings."
+        }
+      }
     }
   }
 }
