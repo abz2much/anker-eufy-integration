@@ -613,7 +613,11 @@ def _release_version_violations(
     """Every way manifest.json's version and the release-please setup disagree."""
     violations: list[str] = []
     released = release_manifest.get(".")
-    if manifest_version != released:
+    # Fork: a "+fork.N" build of the released version (see CHANGES-FROM-UPSTREAM.md).
+    manifest_version_base: object = manifest_version
+    if isinstance(manifest_version, str):
+        manifest_version_base = re.sub(r"\+fork\.\d+$", "", manifest_version)
+    if manifest_version_base != released:
         violations.append(
             f"manifest.json version {manifest_version!r} != release-please version {released!r}"
         )

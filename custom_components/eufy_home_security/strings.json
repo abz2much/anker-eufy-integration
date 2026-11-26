@@ -504,6 +504,15 @@
     "security_mode_not_settable": {
       "message": "Home Assistant cannot switch the HomeBase to {mode}, so nothing was sent. Choose another mode, or set this one in the eufy app."
     },
+    "restart_not_confirmed": {
+      "message": "{station} acknowledged the restart but did not confirm it, so it may or may not be restarting. Wait a few minutes before trying again."
+    },
+    "restart_rejected": {
+      "message": "{station} refused the restart. Check in the eufy app that {station} is shared with this eufy account."
+    },
+    "restart_no_answer": {
+      "message": "{station} did not answer the restart request. Check that it is online and on the same network as Home Assistant."
+    },
     "siren_not_confirmed": {
       "message": "The device acknowledged the request for {target} but did not confirm it, so it may or may not be sounding. Check the device and try again."
     },
@@ -745,6 +754,9 @@
       },
       "save_view": {
         "name": "Save current view"
+      },
+      "restart": {
+        "name": "Restart"
       }
     },
     "update": {
