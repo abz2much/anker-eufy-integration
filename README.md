@@ -4,138 +4,88 @@
 
 # Anker eufy Integration for Home Assistant
 
-[![Home Assistant](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Falaraun%2Fhomeassistant-eufy-home-security%2Fmain%2Fhacs.json&query=%24.homeassistant&label=Home%20Assistant&suffix=%2B&color=41BDF5&cacheSeconds=3600)](https://www.home-assistant.io/)
 [![Release](https://img.shields.io/github/v/release/abz2much/anker-eufy-integration)](https://github.com/abz2much/anker-eufy-integration/releases)
 [![CI](https://github.com/abz2much/anker-eufy-integration/actions/workflows/ci.yml/badge.svg)](https://github.com/abz2much/anker-eufy-integration/actions/workflows/ci.yml)
 [![License](https://img.shields.io/github/license/abz2much/anker-eufy-integration)](https://github.com/abz2much/anker-eufy-integration/blob/main/LICENSE)
 
-Control of eufy Security HomeBases and the devices paired to them, and of standalone
-eufy cameras: alarm panel, detections, camera stills, live video, pan/tilt presets,
-lights and device settings.
+Anker eufy Integration connects eufy Security HomeBases, cameras, doorbells and sensors
+to Home Assistant. It talks to your devices over your own network wherever a device
+allows it. It uses eufy's cloud only to sign in, to fetch the device list and keys, and
+for the few things a device will not do locally.
 
-Based on [alaraun/homeassistant-eufy-home-security](https://github.com/alaraun/homeassistant-eufy-home-security)
-(MIT), with its own domain (`anker_eufy_integration`) so it installs alongside it.
-
-Where a device allows it, Home Assistant talks to it directly on your network. The
-eufy cloud is still used for sign-in, the device list and device keys; for detections
-from standalone cameras and a HomeBase 2 (cloud push, when switched on); and for a
-station that Home Assistant cannot find on its own network and to wake a battery
-camera, both through eufy's servers. The protocol work is done by the
-[`eufy-home-security`](https://pypi.org/project/eufy-home-security/) library
-([source](https://github.com/alaraun/python-eufy-home-security)), which Home Assistant
-installs automatically. Library bugs that show without Home Assistant go to [its issue
-tracker](https://github.com/alaraun/python-eufy-home-security/issues).
+It is based on [alaraun's eufy integration](https://github.com/alaraun/homeassistant-eufy-home-security)
+(MIT) and has its own domain, `anker_eufy_integration`, so the two can be installed side
+by side. Every change from that starting point is listed in
+[CHANGES-FROM-UPSTREAM.md](CHANGES-FROM-UPSTREAM.md).
 
 > [!WARNING]
-> Beta. Only the devices in
-> [Supported devices](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/devices.md)
-> are tested, and a minor release may change entities or options. Keep the eufy app
-> installed. Not affiliated with or endorsed by Anker or eufy.
+> This is a beta. Only the devices listed in [Supported devices](docs/devices.md) have been
+> tested, and a release may change entities or options. Keep the eufy app installed.
+> This project is not affiliated with or endorsed by Anker or eufy.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/abz2much/anker-eufy-integration/main/docs/images/camera-card.png" alt="A eufy camera with live view and setting controls on a dashboard" width="600">
-  <br><sub>The camera card that comes with the integration: one or several cameras, live view, pan/tilt, presets, history and settings.</sub>
-</p>
+## What it does
 
-## Supported devices
+- Each HomeBase appears as an alarm panel that you can arm Home, Away or Night, with its
+  siren, storage and event history.
+- Cameras show stills and live video, and report motion, people, pets and vehicles.
+- Each camera has a Last visitor sensor that shows the last person it recognised.
+- The E340 doorbell can sound its siren, play eufy's quick replies, play your own sound
+  files, and report packages that are delivered, taken or left too long.
+- A HomeBase can be restarted from Home Assistant.
+- Motion, entry and smoke sensors, locks and keypads appear with the readings the
+  library supports.
 
-| Device | In Home Assistant |
-|---|---|
-| HomeBase | alarm panel for the security mode, siren where supported, storage, event history |
-| Cameras: battery and wired, on a HomeBase or standalone, indoor pan & tilt, floodlight and wall light cameras | camera with stills, live video where the model supports it, detections, pan/tilt and presets, the lamp as a light, settings |
-| Video doorbells | as a camera, plus a ring event |
-| Motion and entry sensors | motion or door binary sensor, battery or tamper where reported |
-| Smoke sensors | smoke, problem, end of life, low battery, alarm muted and testing binary sensors |
-| Smart locks, video smart locks included, where the library reads their state (Wi-Fi locks without a HomeBase not yet) | lock showing locked, unlocked or jammed; locking and unlocking from Home Assistant come later |
-| Garage door cameras (T8452, T8453) | a garage door per door, open and close where a motor is connected |
-| Keypads and other eufy devices | added as devices, with the settings the library knows |
-
-Only some models are tested on hardware; the others follow the eufy app's own model
-data. Model by model:
-[Supported devices](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/devices.md).
+The features added in this integration are described in [docs/features.md](docs/features.md).
+Model-by-model support is in [docs/devices.md](docs/devices.md).
 
 ## Requirements
 
-- Home Assistant **2026.11.0** or newer, with ffmpeg (included in Home Assistant OS
-  and the official container) for 4K stills.
-- Home Assistant on the same LAN as the HomeBase is the fastest path (host networking
-  in Docker). A station on another subnet or at another site connects through eufy's
-  servers (not behind a symmetric NAT). Firewall, reverse proxy and browsers:
-  [Network and security](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/network.md).
-- Live view reads each camera from Home Assistant's own port on `127.0.0.1`: TLS on
-  that port works, an `http: server_host` bound only to a LAN address does not
-  ([stream access](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/network.md#stream-access)).
-- A eufy account that sees the HomeBase: the owner's, or one it is shared with. Use a
-  separate account for Home Assistant: a sign-in elsewhere with the same account ends
-  Home Assistant's session, so accept the owner's invitation from Home Assistant's
-  repair, not on a phone.
+- Home Assistant 2026.11.0 or newer, with ffmpeg. Home Assistant OS and the official
+  container already include it.
+- Home Assistant on the same network as the HomeBase. Other set-ups are covered in
+  [docs/network.md](docs/network.md).
+- A eufy account for Home Assistant alone, shared from the owner's account. eufy allows
+  one session per account, so a sign-in elsewhere with the same account ends Home
+  Assistant's session.
 
 ## Installation
 
-[![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=alaraun&repository=homeassistant-eufy-home-security&category=integration)
-
-1. **Settings → Marketplace** → search for **Anker eufy Home Security** (or use the
-   button above).
-2. **Install** it, and restart Home Assistant if the Marketplace asks for it.
-
-An install added as a custom repository needs no change: the Marketplace lists it from
-its catalog and keeps updating it.
-
-Manual: download the source archive of the latest
-[release](https://github.com/abz2much/anker-eufy-integration/releases), copy its
-`custom_components/anker_eufy_integration` into your configuration's `custom_components`
-directory and restart.
+1. In Home Assistant, open **Settings → Marketplace**, choose **Custom repositories**,
+   and add `https://github.com/abz2much/anker-eufy-integration` with the category
+   **Integration**.
+2. Find **Anker eufy Integration** in the Marketplace, download it, and restart Home
+   Assistant.
 
 ## Setup
 
-[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=anker_eufy_integration)
-
-1. **Settings → Devices & services → Add integration → Anker eufy Home Security**.
-2. Enter the eufy account's e-mail and password. This is one eufy sign-in; the
-   session is kept, so restarts do not sign in again.
+1. Open **Settings → Devices & services → Add integration** and choose **Anker eufy
+   Integration**.
+2. Enter the eufy account's e-mail address and password. The session is kept, so a
+   restart does not sign in again.
 3. Every HomeBase, its paired devices and every standalone camera appear as devices.
 
-eufy allows only a few sign-ins per account per day
-([details](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/network.md#eufy-account));
-Home Assistant never signs in by itself.
-
-Devices added to the eufy account later: press **Refresh device list** on the
-**eufy account** device.
-
-The camera card comes with the integration: edit a dashboard → **Add card** →
-**eufy camera**
-([Camera card](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/card.md)).
-So does a card per HomeBase: **eufy HomeBase**
-([HomeBase card](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/homebase-card.md)).
+eufy allows only a few sign-ins per account each day, and Home Assistant never signs in
+again by itself. If you add devices to the eufy account later, press **Refresh device
+list** on the **eufy account** device.
 
 ## Documentation
 
-| | |
+| Page | What it covers |
 |---|---|
-| [Usage](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/usage.md) | options, alarm panel, camera images, event history and videos, live video, pan/tilt, settings and lights, signing in again, removal |
-| [Camera card](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/card.md) | the dashboard card that comes with the integration: install, options, layout, writes |
-| [HomeBase card](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/homebase-card.md) | the HomeBase's dashboard card: security mode, what each device does per mode, arming groups, settings, status |
-| [Supported devices](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/devices.md) | tested models, settings, adding a device, reporting a new device |
-| [Network and security](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/network.md) | LAN, firewall, reverse proxy, browsers, accounts, stored data |
-| [Troubleshooting](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/troubleshooting.md) | debug logging, diagnostics, repair issues, known limitations |
-| [Changelog](https://github.com/abz2much/anker-eufy-integration/blob/main/CHANGELOG.md) | changes per release |
+| [Added features](docs/features.md) | restart, Night arm, last visitor, packages, doorbell siren, quick replies, playing sound files |
+| [Usage](docs/usage.md) | options, the alarm panel, camera images, event history, live video, settings |
+| [Camera card](docs/card.md) | the dashboard card for one or more cameras |
+| [HomeBase card](docs/homebase-card.md) | the dashboard card for a HomeBase |
+| [Supported devices](docs/devices.md) | tested models and how to report a new one |
+| [Network and security](docs/network.md) | network set-up, accounts and stored data |
+| [Troubleshooting](docs/troubleshooting.md) | debug logging, diagnostics and known limits |
+| [Bringing in upstream changes](docs/upstream-sync.md) | how changes from alaraun's integration are chosen and applied |
 
-Bugs and feature requests:
-[issues](https://github.com/abz2much/anker-eufy-integration/issues), with the
-integration's diagnostics download attached.
+Report bugs and ideas as [issues](https://github.com/abz2much/anker-eufy-integration/issues),
+with the integration's diagnostics download attached.
 
-## Support
+## Licence
 
-This project is built in spare time and is free to use. If it is useful to you,
-donations are welcome. They are voluntary, buy no support or priority, and are not
-tax-deductible.
-
-- [Ko-fi](https://ko-fi.com/alaraun)
-
-Donated eufy hardware helps develop future features; please get in touch first.
-
-## License
-
-[MIT](https://github.com/abz2much/anker-eufy-integration/blob/main/LICENSE). eufy
-and Anker are trademarks of Anker Innovations; the eufy logo identifies the devices this
-project works with.
+This project is released under the [MIT licence](LICENSE), which keeps the copyright
+notice of the integration it is based on. eufy and Anker are trademarks of Anker
+Innovations.

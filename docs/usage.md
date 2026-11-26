@@ -2,7 +2,7 @@
 
 ## Options
 
-**Settings → Devices & services → Anker eufy Home Security → Configure**. The options
+**Settings → Devices & services → Anker eufy Integration → Configure**. The options
 sit in six collapsible sections.
 
 | Section | Option | Default | Description |
@@ -731,7 +731,7 @@ the camera and its settings. The limits above apply.
 
 ## Removal
 
-**Settings → Devices & services → Anker eufy Home Security → ⋮ → Delete**. The saved
+**Settings → Devices & services → Anker eufy Integration → ⋮ → Delete**. The saved
 password, keys and cached images are deleted; with the last account also the dashboard
 resources of the bundled cards (remove those cards from dashboards first). The sign-in
 hold-off is kept, so removing and re-adding cannot trigger eufy's lockout. Event

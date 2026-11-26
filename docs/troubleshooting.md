@@ -10,7 +10,7 @@ logger:
     firebase_messaging: debug  # cloud push only
 ```
 
-Or at runtime: **Settings → Devices & services → Anker eufy Home Security → ⋮ →
+Or at runtime: **Settings → Devices & services → Anker eufy Integration → ⋮ →
 Enable debug logging**.
 
 Passwords, codes and captcha answers are logged as `***`. Serials are shortened to
