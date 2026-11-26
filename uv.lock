@@ -231,6 +231,51 @@ wheels = [
 ]
 
 [[package]]
+name = "anker-eufy-integration"
+version = "0.0.0"
+source = { virtual = "." }
+
+[package.dev-dependencies]
+dev = [
+    { name = "anker-eufy-security" },
+    { name = "av" },
+    { name = "mypy" },
+    { name = "pytest-homeassistant" },
+    { name = "pytest-timeout" },
+    { name = "pyturbojpeg" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "anker-eufy-security", specifier = "==0.1.0" },
+    { name = "av", specifier = "==19.0.0" },
+    { name = "mypy" },
+    { name = "pytest-homeassistant", specifier = "==2026.11.0" },
+    { name = "pytest-timeout" },
+    { name = "pyturbojpeg", specifier = "==1.8.3" },
+    { name = "ruff" },
+]
+
+[[package]]
+name = "anker-eufy-security"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "cryptography" },
+    { name = "firebase-messaging" },
+    { name = "protobuf" },
+    { name = "tzdata" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/af/8c/daed9055c90fbe2609165ef4fc5523cfaee7f0da5ecdc278f69a554fd75a/anker_eufy_security-0.1.0.tar.gz", hash = "sha256:e8b060a188b354d9375fc115a4f1ed891c0bd295256264dd4996fde18606db55", size = 1294991, upload-time = "2026-11-26T18:41:58.538Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9c/3d/700a68863a9ef9862393375670a129ed9fd4f637cde04313170e19613752/anker_eufy_security-0.1.0-py3-none-any.whl", hash = "sha256:533840068d396a83abeb32a223a463808ab0912aa953ca0d759965cb3923d04d", size = 1519075, upload-time = "2026-11-26T18:41:56.926Z" },
+]
+
+[[package]]
 name = "annotatedyaml"
 version = "1.0.2"
 source = { registry = "https://pypi.org/simple" }
@@ -934,22 +979,6 @@ wheels = [
 ]
 
 [[package]]
-name = "eufy-home-security"
-version = "0.4.19"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "aiohttp" },
-    { name = "cryptography" },
-    { name = "firebase-messaging" },
-    { name = "protobuf" },
-    { name = "tzdata" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/08/64/959fbb51294abf35acc9b77a5328e314abc8f30099a1f204e51598315f56/eufy_home_security-0.4.19.tar.gz", hash = "sha256:665a53de3b9f9cfe104e4fdd963eaf3de6c717d3875578ed930883f8e710f834", size = 1310652, upload-time = "2026-11-25T17:20:56.78Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/7e/3d/ee0c8462753c4b25af02af493c0283a004d0cbc53ee90766750856b90102/eufy_home_security-0.4.19-py3-none-any.whl", hash = "sha256:c832afcf3a40899bbaf7a6dc0553c723e37da2afd1828f4c2aff0193f3afddbe", size = 1517700, upload-time = "2026-11-25T17:20:55.148Z" },
-]
-
-[[package]]
 name = "execnet"
 version = "2.1.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1254,35 +1283,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f2/13/ab2c1e18f48341791a77520a869cdb12f1cebd3e6e292ddf2061891b0fc6/homeassistant-2026.11.0.tar.gz", hash = "sha256:5a5e6af380793d53ab37fd9ce5b7a7e00a408a7258923fe75d0610e31a394468", size = 42012362, upload-time = "2026-11-05T13:03:49.664Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/28/0a/10c900142dfff3c8bda64e75d0077519c4ee9a3e0f18aabc67c023ac079f/homeassistant-2026.11.0-py3-none-any.whl", hash = "sha256:7ca5fbde9dea879ac7723949fc84347aac5182e6309c357b2e4973fd391b00f7", size = 67607712, upload-time = "2026-11-04T18:00:10.238Z" },
-]
-
-[[package]]
-name = "anker-eufy-integration"
-version = "0.0.0"
-source = { virtual = "." }
-
-[package.dev-dependencies]
-dev = [
-    { name = "av" },
-    { name = "eufy-home-security" },
-    { name = "mypy" },
-    { name = "pytest-homeassistant" },
-    { name = "pytest-timeout" },
-    { name = "pyturbojpeg" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "av", specifier = "==19.0.0" },
-    { name = "eufy-home-security", specifier = "==0.4.19" },
-    { name = "mypy" },
-    { name = "pytest-homeassistant", specifier = "==2026.11.0" },
-    { name = "pytest-timeout" },
-    { name = "pyturbojpeg", specifier = "==1.8.3" },
-    { name = "ruff" },
 ]
 
 [[package]]
