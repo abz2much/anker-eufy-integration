@@ -5,6 +5,13 @@ All notable changes to this project. The project follows
 release may change entities, options or actions. From 0.1.0 on, release-please writes the
 entries from the conventional commits.
 
+## [0.8.1](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.0...v0.8.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* **event:** ring when a press follows a face detection ([#12](https://github.com/abz2much/anker-eufy-integration/issues/12)) ([94421a6](https://github.com/abz2much/anker-eufy-integration/commit/94421a6a84140b138297e3ed64f37afb42f080a2))
+
 ## [0.8.0](https://github.com/abz2much/anker-eufy-integration/releases/tag/v0.8.0) (2026-11-26)
 
 
