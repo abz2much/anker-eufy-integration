@@ -164,6 +164,7 @@ ARMING_EVENT_TYPES: Final[Mapping[AlarmControlPanelState, str]] = MappingProxyTy
         AlarmControlPanelState.ARMED_AWAY: "armed_away",
         AlarmControlPanelState.ARMED_HOME: "armed_home",
         AlarmControlPanelState.DISARMED: "disarmed",
+        AlarmControlPanelState.ARMED_NIGHT: "armed_night",
         AlarmControlPanelState.ARMED_CUSTOM_BYPASS: "armed_custom",
     }
 )
@@ -192,8 +193,8 @@ def ha_state(mode: GuardMode | int | None) -> AlarmControlPanelState | None:
     ``None`` (not read yet) and an unknown code (a plain ``int``) show as unknown,
     never as disarmed: "disarmed" is the one wrong answer that tells a user the
     house is unprotected when nobody knows. ``is_disarmed`` covers both DISARMED
-    and OFF. Schedule, the custom modes and geofence have no native HA state and
-    show as custom bypass.
+    and OFF. Custom 1 is Night (the panel arms it with ``ARM_NIGHT``). Schedule,
+    Custom 2 and 3 and geofence have no native HA state and show as custom bypass.
     """
     if mode is None or not isinstance(mode, GuardMode):
         return None
@@ -203,6 +204,8 @@ def ha_state(mode: GuardMode | int | None) -> AlarmControlPanelState | None:
         return AlarmControlPanelState.ARMED_AWAY
     if mode is GuardMode.HOME:
         return AlarmControlPanelState.ARMED_HOME
+    if mode is GuardMode.CUSTOM_1:
+        return AlarmControlPanelState.ARMED_NIGHT
     return AlarmControlPanelState.ARMED_CUSTOM_BYPASS
 
 
