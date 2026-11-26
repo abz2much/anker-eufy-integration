@@ -728,6 +728,15 @@
       },
       "meaning_testing": {
         "name": "Testing"
+      },
+      "package_delivered": {
+        "name": "Package delivered"
+      },
+      "package_taken": {
+        "name": "Package taken"
+      },
+      "package_stranded": {
+        "name": "Package stranded"
       }
     },
     "button": {
