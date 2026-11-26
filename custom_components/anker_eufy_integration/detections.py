@@ -423,6 +423,14 @@ def is_kind_upgrade(event: SecurityEvent, delivered_rank: int | None) -> bool:
     )
 
 
+# Package events of a doorbell (eufy-security-client ``src/push/types.ts``); the library
+# keeps them as a raw ``event_type`` without a ``detection`` (package_sensors.py).
+PACKAGE_DELIVERED: Final = 3301
+PACKAGE_TAKEN: Final = 3302
+PACKAGE_STRANDED: Final = 3304
+PACKAGE_EVENT_TYPES: Final = frozenset({PACKAGE_DELIVERED, PACKAGE_TAKEN, PACKAGE_STRANDED})
+
+
 def device_event_consumed(serial: str, kind: DeviceKind | None, event: SecurityEvent) -> bool:
     """Whether an entity of the paired device ``serial`` (of entity kind ``kind``) consumes
     the device event ``event``.
@@ -434,6 +442,12 @@ def device_event_consumed(serial: str, kind: DeviceKind | None, event: SecurityE
     the event.
     """
     if event.detection is DetectionType.DOORBELL_PRESS and has_doorbell_entity(serial):
+        return True
+    if (
+        event.event_type in PACKAGE_EVENT_TYPES
+        and has_detection_entities(kind)
+        and has_doorbell_entity(serial)
+    ):
         return True
     if (
         event.device_sn is not None

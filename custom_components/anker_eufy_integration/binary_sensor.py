@@ -46,7 +46,7 @@ from homeassistant.util import dt as dt_util
 
 from eufy_home_security import SecurityEvent, StationState, StorageMedium, SubDeviceState
 
-from . import detections
+from . import detections, package_sensors
 from .const import (
     ATTR_POWER_SOURCE,
     ATTR_SOLAR_CHARGING,
@@ -288,6 +288,8 @@ async def async_setup_entry(
             entities.extend(
                 EufyDetectionBinarySensor(coordinator, device_sn, key, hold) for key in keys
             )
+        # The doorbell's package sensors (package_sensors.py).
+        entities.extend(package_sensors.package_sensors(coordinator, hold))
     async_add_entities(entities)
     for coordinator in entry.runtime_data.coordinators.values():
         _async_add_state_binary_sensors(entry, coordinator, async_add_entities)
