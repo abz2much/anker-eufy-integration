@@ -71,6 +71,7 @@ from . import (
     history,
     presets,
     ptz,
+    quick_response,
     runtime,
     small_images,
     snapshots,
@@ -192,6 +193,12 @@ async def async_setup_entry(
         supports_response=SupportsResponse.OPTIONAL,
     )
     platform.async_register_entity_service(SERVICE_STOP_RECORDING, None, "async_stop_recording")
+    # The doorbell's quick response (quick_response.py).
+    platform.async_register_entity_service(
+        quick_response.SERVICE_QUICK_RESPONSE,
+        quick_response.QUICK_RESPONSE_SCHEMA,
+        quick_response.async_handle_quick_response,
+    )
 
 
 # A slot index as every preset action takes it.

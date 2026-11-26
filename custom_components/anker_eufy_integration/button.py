@@ -55,7 +55,16 @@ from eufy_home_security import (
     redact_serial,
 )
 
-from . import detections, errors, presets, ptz, restart_button, runtime, stale_devices
+from . import (
+    detections,
+    errors,
+    presets,
+    ptz,
+    quick_response,
+    restart_button,
+    runtime,
+    stale_devices,
+)
 from .const import (
     CAPTURE_LIVE_IMAGE_KEY,
     CAPTURE_PRESET_KEY,
@@ -131,6 +140,9 @@ async def async_setup_entry(
     manager = entry.runtime_data.snapshots
     preset_manager = entry.runtime_data.presets
     entities: list[ButtonEntity] = [EufyRefreshDeviceListButton(entry)]
+    # The doorbell's quick-response buttons (quick_response.py).
+    for coordinator in entry.runtime_data.coordinators.values():
+        entities.extend(quick_response.quick_response_buttons(coordinator))
     # The HomeBase "Restart" button (restart_button.py).
     entities.extend(
         restart_button.EufyRestartButton(coordinator)

@@ -123,3 +123,19 @@ stop_recording:
     entity:
       integration: anker_eufy_integration
       domain: camera
+
+quick_response:
+  target:
+    entity:
+      integration: anker_eufy_integration
+      domain: camera
+  fields:
+    voice_id:
+      required: true
+      example: 1
+      selector:
+        number:
+          min: 1
+          max: 255
+          step: 1
+          mode: box
