@@ -139,3 +139,15 @@ quick_response:
           max: 255
           step: 1
           mode: box
+
+play_audio:
+  target:
+    entity:
+      integration: anker_eufy_integration
+      domain: camera
+  fields:
+    media_path:
+      required: true
+      example: /media/doorbell/hello.mp3
+      selector:
+        text:
