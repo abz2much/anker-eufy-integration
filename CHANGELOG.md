@@ -5,6 +5,18 @@ All notable changes to this project. The project follows
 release may change entities, options or actions. From 0.1.0 on, release-please writes the
 entries from the conventional commits.
 
+## [0.8.0](https://github.com/abz2much/anker-eufy-integration/compare/v0.7.0...v0.8.0) (2026-11-26)
+
+
+### Features
+
+* use our own anker-eufy-security library (import anker_eufy_security), so a library fix never changes alaraun's integration installed beside it; the debug logger is now anker_eufy_security ([76c0775](https://github.com/abz2much/anker-eufy-integration/commit/76c0775c1d148cd7ec0367a27ed3322dcb17c376))
+
+
+### Bug Fixes
+
+* **event:** every doorbell ring fires: a press seconds after a face detection of the same doorbell, or a second press seconds later, is no longer dropped ([76c0775](https://github.com/abz2much/anker-eufy-integration/commit/76c0775c1d148cd7ec0367a27ed3322dcb17c376))
+
 ## [0.4.21](https://github.com/alaraun/homeassistant-eufy-home-security/compare/v0.4.20...v0.4.21) (2026-11-25)
 
 
