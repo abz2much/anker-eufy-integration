@@ -5,7 +5,7 @@ All notable changes to this project. The project follows
 release may change entities, options or actions. From 0.1.0 on, release-please writes the
 entries from the conventional commits.
 
-## [0.8.0](https://github.com/abz2much/anker-eufy-integration/compare/v0.7.0...v0.8.0) (2026-11-26)
+## [0.8.0](https://github.com/abz2much/anker-eufy-integration/releases/tag/v0.8.0) (2026-11-26)
 
 
 ### Features
