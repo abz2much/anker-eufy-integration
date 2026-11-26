@@ -75,8 +75,8 @@ from pytest_homeassistant.typing import (
     WebSocketGenerator,
 )
 
-from custom_components.eufy_home_security import detections, homebase, select, settings_layout
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections, homebase, select, settings_layout
+from custom_components.anker_eufy_integration.const import (
     ATTR_SECTION,
     ATTR_VALUE_SOURCE,
     DEFAULT_PRESET_KEY,
@@ -85,7 +85,7 @@ from custom_components.eufy_home_security.const import (
     POLL_INTERVAL_SECONDS,
     SECURITY_MODE_KEY,
 )
-from custom_components.eufy_home_security.settings import (
+from custom_components.anker_eufy_integration.settings import (
     is_per_mode_entity,
     is_setting_row,
     setting_specs,

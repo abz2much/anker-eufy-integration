@@ -42,7 +42,7 @@ from homeassistant.helpers import entity_registry as er
 from PIL import Image
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import (
+from custom_components.anker_eufy_integration import (
     detections,
     history,
     preset_upload,
@@ -50,7 +50,7 @@ from custom_components.eufy_home_security import (
     snapshots,
     still_cache,
 )
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 SN = "T8170P0000000001"
 # The debug line of a live view yielding the media slot, after the camera.
@@ -588,7 +588,7 @@ async def test_a_failed_preset_capture_keeps_the_previous_image(
 
     monkeypatch.setattr(Station, "async_preset_image", _timed_out)
 
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await hass.services.async_call("button", "press", {"entity_id": button_1}, blocking=True)
     await wait_until(lambda: "DeviceTimeoutError" in caplog.text, timeout=15)
@@ -600,7 +600,7 @@ async def test_a_failed_preset_capture_keeps_the_previous_image(
     assert not any(
         record.levelno == logging.ERROR
         for record in caplog.records
-        if record.name.startswith("custom_components.eufy_home_security")
+        if record.name.startswith("custom_components.anker_eufy_integration")
     )
     assert fake_station.preset_gotos == [1]  # the failed capture sent nothing
 
@@ -624,7 +624,7 @@ async def test_diagnostics_list_the_preset_slots_by_index_only(
     )
     await hass.async_block_till_done()
 
-    from custom_components.eufy_home_security import diagnostics
+    from custom_components.anker_eufy_integration import diagnostics
 
     result = await diagnostics.async_get_config_entry_diagnostics(hass, entry)
 
@@ -690,7 +690,7 @@ async def test_a_preset_capture_that_fails_while_the_session_is_replaced_names_t
 
     import logging
 
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await hass.services.async_call("button", "press", {"entity_id": button_1}, blocking=True)
     await wait_until(lambda: "SessionReplacedError" in caplog.text, timeout=15)
@@ -706,7 +706,8 @@ async def test_a_preset_capture_that_fails_while_the_session_is_replaced_names_t
     error_records = [
         r
         for r in caplog.records
-        if r.levelno >= logging.ERROR and r.name.startswith("custom_components.eufy_home_security")
+        if r.levelno >= logging.ERROR
+        and r.name.startswith("custom_components.anker_eufy_integration")
     ]
     assert not error_records
 
@@ -764,7 +765,7 @@ async def test_a_preset_capture_makes_the_live_stream_yield_the_media_slot(
     await wait_until(lambda: fake_station.streaming, timeout=20)
 
     caplog.clear()
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await hass.services.async_call("button", "press", {"entity_id": button_1}, blocking=True)
     await wait_until(lambda: state_of(hass, image_1) != "unknown", timeout=45)
@@ -782,7 +783,8 @@ async def test_a_preset_capture_makes_the_live_stream_yield_the_media_slot(
     assert [
         r
         for r in caplog.records
-        if r.levelno >= logging.ERROR and r.name.startswith("custom_components.eufy_home_security")
+        if r.levelno >= logging.ERROR
+        and r.name.startswith("custom_components.anker_eufy_integration")
     ] == []
 
     response.close()
@@ -815,7 +817,7 @@ async def test_a_live_capture_of_a_standalone_camera_ends_its_own_live_view(
     await wait_until(lambda: fake_station.streaming, timeout=20)
 
     caplog.clear()
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
     await hass.services.async_call(
         "button",
         "press",
@@ -1755,7 +1757,7 @@ async def test_the_live_view_zoom_follows_the_cameras_reports_while_watching(
     await wait_until(lambda: float(state_of(hass, zoom_id)) == 4.0)
 
     response.close()
-    broadcast = hass.data["eufy_home_security_streams"].broadcasts[SN]
+    broadcast = hass.data["anker_eufy_integration_streams"].broadcasts[SN]
     await wait_until(lambda: not broadcast.running, timeout=10)
     fake_station.send_zoom_report(1)
     await wait_until(lambda: station.zoom(SN) == 1.0)
@@ -1817,7 +1819,7 @@ async def test_a_zoom_that_changes_the_picture_size_keeps_the_view_running(
     entry = await set_up_warm(hass, seed_warm_cache)
     response = await _watch(hass, await hass_client_no_auth(), fake_station)
     assert await _read_some(response)
-    broadcast = hass.data["eufy_home_security_streams"].broadcasts[SN]
+    broadcast = hass.data["anker_eufy_integration_streams"].broadcasts[SN]
     send_video = fake_station.send_video
 
     def _smaller(body, **kw):
@@ -1883,7 +1885,7 @@ async def test_refresh_presets_recaptures_every_set_slot_and_its_small_copy(
     first = [path.read_bytes() for path in small]
     pictures = [_state(hass, i).attributes["entity_picture"] for i in images]
     assert all(
-        p.startswith(f"/api/eufy_home_security/image/{i}/small?v=")
+        p.startswith(f"/api/anker_eufy_integration/image/{i}/small?v=")
         for p, i in zip(pictures, images, strict=True)
     )
 

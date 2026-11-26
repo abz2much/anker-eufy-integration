@@ -51,8 +51,8 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import issue_registry as ir
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import detections, diagnostics, errors
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections, diagnostics, errors
+from custom_components.anker_eufy_integration.const import (
     CONF_MODE_HOLDS_DETECTIONS_REPAIR,
     DETECTION_DELIVERY_KEY,
     DETECTION_EVENT_KEY,
@@ -841,7 +841,7 @@ async def test_each_report_reason_is_logged_at_debug(
         SYNTHETIC.station_sn,
         {SYNTHETIC.camera_sn: _report(SYNTHETIC.camera_sn, DetectionDelivery.SENT)},
     )
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security.errors")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration.errors")
 
     errors.sync_mode_holds_detections_issue(hass, entry, [station])  # type: ignore[list-item]
 

@@ -1,0 +1,6 @@
+# The library sorts as first-party inside the integration, as it did when the
+# integration's folder shared the library's name (keeps upstream's import layout).
+extend = "../../pyproject.toml"
+
+[lint.isort]
+known-first-party = ["eufy_home_security"]

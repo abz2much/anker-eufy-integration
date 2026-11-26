@@ -44,14 +44,14 @@ from homeassistant.helpers import issue_registry as ir
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.eufy_home_security import errors, history
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import errors, history
+from custom_components.anker_eufy_integration.const import (
     CAPTURE_LIVE_IMAGE_KEY,
     CONF_EVENT_HISTORY_DAYS,
     DOMAIN,
     ISSUE_MEDIA_NOT_PERSISTENT,
 )
-from custom_components.eufy_home_security.snapshots import SnapshotManager
+from custom_components.anker_eufy_integration.snapshots import SnapshotManager
 
 THUMBNAIL: Final = b"\xff\xd8PERSON-THUMBNAIL\xff\xd9"
 CAMERA_NAME: Final = "Front"
@@ -320,12 +320,12 @@ def test_media_is_persistent_only_on_its_own_mount_in_a_container(
 ) -> None:
     """In a container ``/media`` must be a mount; the root file system does not count."""
     monkeypatch.setattr(history, "is_docker_env", lambda: True)
-    media = Path("/media/eufy_home_security")
+    media = Path("/media/anker_eufy_integration")
     bare = _mountinfo(tmp_path, "bare", "/", "/config", "/proc")
     assert not history.media_is_persistent(media, bare)
     mounted = _mountinfo(tmp_path, "mounted", "/", "/config", "/media")
     assert history.media_is_persistent(media, mounted)
-    under_config = Path("/config/media/eufy_home_security")
+    under_config = Path("/config/media/anker_eufy_integration")
     assert history.media_is_persistent(under_config, bare)
     spaced = _mountinfo(tmp_path, "spaced", "/", "/my\\040media")
     assert history.media_is_persistent(Path("/my media/x"), spaced)

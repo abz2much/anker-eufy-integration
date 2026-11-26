@@ -40,8 +40,8 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import errors
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import errors
+from custom_components.anker_eufy_integration.const import (
     CAMERA_KEY,
     DEFAULT_PRESET_KEY,
     DOMAIN,
@@ -54,7 +54,7 @@ from custom_components.eufy_home_security.const import (
     SERVICE_RECORD,
     SIREN_KEY,
 )
-from custom_components.eufy_home_security.streaming import StreamManager
+from custom_components.anker_eufy_integration.streaming import StreamManager
 
 _STRINGS: Final = json.loads(
     (Path(__file__).parents[1] / "custom_components" / DOMAIN / "strings.json").read_text(

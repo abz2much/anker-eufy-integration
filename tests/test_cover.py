@@ -31,8 +31,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security import cover as cover_module
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import cover as cover_module
+from custom_components.anker_eufy_integration.const import (
     DOMAIN,
     EXC_GARAGE_DOOR_MOVING,
     EXC_GARAGE_DOOR_POSITION_UNKNOWN,
@@ -58,7 +58,7 @@ DOOR2_CLOSED: Final = 0x08
 DOOR1_BOUND: Final = 0x01
 DOOR2_BOUND: Final = 0x02
 
-_COVER_LOGGER: Final = "custom_components.eufy_home_security.cover"
+_COVER_LOGGER: Final = "custom_components.anker_eufy_integration.cover"
 
 pytestmark = pytest.mark.usefixtures("built_clients")
 

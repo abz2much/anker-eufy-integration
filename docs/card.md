@@ -1,6 +1,6 @@
-# eufy-camera-card
+# anker-eufy-camera-card
 
-A card for one or several eufy cameras (`eufy_home_security` integration). It shows the camera's still until live
+A card for one or several eufy cameras (`anker_eufy_integration` integration). It shows the camera's still until live
 view is started, pan/tilt/zoom and presets on the picture for cameras that have them, a record button, its saved
 history and the recordings on its HomeBase, and the camera's settings. With several cameras a list on the name
 switches between them.
@@ -9,16 +9,16 @@ switches between them.
 
 The card comes with the integration; there is nothing to download or copy.
 
-- The integration serves it at `/eufy_home_security/eufy-camera-card.js` and, with dashboard resources in
-  storage mode (the default), keeps one resource for it, `…/eufy-camera-card.js?v=<hash>`. The hash is the
+- The integration serves it at `/anker_eufy_integration/anker-eufy-camera-card.js` and, with dashboard resources in
+  storage mode (the default), keeps one resource for it, `…/anker-eufy-camera-card.js?v=<hash>`. The hash is the
   file's own, so an integration update reloads the card in every browser.
-- Add it: edit a dashboard → **Add card** → **eufy camera**, or a card with `type: custom:eufy-camera-card`.
+- Add it: edit a dashboard → **Add card** → **eufy camera**, or a card with `type: custom:anker-eufy-camera-card`.
 - Resources in YAML mode (`lovelace: resource_mode: yaml`): add it once yourself:
 
   ```yaml
   lovelace:
     resources:
-      - url: /eufy_home_security/eufy-camera-card.js
+      - url: /anker_eufy_integration/anker-eufy-camera-card.js
         type: module
   ```
 
@@ -30,7 +30,7 @@ The card comes with the integration; there is nothing to download or copy.
 Every option is also in the card editor.
 
 ```yaml
-type: custom:eufy-camera-card
+type: custom:anker-eufy-camera-card
 entity: camera.front_door        # the eufy camera entity
 entities:                        # optional: more cameras; the name opens a list to switch between them
   - camera.backyard
@@ -214,7 +214,7 @@ the card never wakes a camera for it. Live view opens only on a press and ends:
   - **Save** copies the recording from the HomeBase into the history folder (5–10 s, one at a time) and marks the
     row Saved; it then plays from there and stays in the history. Play and Save keep working on a row while the
     list stays open, also on a HomeBase 2. A standalone camera has no Station sub-tab.
-  - Files come from the integration's history in HA's media folder (`Media › eufy_home_security › <camera name>`).
+  - Files come from the integration's history in HA's media folder (`Media › anker_eufy_integration › <camera name>`).
     A missing folder (history off, or nothing saved yet) reads as empty.
 - **Settings:** the camera device's settings (its `select`, `number`, `switch` and `light` entities), so a new
   camera model needs no card change. Entities hidden or disabled in HA are left out.
@@ -228,7 +228,7 @@ the card never wakes a camera for it. Live view opens only on a press and ends:
     on/off-only light keeps the toggle only. The lamp's brightness setting is a row of its own only where it is
     enabled (it is disabled on a new install).
   - Tabs follow the integration's sections: the card asks the integration for the device's settings layout
-    (websocket `eufy_home_security/settings_layout`) and shows one tab per section that has settings, with the
+    (websocket `anker_eufy_integration/settings_layout`) and shows one tab per section that has settings, with the
     section's name, in the integration's order; rows keep the integration's order within a section (two-line
     rows first, switches after). The layout is asked when the card first draws and again when the device's
     entities change in HA. Until the first answer Settings shows `Loading settings` in the tabs' place; when it
@@ -265,8 +265,8 @@ the card never wakes a camera for it. Live view opens only on a press and ends:
 
 - **Immediate:** pan/tilt, zoom and go-to-preset (`eufy_home_security.pan_tilt`, `.zoom`, `.goto_preset`), Record
   (`eufy_home_security.record`), Stop recording (`eufy_home_security.stop_recording`), Save view and Replace (`eufy_home_security.save_preset`, then the picture over
-  the websocket command `eufy_home_security/preset_image`), the Station Play (websocket subscription
-  `eufy_home_security/recordings/play`) and Save (`eufy_home_security/recordings/fetch`). Pan/tilt steps run one at a time; up to 3 presses wait
+  the websocket command `anker_eufy_integration/preset_image`), the Station Play (websocket subscription
+  `anker_eufy_integration/recordings/play`) and Save (`anker_eufy_integration/recordings/fetch`). Pan/tilt steps run one at a time; up to 3 presses wait
   their turn.
 - **Live view buttons** (`live_buttons`): immediate on the second press.
 - **Staged:** settings, `New still` and `Refresh event image`. ✕ / Set appear in the header; Set sends one write

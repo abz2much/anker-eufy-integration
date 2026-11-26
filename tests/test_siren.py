@@ -80,8 +80,8 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.eufy_home_security import detections, errors, siren
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections, errors, siren
+from custom_components.anker_eufy_integration.const import (
     ALARM_EVENT_KEY,
     DOMAIN,
     GUARD_MODE_KEY,

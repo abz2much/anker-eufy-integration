@@ -35,8 +35,8 @@ from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import HomeAssistant
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import still_cache
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import still_cache
+from custom_components.anker_eufy_integration.const import (
     ATTR_IMAGE_SOURCE,
     ATTR_IMAGE_UPDATED,
     ATTR_TRIGGERED_AT,
@@ -45,7 +45,7 @@ from custom_components.eufy_home_security.const import (
     DOMAIN,
     CameraImageMode,
 )
-from custom_components.eufy_home_security.snapshots import SnapshotManager
+from custom_components.anker_eufy_integration.snapshots import SnapshotManager
 
 NEW_THUMBNAIL: Final = b"\xff\xd8NEW-THUMBNAIL\xff\xd9"
 OLD_THUMBNAIL: Final = b"\xff\xd8OLD-THUMBNAIL\xff\xd9"

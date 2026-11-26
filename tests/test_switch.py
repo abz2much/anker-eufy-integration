@@ -42,7 +42,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 # Inverted: wire 0 is on (ECB).
 _END_EARLY: Final = "motion_stop_end_early"
@@ -109,7 +109,7 @@ async def test_switches_follow_the_station_including_inverted_ones(
     assert registered.entity_category is EntityCategory.CONFIG
     assert registered.original_name == settings_of("T8160")[_STATUS_LED].name
 
-    from custom_components.eufy_home_security import switch
+    from custom_components.anker_eufy_integration import switch
 
     assert switch.PARALLEL_UPDATES == 1
 

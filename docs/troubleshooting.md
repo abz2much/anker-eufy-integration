@@ -5,7 +5,7 @@
 ```yaml
 logger:
   logs:
-    custom_components.eufy_home_security: debug
+    custom_components.anker_eufy_integration: debug
     eufy_home_security: debug
     firebase_messaging: debug  # cloud push only
 ```
@@ -21,7 +21,7 @@ Read a log before sharing it.
 
 "Home Assistant could not reach eufy" covers every failure without its own message
 (network, eufy's answer, the device list after the sign-in). The log then has one
-warning `eufy sign-in did not complete: <error>` from `custom_components.eufy_home_security`
+warning `eufy sign-in did not complete: <error>` from `custom_components.anker_eufy_integration`
 naming the cause; attach it to an issue. No entry exists yet, so turn on debug logging
 in `configuration.yaml` (above) for the full request trail.
 

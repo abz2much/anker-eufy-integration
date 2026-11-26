@@ -25,7 +25,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 # On the camera, written as a 1350 sub-command whose payload names the channel.
 _NIGHT_VISION: Final = "nightvision_type_new"
@@ -94,7 +94,7 @@ async def test_a_camera_select_shows_the_library_labels_and_writes_the_value(
     assert registered.translation_key is None
     assert registered.original_name == setting.name
 
-    from custom_components.eufy_home_security import select
+    from custom_components.anker_eufy_integration import select
 
     assert select.PARALLEL_UPDATES == 1
 

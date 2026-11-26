@@ -19,8 +19,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import errors
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration import errors
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 
 def _issues(hass: HomeAssistant, entry: MockConfigEntry, kind: str) -> dict[str, ir.IssueEntry]:

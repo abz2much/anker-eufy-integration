@@ -1,8 +1,8 @@
 """The bundled Lovelace cards: served by the integration and registered as dashboard resources.
 
 Each card file lives in ``frontend/`` beside this module and is served at its URL:
-``CARD_URL`` (``/eufy_home_security/eufy-camera-card.js``) and ``HOMEBASE_CARD_URL``
-(``/eufy_home_security/eufy-homebase-card.js``). In storage-mode resources (the default)
+``CARD_URL`` (``/anker_eufy_integration/anker-eufy-camera-card.js``) and ``HOMEBASE_CARD_URL``
+(``/anker_eufy_integration/anker-eufy-homebase-card.js``). In storage-mode resources (the default)
 the integration keeps exactly one Lovelace resource per card, ``<url>?v=<hash>``, whose
 query is the file's content hash, so every change to a file makes browsers fetch it
 again. In YAML resource mode nothing is registered: the user adds each URL to
@@ -33,10 +33,10 @@ from .const import DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 _FRONTEND: Final = Path(__file__).parent / "frontend"
-CARD_FILE: Final = _FRONTEND / "eufy-camera-card.js"
-CARD_URL: Final = f"/{DOMAIN}/eufy-camera-card.js"
-HOMEBASE_CARD_FILE: Final = _FRONTEND / "eufy-homebase-card.js"
-HOMEBASE_CARD_URL: Final = f"/{DOMAIN}/eufy-homebase-card.js"
+CARD_FILE: Final = _FRONTEND / "anker-eufy-camera-card.js"
+CARD_URL: Final = f"/{DOMAIN}/anker-eufy-camera-card.js"
+HOMEBASE_CARD_FILE: Final = _FRONTEND / "anker-eufy-homebase-card.js"
+HOMEBASE_CARD_URL: Final = f"/{DOMAIN}/anker-eufy-homebase-card.js"
 _RESOURCE_TYPE: Final = "module"
 _SERVED: HassKey[bool] = HassKey(f"{DOMAIN}_card_served")
 

@@ -1,8 +1,8 @@
 [project]
 # Not "eufy-home-security": that normalises to the library's name, and uv then refuses
 # the editable library source ("conflicting URLs").
-name = "homeassistant-eufy_home_security"
-# The release version lives in custom_components/eufy_home_security/manifest.json.
+name = "anker-eufy-integration"
+# The release version lives in custom_components/anker_eufy_integration/manifest.json.
 version = "0.0.0"
 description = "Anker eufy Home Security custom integration for Home Assistant"
 requires-python = ">=3.14.2"
@@ -45,7 +45,7 @@ testpaths = ["tests"]
 norecursedirs = [".git", "dist", "build", ".venv"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-# Puts the repo root on sys.path, so `custom_components.eufy_home_security` imports.
+# Puts the repo root on sys.path, so `custom_components.anker_eufy_integration` imports.
 pythonpath = ["."]
 # Parallel by default: worksteal evens out the few tests that wait out a hardware
 # timeout. tests/conftest.py drops the workers for a run of a few tests. A test
@@ -71,7 +71,7 @@ warn_unreachable = true
 # Strict mode for the integration package. `strict` cannot be set per module, so its
 # flags are listed; tests/test_toolchain.py checks them.
 [[tool.mypy.overrides]]
-module = ["custom_components.eufy_home_security", "custom_components.eufy_home_security.*"]
+module = ["custom_components.anker_eufy_integration", "custom_components.anker_eufy_integration.*"]
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_any_generics = true

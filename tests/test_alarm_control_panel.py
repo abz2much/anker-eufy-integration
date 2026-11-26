@@ -80,17 +80,17 @@ from pytest_homeassistant.common import (
     mock_restore_cache_with_extra_data,
 )
 
-from custom_components.eufy_home_security import alarm_control_panel, detections, errors
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import alarm_control_panel, detections, errors
+from custom_components.anker_eufy_integration.const import (
     ALARM_EVENT_KEY,
     CONF_ALARM_TIMEOUT,
     DOMAIN,
     POLL_INTERVAL_SECONDS,
 )
-from custom_components.eufy_home_security.detections import ha_state
+from custom_components.anker_eufy_integration.detections import ha_state
 
 # The loggers whose lines a user's log would carry: the integration's and the library's.
-_OUR_LOGGERS = ("custom_components.eufy_home_security", "eufy_home_security")
+_OUR_LOGGERS = ("custom_components.anker_eufy_integration", "eufy_home_security")
 
 # The mode mapping, written out in full rather than derived from the function under test.
 _EXPECTED: dict[GuardMode | int | None, AlarmControlPanelState | None] = {
@@ -171,7 +171,7 @@ async def test_an_unknown_guard_mode_code_is_unknown_and_logged_once(
         record
         for record in caplog.records
         if record.levelno == logging.WARNING
-        and record.name.startswith("custom_components.eufy_home_security")
+        and record.name.startswith("custom_components.anker_eufy_integration")
         and "guard mode code 99" in record.getMessage()
     ]
     assert len(warnings) == 1, [record.getMessage() for record in warnings]

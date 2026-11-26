@@ -37,7 +37,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security.const import DOMAIN, FIRMWARE_KEY
+from custom_components.anker_eufy_integration.const import DOMAIN, FIRMWARE_KEY
 
 # The parameter a device reports its own firmware under (fixture value only).
 _FIRMWARE_PARAM: Final = 7013
@@ -55,7 +55,7 @@ _UPDATE_TRANSLATION_KEY: Final = "firmware_update"
 _EN_PATH: Final = (
     Path(__file__).resolve().parent.parent
     / "custom_components"
-    / "eufy_home_security"
+    / "anker_eufy_integration"
     / "translations"
     / "en.json"
 )

@@ -20,8 +20,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import errors
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration import errors
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 _CIPHER_CALLS_PREFIX = "cipher:"
 _RSA_VERSION = 1

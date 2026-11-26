@@ -36,13 +36,13 @@ from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 
-from custom_components.eufy_home_security import errors, runtime
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration import errors, runtime
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 _EN_PATH = (
     Path(__file__).resolve().parent.parent
     / "custom_components"
-    / "eufy_home_security"
+    / "anker_eufy_integration"
     / "translations"
     / "en.json"
 )
@@ -175,7 +175,7 @@ def test_flow_error_key_maps_every_library_error(error: EufySecurityError, key: 
     assert errors.flow_error_key(error) == key
 
 
-_INTEGRATION_LOGGER = "custom_components.eufy_home_security"
+_INTEGRATION_LOGGER = "custom_components.anker_eufy_integration"
 
 
 def _integration_warnings(caplog: pytest.LogCaptureFixture) -> list[logging.LogRecord]:
@@ -346,7 +346,7 @@ _NEW_PASSWORD = "synthetic-new-password"
 _CONFIG_FLOW_PATH = (
     Path(__file__).resolve().parent.parent
     / "custom_components"
-    / "eufy_home_security"
+    / "anker_eufy_integration"
     / "config_flow.py"
 )
 

@@ -32,9 +32,9 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security.const import ATTR_SECTION, ATTR_VALUE, DOMAIN
-from custom_components.eufy_home_security.sensor import EufySettingSensor
-from custom_components.eufy_home_security.settings import (
+from custom_components.anker_eufy_integration.const import ATTR_SECTION, ATTR_VALUE, DOMAIN
+from custom_components.anker_eufy_integration.sensor import EufySettingSensor
+from custom_components.anker_eufy_integration.settings import (
     MAX_STATE_LENGTH,
     SettingEntitySpec,
     capped_state,

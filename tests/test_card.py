@@ -17,8 +17,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component
 from pytest_homeassistant.typing import ClientSessionGenerator
 
-from custom_components.eufy_home_security import card
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration import card
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 _RESOURCES_KEY = "lovelace_resources"
 
@@ -54,10 +54,10 @@ async def _set_up(hass: HomeAssistant) -> None:
 def test_the_bundled_cards_are_shipped_and_name_their_custom_elements() -> None:
     """Both files exist in the package and define the elements dashboards reference."""
     source = card.CARD_FILE.read_text(encoding="utf-8")
-    assert "customElements.define('eufy-camera-card'" in source
+    assert "customElements.define('anker-eufy-camera-card'" in source
     assert len(card.card_hash()) == 8
     homebase = card.HOMEBASE_CARD_FILE.read_text(encoding="utf-8")
-    assert "customElements.define('eufy-homebase-card'" in homebase
+    assert "customElements.define('anker-eufy-homebase-card'" in homebase
     assert len(card.card_hash(card.HOMEBASE_CARD_FILE)) == 8
     assert [c.url for c in card.CARDS] == [card.CARD_URL, card.HOMEBASE_CARD_URL]
 

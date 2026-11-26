@@ -13,8 +13,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security import detections
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration import detections
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 SN = "T8410P0000000001"
 CHANNEL = 0

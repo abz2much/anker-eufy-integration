@@ -2,7 +2,7 @@
 
 One websocket command, registered once per Home Assistant instance:
 
-- ``eufy_home_security/settings_layout`` ``{device_id}`` (a station, a paired camera or
+- ``anker_eufy_integration/settings_layout`` ``{device_id}`` (a station, a paired camera or
   sensor, a standalone camera) answers ``{device_id, sections}``: each section with at
   least one registered entity, as ``{id, heading, order, alarm_affecting, entity_ids,
   alarm_affecting_entity_ids}``. Sections, headings, order and ``alarm_affecting`` are the

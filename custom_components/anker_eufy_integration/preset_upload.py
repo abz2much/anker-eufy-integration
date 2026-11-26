@@ -2,7 +2,7 @@
 
 One websocket command, registered once per Home Assistant instance:
 
-- ``eufy_home_security/preset_image`` ``{entity_id, preset, image}`` keeps ``image`` (a
+- ``anker_eufy_integration/preset_image`` ``{entity_id, preset, image}`` keeps ``image`` (a
   base64 JPEG the card drew from the playing live video) as slot ``preset``'s image of
   the camera ``entity_id``, exactly where a "Capture preset n" image goes
   (``PresetManager.async_store_image``: memory, still cache and small copy, the event

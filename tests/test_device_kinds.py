@@ -32,8 +32,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security import detections, runtime
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections, runtime
+from custom_components.anker_eufy_integration.const import (
     BATTERY_KEY,
     CAMERA_KEY,
     CAPTURE_LIVE_IMAGE_KEY,
@@ -54,7 +54,7 @@ from custom_components.eufy_home_security.const import (
     SIGNAL_STRENGTH_KEY,
     VEHICLE_DETECTED_KEY,
 )
-from custom_components.eufy_home_security.snapshots import SnapshotManager
+from custom_components.anker_eufy_integration.snapshots import SnapshotManager
 
 # Synthetic serials on real product prefixes of the library's model list.
 KEYPAD_SN: Final = "T8960P0000000001"

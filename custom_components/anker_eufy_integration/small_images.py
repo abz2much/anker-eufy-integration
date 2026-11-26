@@ -6,7 +6,7 @@ integration's own stills. Every still has a small copy in the still cache
 (``still_cache.py``), at most ``SMALL_WIDTH`` pixels wide, made when the still is
 stored. It is served here:
 
-    /api/eufy_home_security/image/<entity id>/small?v=<version>[&token=<access token>]
+    /api/anker_eufy_integration/image/<entity id>/small?v=<version>[&token=<access token>]
 
 - **Authentication as Home Assistant's own image views.** A request with a valid login
   (``Authorization`` header, a signed path) or the entity's current access token, the

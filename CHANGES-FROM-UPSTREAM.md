@@ -1,20 +1,20 @@
 # Changes from upstream
 
-This fork of [alaraun/homeassistant-eufy-home-security](https://github.com/alaraun/homeassistant-eufy-home-security)
-adds features on top of upstream. Each change is kept small and, where possible, in its
-own `fork_*.py` module, so upstream updates merge cleanly. See
-[docs/fork-upstream-sync.md](docs/fork-upstream-sync.md) for how to pull upstream.
+Anker eufy Integration is based on
+[alaraun/homeassistant-eufy-home-security](https://github.com/alaraun/homeassistant-eufy-home-security)
+(MIT; its copyright notice is kept in [LICENSE](LICENSE)), taken at upstream commit
+`2a76edf` (release 0.4.21). It is a separate integration with its own domain and
+versions: upstream changes are brought in only when chosen
+([docs/upstream-sync.md](docs/upstream-sync.md)).
 
-Forked from upstream commit `2a76edf` (release 0.4.21).
-
-## Version
-
-The manifest version is upstream's version plus `+fork.N` (SemVer build metadata), for
-example `0.4.21+fork.1`, so Home Assistant shows which build is installed. Home
-Assistant's loader and the Marketplace both accept this form. Bump `N` with each fork
-change; reset it to `1` after merging a new upstream version. Do not merge the fork's
-release-please PR: it would overwrite this version.
+Last synced upstream commit: `2a76edf`.
 
 | Change | Files | Path | Source | Licence |
 |---|---|---|---|---|
-| HomeBase **Restart** button: disabled by default, under Configuration, only on stations the library can restart. Calls the library's `Station.async_restart` (command 1034). A session ended by another client shows upstream's Repairs message. | `fork_restart.py` (new), `button.py` (setup hook, 6 lines), `manifest.json` (version), `strings.json` and `translations/en.json` (button name, 3 error messages), `tests/test_restart_button.py` (new), `tests/test_packaging.py` (release-version check accepts `+fork.N`), `tests/test_fork_version.py` (new) | Local P2P | Own code; uses the upstream library's existing restart | MIT (this repo) |
+| Own identity: domain `anker_eufy_integration`, name "Anker eufy Integration", cards `anker-eufy-camera-card` and `anker-eufy-homebase-card`, event `anker_eufy_integration_event`, stream view, media and cache folders, links and code owner. Version starts at `0.1.0`. | `custom_components/anker_eufy_integration/` (folder moved; `ruff.toml` keeps upstream's import order), `manifest.json`, `hacs.json`, `const.py`, `services.yaml`, `frontend/*.js` (renamed), `pyproject.toml`, `uv.lock`, `.release-please-manifest.json`, `README.md`, `SECURITY.md`, docs, tests (paths and names), `tests/test_identity.py` (new) | n/a | Own | MIT |
+| HomeBase **Restart** button: disabled by default, under Configuration, only on stations the library can restart. Calls the library's `Station.async_restart` (command 1034). A session ended by another client shows the Repairs message. | `restart_button.py` (new), `button.py` (setup hook), `strings.json` and `translations/en.json` (button name, 3 error messages), `tests/test_restart_button.py` (new) | Local P2P | Own; uses the library's existing restart | MIT |
+
+The Python library (`eufy-home-security`, alaraun, MIT) is unchanged and installed from
+PyPI at the version in `manifest.json`. Keep that version equal to the one the upstream
+integration pins while both are installed in the same Home Assistant: they share one
+copy of the library.

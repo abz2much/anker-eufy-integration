@@ -12,7 +12,7 @@ _PYPROJECT_PATH = Path(__file__).resolve().parent.parent / "pyproject.toml"
 
 # The strict-mode flags the integration's override must set. `strict` itself
 # cannot be set per module, so the flags are listed.
-_PACKAGE_GLOB = "custom_components.eufy_home_security.*"
+_PACKAGE_GLOB = "custom_components.anker_eufy_integration.*"
 _STRICT_FLAGS = (
     "disallow_untyped_defs",
     "disallow_incomplete_defs",

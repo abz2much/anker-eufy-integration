@@ -1,4 +1,4 @@
-"""Fork: the HomeBase "Restart" button (not in upstream; see CHANGES-FROM-UPSTREAM.md).
+"""The HomeBase "Restart" button.
 
 A press calls the library's ``Station.async_restart`` (1034 over the local P2P session).
 A restart is alarm-affecting (``StationFeature.RESTART``: the station does not alarm

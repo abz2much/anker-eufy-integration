@@ -22,12 +22,12 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import (
+from custom_components.anker_eufy_integration import (
     async_remove_config_entry_device,
     runtime,
     stale_devices,
 )
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration.const import (
     CONF_EXTRA_COUNTRIES,
     DOMAIN,
     REFRESH_DEVICE_LIST_KEY,

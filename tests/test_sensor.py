@@ -43,7 +43,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
 
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration.const import (
     BATTERY_KEY,
     DOMAIN,
     EMMC_USED_KEY,
@@ -593,7 +593,7 @@ async def test_a_paired_device_with_no_serial_gets_no_entities_and_one_debug_lin
     re-pair. It is said once per channel rather than on every 45 s poll, and the line
     carries the station's redacted serial and the slot number only.
     """
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security.coordinator")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration.coordinator")
     fake_station.params[_SERIALLESS_CHANNEL] = {_BATTERY_PARAM: "50"}
     entry = await set_up_warm(hass, seed_warm_cache)
     anchor = dt_util.utcnow()

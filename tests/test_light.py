@@ -61,8 +61,8 @@ from homeassistant.setup import async_setup_component
 from homeassistant.util.color import value_to_brightness
 from pytest_homeassistant.common import MockConfigEntry, async_capture_events
 
-from custom_components.eufy_home_security.const import DOMAIN
-from custom_components.eufy_home_security.settings import SettingEntitySpec, setting_specs
+from custom_components.anker_eufy_integration.const import DOMAIN
+from custom_components.anker_eufy_integration.settings import SettingEntitySpec, setting_specs
 
 _CAMERA: Final = SYNTHETIC.camera_sn
 _SWITCH: Final = "spotlight_switch"
@@ -349,7 +349,7 @@ def _moved_lines(caplog: pytest.LogCaptureFixture) -> list[str]:
     return [
         r.getMessage()
         for r in caplog.records
-        if r.name == "custom_components.eufy_home_security" and "moved to" in r.getMessage()
+        if r.name == "custom_components.anker_eufy_integration" and "moved to" in r.getMessage()
     ]
 
 
@@ -381,7 +381,7 @@ async def test_the_switch_rows_customisations_carry_over_to_the_light_row(
         hidden_by=er.RegistryEntryHider.USER,
         disabled_by=er.RegistryEntryDisabler.USER,
     )
-    caplog.set_level(logging.INFO, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.INFO, logger="custom_components.anker_eufy_integration")
 
     assert await setup_entry(hass, entry)
     assert registry.async_get(old.entity_id) is None
@@ -428,7 +428,7 @@ async def test_a_switch_row_as_home_assistant_named_it_carries_its_object_id(
         disabled_by=er.RegistryEntryDisabler.INTEGRATION,
         hidden_by=er.RegistryEntryHider.INTEGRATION,
     )
-    caplog.set_level(logging.INFO, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.INFO, logger="custom_components.anker_eufy_integration")
 
     assert await setup_entry(hass, entry)
     assert registry.async_get(old.entity_id) is None
@@ -462,7 +462,7 @@ async def test_a_taken_light_id_gets_home_assistants_suffix(
     assert taken.entity_id == "light.garden_lamp"
     old = _old_switch(hass, entry)
     registry.async_update_entity(old.entity_id, new_entity_id="switch.garden_lamp")
-    caplog.set_level(logging.INFO, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.INFO, logger="custom_components.anker_eufy_integration")
 
     assert await setup_entry(hass, entry)
     assert _light_id(hass) == "light.garden_lamp_2"
@@ -622,7 +622,8 @@ def _taken_lines(caplog: pytest.LogCaptureFixture) -> list[str]:
     return [
         r.getMessage()
         for r in caplog.records
-        if r.name == "custom_components.eufy_home_security" and "took the place" in r.getMessage()
+        if r.name == "custom_components.anker_eufy_integration"
+        and "took the place" in r.getMessage()
     ]
 
 
@@ -719,7 +720,7 @@ async def test_the_light_takes_the_place_of_a_loaded_switch_as_x_light(
         hidden_by=er.RegistryEntryHider.USER,
     )
     assert wrapper.entity_id == "light.front_spotlight"
-    caplog.set_level(logging.INFO, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.INFO, logger="custom_components.anker_eufy_integration")
     events = async_capture_events(hass, er.EVENT_ENTITY_REGISTRY_UPDATED)
 
     assert await setup_entry(hass, entry)
@@ -822,7 +823,7 @@ async def test_a_not_loaded_switch_as_x_light_keeps_its_id_also_when_deleted_lat
     wrapper = registry.async_update_entity(_wrapper(hass, helper).entity_id, name="Porch lamp")
     assert await hass.config_entries.async_unload(helper.entry_id)
     await hass.async_block_till_done()
-    caplog.set_level(logging.INFO, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.INFO, logger="custom_components.anker_eufy_integration")
 
     assert await setup_entry(hass, entry)
     assert hass.config_entries.async_get_entry(helper.entry_id) == helper
@@ -856,7 +857,7 @@ async def test_a_switch_as_x_entity_of_another_domain_gives_no_place_to_take(
     helper = await _switch_as_x(hass, old.entity_id, Platform.FAN)
     wrapper = registry.async_update_entity(_wrapper(hass, helper).entity_id, name="Fan name")
     assert wrapper.entity_id == "fan.front_spotlight"
-    caplog.set_level(logging.INFO, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.INFO, logger="custom_components.anker_eufy_integration")
 
     assert await setup_entry(hass, entry)
     assert hass.config_entries.async_get_entry(helper.entry_id) is None
@@ -1172,7 +1173,7 @@ async def test_a_read_only_lamps_switch_row_gives_no_light_row(
     registry = er.async_get(hass)
     _old_switch(hass, entry)
     created = async_capture_events(hass, er.EVENT_ENTITY_REGISTRY_UPDATED)
-    caplog.set_level(logging.INFO, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.INFO, logger="custom_components.anker_eufy_integration")
 
     assert await setup_entry(hass, entry)
     unique_id = entity_unique_id(_CAMERA, _SWITCH)
@@ -1206,7 +1207,7 @@ async def test_another_entrys_switch_row_is_not_moved(
         Platform.SWITCH, DOMAIN, entity_unique_id(_CAMERA, _SWITCH), config_entry=other
     )
     foreign = registry.async_update_entity(foreign.entity_id, name="Other", icon="mdi:lamp")
-    caplog.set_level(logging.INFO, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.INFO, logger="custom_components.anker_eufy_integration")
 
     assert await setup_entry(hass, entry)
     kept = registry.async_get(foreign.entity_id)
@@ -1242,7 +1243,7 @@ async def test_an_existing_light_row_is_left_as_it_is(
         suggested_object_id="porch",
     )
     registry.async_update_entity(light.entity_id, name="Kept")
-    caplog.set_level(logging.INFO, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.INFO, logger="custom_components.anker_eufy_integration")
 
     assert await setup_entry(hass, entry)
     assert registry.async_get(old.entity_id) is None

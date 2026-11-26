@@ -31,8 +31,8 @@ from homeassistant.data_entry_flow import FlowResultType, InvalidData, section
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import runtime
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import runtime
+from custom_components.anker_eufy_integration.const import (
     CONF_ALARM_TIMEOUT,
     CONF_CAMERA_IMAGE,
     CONF_CLOUD_PUSH,

@@ -57,7 +57,7 @@ shows or what the user must be told:
   (``detections.device_event_consumed``) and the device is paired to the delivering
   station. A station push (alarm, alarm delay, arming) goes to that station's
   entities when one consumes it (``detections.station_event_consumed``). Every other
-  one fires the ``eufy_home_security_event`` bus event, with six fixed keys and a
+  one fires the ``anker_eufy_integration_event`` bus event, with six fixed keys and a
   device registry id, never a serial. An enriching copy and an unauthenticated alarm
   stop fire nothing, except an enriching copy whose detection is more specific than
   every copy of that occurrence dispatched so far (``detections.is_kind_upgrade``):

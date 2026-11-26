@@ -18,8 +18,8 @@ import av
 import pytest
 from recording_media import Part, audio_only, make_ts
 
-from custom_components.eufy_home_security import recording_hls
-from custom_components.eufy_home_security.recording_hls import (
+from custom_components.anker_eufy_integration import recording_hls
+from custom_components.anker_eufy_integration.recording_hls import (
     HlsPlaylist,
     RemuxError,
     Segment,

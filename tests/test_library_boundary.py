@@ -27,7 +27,7 @@ from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-INTEGRATION_ROOT = REPO_ROOT / "custom_components" / "eufy_home_security"
+INTEGRATION_ROOT = REPO_ROOT / "custom_components" / "anker_eufy_integration"
 PYPROJECT_PATH = REPO_ROOT / "pyproject.toml"
 # The sibling checkout the editable uv path source points at.
 LIBRARY_CHECKOUT = REPO_ROOT.parent / "python-eufy_home_security"
@@ -204,7 +204,7 @@ def test_installed_versions_satisfy_home_assistant_pins() -> None:
 # ---------------------------------------------------------------------------
 
 
-_PROJECT_NAME = "homeassistant-eufy_home_security"
+_PROJECT_NAME = "anker-eufy-integration"
 _LIBRARY_SOURCE = {"path": "../python-eufy_home_security", "editable": True}
 
 
@@ -600,7 +600,7 @@ def _find_eufy_parsing(tree: ast.AST) -> list[tuple[int, str]]:
     return hits
 
 
-_INTEGRATION_PACKAGE = ("custom_components", "eufy_home_security")
+_INTEGRATION_PACKAGE = ("custom_components", "anker_eufy_integration")
 
 
 def _eufy_parsing_report(root: Path) -> dict[str, list[tuple[int, str]]]:
@@ -648,7 +648,7 @@ def test_the_integration_parses_no_eufy_payload(tmp_path: Path) -> None:
 
     # Fail-first for the gate's ordering: a tree missing a sanity-set module
     # trips the sanity assertion instead of being scanned.
-    broken_tree = tmp_path / "broken_tree" / "eufy_home_security"
+    broken_tree = tmp_path / "broken_tree" / "anker_eufy_integration"
     shutil.copytree(INTEGRATION_ROOT, broken_tree, ignore=shutil.ignore_patterns("__pycache__"))
     (broken_tree / "coordinator.py").unlink()
     with pytest.raises(AssertionError, match="path mistake"):
@@ -840,7 +840,7 @@ def test_eufy_security_is_built_only_in_runtime(tmp_path: Path) -> None:
         ),
         (
             "build_client_absolute",
-            "from custom_components.eufy_home_security.runtime import build_client as b\n",
+            "from custom_components.anker_eufy_integration.runtime import build_client as b\n",
             ("tests",),
             {"build-client-by-name"},
         ),
@@ -1070,7 +1070,7 @@ def test_integration_tests_run_on_the_library_testing_package(tmp_path: Path) ->
             "patch",
             (
                 "from unittest.mock import patch\n"
-                'p = patch("custom_components.eufy_home_security.runtime.build_client")\n'
+                'p = patch("custom_components.anker_eufy_integration.runtime.build_client")\n'
             ),
             "patch-of-library",
         ),

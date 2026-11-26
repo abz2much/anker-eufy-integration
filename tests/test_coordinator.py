@@ -47,10 +47,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import async_fire_time_changed
 
-from custom_components.eufy_home_security.const import CONNECTION_LOSS_GRACE_SECONDS
+from custom_components.anker_eufy_integration.const import CONNECTION_LOSS_GRACE_SECONDS
 
 # The loggers whose lines a user's log would carry: the integration's and the library's.
-_OUR_LOGGERS = ("custom_components.eufy_home_security", "eufy_home_security")
+_OUR_LOGGERS = ("custom_components.anker_eufy_integration", "eufy_home_security")
 
 # A verified camera setting with a number entity: shows when a pushed dump arrives.
 _RETRIGGER = "trigger_interval_time"
@@ -358,7 +358,7 @@ def _integration_errors(caplog: pytest.LogCaptureFixture) -> list[str]:
     return [
         f"{record.name}: {record.getMessage()}"
         for record in caplog.records
-        if record.name.startswith("custom_components.eufy_home_security")
+        if record.name.startswith("custom_components.anker_eufy_integration")
         and record.levelno >= logging.ERROR
     ]
 
@@ -507,7 +507,7 @@ async def test_a_station_that_never_came_up_on_first_setup_is_retried_then_loads
     integration_errors = [
         f"{record.name}: {record.getMessage()}"
         for record in ours
-        if record.name.startswith("custom_components.eufy_home_security")
+        if record.name.startswith("custom_components.anker_eufy_integration")
         and record.levelno >= logging.ERROR
     ]
     assert integration_errors == []
@@ -581,7 +581,7 @@ async def test_a_session_lost_while_home_assistant_stops_is_not_an_outage(
     assert [
         record.getMessage()
         for record in caplog.records
-        if record.name.startswith("custom_components.eufy_home_security")
+        if record.name.startswith("custom_components.anker_eufy_integration")
         and record.levelno >= logging.ERROR
     ] == []
 
@@ -666,7 +666,7 @@ async def test_a_session_back_within_the_grace_never_shows_unavailable(
     assert [
         record.getMessage()
         for record in caplog.records
-        if record.name.startswith("custom_components.eufy_home_security")
+        if record.name.startswith("custom_components.anker_eufy_integration")
         and record.levelno >= logging.ERROR
     ] == []
 

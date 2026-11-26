@@ -44,7 +44,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
 
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration.const import (
     BATTERY_KEY,
     BATTERY_LOW_KEY,
     BATTERY_TEMPERATURE_KEY,

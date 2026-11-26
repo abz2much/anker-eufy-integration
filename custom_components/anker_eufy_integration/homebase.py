@@ -5,17 +5,17 @@ HA device of a station (a HomeBase, or a standalone camera); no response carries
 serial: devices are named by HA device id and name, a device HA does not know by
 ``device_id: null``.
 
-- ``eufy_home_security/homebase`` ``{device_id}`` (read): the station's configuration
+- ``anker_eufy_integration/homebase`` ``{device_id}`` (read): the station's configuration
   (``Station.config``, no I/O) with its revision, defined modes and their names, mode
   tables, schedule and cross-camera tracking; the support of every ``StationFeature``;
   the per-mode action flags with the library's labels; the paired devices; the alarm
   panel, security-mode select, alarm and storage status. See ``payload``.
-- ``eufy_home_security/homebase/subscribe`` ``{device_id}`` (read): the same payload as
+- ``anker_eufy_integration/homebase/subscribe`` ``{device_id}`` (read): the same payload as
   an event at once, then after every update of the station's coordinator (which the
   router makes on ``StationConfigChanged``, ``GuardModeChanged`` and every state) and
   every state change of its alarm panel (``AlarmChanged``), at most one per
   ``_DEBOUNCE_S``. Follows the entry across a reload.
-- ``eufy_home_security/homebase/mode_table/set`` (admin) ``{device_id, mode, actions,
+- ``anker_eufy_integration/homebase/mode_table/set`` (admin) ``{device_id, mode, actions,
   entry_s?, entry_devices?, exit_s?, exit_devices?, expect_revision}``: one mode's
   device actions and delays in one write (``Station.async_set_mode_actions``); answers
   the payload after the write.
@@ -25,7 +25,7 @@ serial: devices are named by HA device id and name, a device HA does not know by
   library's configuration writes; answer the payload after the write.
 - ``homebase/restart`` and ``homebase/alarm`` ``{action, seconds?}`` (admin,
   ``device_id``): restart the station, sound or stop its alarm; answer the payload.
-- ``eufy_home_security/arming_groups/list`` (read), ``create``, ``update``, ``delete``,
+- ``anker_eufy_integration/arming_groups/list`` (read), ``create``, ``update``, ``delete``,
   ``activate`` (admin) and ``logs`` (read): the arming groups of the station's house
   (``EufySecurity.async_arming_groups`` and siblings). Every call reads the cloud; the
   library caches nothing. ``activate`` changes the alarm state of every member.

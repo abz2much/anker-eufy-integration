@@ -40,8 +40,8 @@ from pytest_homeassistant.components.diagnostics import (
 )
 from pytest_homeassistant.typing import ClientSessionGenerator
 
-from custom_components.eufy_home_security import errors, runtime
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import errors, runtime
+from custom_components.anker_eufy_integration.const import (
     CONF_COUNTRY,
     CONF_EXTRA_COUNTRIES,
     CONF_SCAN_REGIONS,

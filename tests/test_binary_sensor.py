@@ -42,8 +42,8 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import detections
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections
+from custom_components.anker_eufy_integration.const import (
     CONF_DETECTION_HOLD,
     DETECTION_EVENT_KEY,
     DOMAIN,
