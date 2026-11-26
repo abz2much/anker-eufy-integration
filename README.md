@@ -1,19 +1,20 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/alaraun/homeassistant-eufy-home-security/main/custom_components/eufy_home_security/brand/logo.png" alt="eufy" height="80">
+  <img src="https://raw.githubusercontent.com/abz2much/anker-eufy-integration/main/custom_components/anker_eufy_integration/brand/logo.png" alt="eufy" height="80">
 </p>
 
-# Anker eufy Home Security for Home Assistant
+# Anker eufy Integration for Home Assistant
 
-[![Marketplace](https://img.shields.io/badge/Marketplace-listed-41BDF5.svg)](https://www.home-assistant.io/integrations/marketplace/)
 [![Home Assistant](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Falaraun%2Fhomeassistant-eufy-home-security%2Fmain%2Fhacs.json&query=%24.homeassistant&label=Home%20Assistant&suffix=%2B&color=41BDF5&cacheSeconds=3600)](https://www.home-assistant.io/)
-[![Release](https://img.shields.io/github/v/release/alaraun/homeassistant-eufy-home-security)](https://github.com/alaraun/homeassistant-eufy-home-security/releases)
-[![CI](https://github.com/alaraun/homeassistant-eufy-home-security/actions/workflows/ci.yml/badge.svg)](https://github.com/alaraun/homeassistant-eufy-home-security/actions/workflows/ci.yml)
-[![License](https://img.shields.io/github/license/alaraun/homeassistant-eufy-home-security)](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/LICENSE)
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/alaraun)
+[![Release](https://img.shields.io/github/v/release/abz2much/anker-eufy-integration)](https://github.com/abz2much/anker-eufy-integration/releases)
+[![CI](https://github.com/abz2much/anker-eufy-integration/actions/workflows/ci.yml/badge.svg)](https://github.com/abz2much/anker-eufy-integration/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/abz2much/anker-eufy-integration)](https://github.com/abz2much/anker-eufy-integration/blob/main/LICENSE)
 
 Control of eufy Security HomeBases and the devices paired to them, and of standalone
 eufy cameras: alarm panel, detections, camera stills, live video, pan/tilt presets,
 lights and device settings.
+
+Based on [alaraun/homeassistant-eufy-home-security](https://github.com/alaraun/homeassistant-eufy-home-security)
+(MIT), with its own domain (`anker_eufy_integration`) so it installs alongside it.
 
 Where a device allows it, Home Assistant talks to it directly on your network. The
 eufy cloud is still used for sign-in, the device list and device keys; for detections
@@ -27,12 +28,12 @@ tracker](https://github.com/alaraun/python-eufy-home-security/issues).
 
 > [!WARNING]
 > Beta. Only the devices in
-> [Supported devices](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/devices.md)
+> [Supported devices](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/devices.md)
 > are tested, and a minor release may change entities or options. Keep the eufy app
 > installed. Not affiliated with or endorsed by Anker or eufy.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/alaraun/homeassistant-eufy-home-security/main/docs/images/camera-card.png" alt="A eufy camera with live view and setting controls on a dashboard" width="600">
+  <img src="https://raw.githubusercontent.com/abz2much/anker-eufy-integration/main/docs/images/camera-card.png" alt="A eufy camera with live view and setting controls on a dashboard" width="600">
   <br><sub>The camera card that comes with the integration: one or several cameras, live view, pan/tilt, presets, history and settings.</sub>
 </p>
 
@@ -51,7 +52,7 @@ tracker](https://github.com/alaraun/python-eufy-home-security/issues).
 
 Only some models are tested on hardware; the others follow the eufy app's own model
 data. Model by model:
-[Supported devices](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/devices.md).
+[Supported devices](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/devices.md).
 
 ## Requirements
 
@@ -60,10 +61,10 @@ data. Model by model:
 - Home Assistant on the same LAN as the HomeBase is the fastest path (host networking
   in Docker). A station on another subnet or at another site connects through eufy's
   servers (not behind a symmetric NAT). Firewall, reverse proxy and browsers:
-  [Network and security](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/network.md).
+  [Network and security](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/network.md).
 - Live view reads each camera from Home Assistant's own port on `127.0.0.1`: TLS on
   that port works, an `http: server_host` bound only to a LAN address does not
-  ([stream access](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/network.md#stream-access)).
+  ([stream access](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/network.md#stream-access)).
 - A eufy account that sees the HomeBase: the owner's, or one it is shared with. Use a
   separate account for Home Assistant: a sign-in elsewhere with the same account ends
   Home Assistant's session, so accept the owner's invitation from Home Assistant's
@@ -81,13 +82,13 @@ An install added as a custom repository needs no change: the Marketplace lists i
 its catalog and keeps updating it.
 
 Manual: download the source archive of the latest
-[release](https://github.com/alaraun/homeassistant-eufy-home-security/releases), copy its
-`custom_components/eufy_home_security` into your configuration's `custom_components`
+[release](https://github.com/abz2much/anker-eufy-integration/releases), copy its
+`custom_components/anker_eufy_integration` into your configuration's `custom_components`
 directory and restart.
 
 ## Setup
 
-[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=eufy_home_security)
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=anker_eufy_integration)
 
 1. **Settings → Devices & services → Add integration → Anker eufy Home Security**.
 2. Enter the eufy account's e-mail and password. This is one eufy sign-in; the
@@ -95,7 +96,7 @@ directory and restart.
 3. Every HomeBase, its paired devices and every standalone camera appear as devices.
 
 eufy allows only a few sign-ins per account per day
-([details](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/network.md#eufy-account));
+([details](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/network.md#eufy-account));
 Home Assistant never signs in by itself.
 
 Devices added to the eufy account later: press **Refresh device list** on the
@@ -103,24 +104,24 @@ Devices added to the eufy account later: press **Refresh device list** on the
 
 The camera card comes with the integration: edit a dashboard → **Add card** →
 **eufy camera**
-([Camera card](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/card.md)).
+([Camera card](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/card.md)).
 So does a card per HomeBase: **eufy HomeBase**
-([HomeBase card](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/homebase-card.md)).
+([HomeBase card](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/homebase-card.md)).
 
 ## Documentation
 
 | | |
 |---|---|
-| [Usage](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/usage.md) | options, alarm panel, camera images, event history and videos, live video, pan/tilt, settings and lights, signing in again, removal |
-| [Camera card](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/card.md) | the dashboard card that comes with the integration: install, options, layout, writes |
-| [HomeBase card](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/homebase-card.md) | the HomeBase's dashboard card: security mode, what each device does per mode, arming groups, settings, status |
-| [Supported devices](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/devices.md) | tested models, settings, adding a device, reporting a new device |
-| [Network and security](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/network.md) | LAN, firewall, reverse proxy, browsers, accounts, stored data |
-| [Troubleshooting](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/troubleshooting.md) | debug logging, diagnostics, repair issues, known limitations |
-| [Changelog](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/CHANGELOG.md) | changes per release |
+| [Usage](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/usage.md) | options, alarm panel, camera images, event history and videos, live video, pan/tilt, settings and lights, signing in again, removal |
+| [Camera card](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/card.md) | the dashboard card that comes with the integration: install, options, layout, writes |
+| [HomeBase card](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/homebase-card.md) | the HomeBase's dashboard card: security mode, what each device does per mode, arming groups, settings, status |
+| [Supported devices](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/devices.md) | tested models, settings, adding a device, reporting a new device |
+| [Network and security](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/network.md) | LAN, firewall, reverse proxy, browsers, accounts, stored data |
+| [Troubleshooting](https://github.com/abz2much/anker-eufy-integration/blob/main/docs/troubleshooting.md) | debug logging, diagnostics, repair issues, known limitations |
+| [Changelog](https://github.com/abz2much/anker-eufy-integration/blob/main/CHANGELOG.md) | changes per release |
 
 Bugs and feature requests:
-[issues](https://github.com/alaraun/homeassistant-eufy-home-security/issues), with the
+[issues](https://github.com/abz2much/anker-eufy-integration/issues), with the
 integration's diagnostics download attached.
 
 ## Support
@@ -135,6 +136,6 @@ Donated eufy hardware helps develop future features; please get in touch first.
 
 ## License
 
-[MIT](https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/LICENSE). eufy
+[MIT](https://github.com/abz2much/anker-eufy-integration/blob/main/LICENSE). eufy
 and Anker are trademarks of Anker Innovations; the eufy logo identifies the devices this
 project works with.

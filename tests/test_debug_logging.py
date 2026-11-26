@@ -35,14 +35,14 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.eufy_home_security import snapshots
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import snapshots
+from custom_components.anker_eufy_integration.const import (
     CAMERA_KEY,
     CONF_CAMERA_IMAGE,
     CONF_LIVE_SNAPSHOT,
     THUMBNAIL_RETRY_DELAY_SECONDS,
 )
-from custom_components.eufy_home_security.snapshots import SnapshotManager
+from custom_components.anker_eufy_integration.snapshots import SnapshotManager
 
 # The start time of the synthetic camera's newest recording, for the Refresh image traces.
 WANTED_START: Final = "2026-09-16 12:03:00"  # hygiene: ok (synthetic record data)
@@ -54,7 +54,7 @@ ROW_THUMB_PATH: Final = "/zx/hdd_data0/Camera00/20260916/snapshort.jpg"
 ROW_THUMBNAIL: Final = b"\xff\xd8ROW-THUMBNAIL\xff\xd9"
 # A camera serial the fake station does not pair: synthetic, like test_camera's.
 UNPAIRED_SN: Final = "T8160P2000000002"
-_OURS: Final = "custom_components.eufy_home_security"
+_OURS: Final = "custom_components.anker_eufy_integration"
 
 
 def _manager(entry: MockConfigEntry) -> SnapshotManager:

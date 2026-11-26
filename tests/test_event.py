@@ -58,8 +58,8 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.update_coordinator import UpdateFailed
 from pytest_homeassistant.common import MockConfigEntry, async_capture_events
 
-from custom_components.eufy_home_security import detections
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections
+from custom_components.anker_eufy_integration.const import (
     ALARM_EVENT_KEY,
     ARMING_EVENT_KEY,
     DETECTION_EVENT_KEY,
@@ -482,7 +482,7 @@ async def test_routing_events_logs_no_serial(
     ours = [
         record
         for record in caplog.records
-        if record.name.startswith("custom_components.eufy_home_security")
+        if record.name.startswith("custom_components.anker_eufy_integration")
     ]
     for record in ours:
         message = record.getMessage()
@@ -923,7 +923,7 @@ async def test_a_cloud_arming_push_fires_the_arming_event(
 _EN_JSON: Final = (
     Path(__file__).parent.parent
     / "custom_components"
-    / "eufy_home_security"
+    / "anker_eufy_integration"
     / "translations"
     / "en.json"
 )

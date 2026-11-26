@@ -41,8 +41,8 @@ from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant.common import MockConfigEntry
 from pytest_homeassistant.typing import ClientSessionGenerator
 
-from custom_components.eufy_home_security import snapshots
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import snapshots
+from custom_components.anker_eufy_integration.const import (
     CAMERA_KEY,
     CAPTURE_LIVE_IMAGE_KEY,
     CONF_FULL_RESOLUTION_CAPTURE,
@@ -54,7 +54,7 @@ from custom_components.eufy_home_security.const import (
 # A woken camera's resolution climb, as a T8170 streams it.
 _CLIMB: Final = [(1280, 720), (1920, 1080), (2880, 1616)]
 # The integration's own logger: size assertions read only its records.
-_LOGGER: Final = "custom_components.eufy_home_security"
+_LOGGER: Final = "custom_components.anker_eufy_integration"
 _TS_PACKET: Final = 188
 _TS_SYNC: Final = 0x47
 

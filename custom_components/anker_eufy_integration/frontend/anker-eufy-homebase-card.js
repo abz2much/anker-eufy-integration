@@ -1,13 +1,13 @@
 // eufy HomeBase card: a tile-style header with the security mode, a drawing of the HomeBase with its paired
 // devices around it (what each does in a mode), and sections for the devices' actions per mode, arming groups,
 // the station's settings and its status. Data comes from the integration's websocket commands
-// (`eufy_home_security/homebase`, `.../subscribe`, `settings_layout`, `arming_groups/*`, the station-config writes);
+// (`anker_eufy_integration/homebase`, `.../subscribe`, `settings_layout`, `arming_groups/*`, the station-config writes);
 // every write is staged under one ✕ / Set in the title line, and alarm-affecting writes (as the payload marks them)
 // are listed for a confirm first. While the alarm sounds, Disarm and Stop alarm act at once.
 
 const CARD_VERSION = '2026.10.15-5';
 
-const DOMAIN = 'eufy_home_security';
+const DOMAIN = 'anker_eufy_integration';
 const WS = {
   hb: `${DOMAIN}/homebase`, sub: `${DOMAIN}/homebase/subscribe`, table: `${DOMAIN}/homebase/mode_table/set`,
   restart: `${DOMAIN}/homebase/restart`, alarm: `${DOMAIN}/homebase/alarm`, layout: `${DOMAIN}/settings_layout`,
@@ -152,8 +152,8 @@ class EufyHomebaseCard extends HTMLElement {
     this._fk = null;        // focus target after the next render
   }
 
-  static getConfigElement() { return document.createElement('eufy-homebase-card-editor'); }
-  static getStubConfig(hass) { const s = stations(hass); return { type: 'custom:eufy-homebase-card', device_id: s[0] || '' }; }
+  static getConfigElement() { return document.createElement('anker-eufy-homebase-card-editor'); }
+  static getStubConfig(hass) { const s = stations(hass); return { type: 'custom:anker-eufy-homebase-card', device_id: s[0] || '' }; }
 
   setConfig(config) {
     this._config = { ...(config || {}) };
@@ -2095,11 +2095,11 @@ class EufyHomebaseCardEditor extends HTMLElement {
   }
 }
 
-if (!customElements.get('eufy-homebase-card-editor')) customElements.define('eufy-homebase-card-editor', EufyHomebaseCardEditor);
-if (!customElements.get('eufy-homebase-card')) customElements.define('eufy-homebase-card', EufyHomebaseCard);
+if (!customElements.get('anker-eufy-homebase-card-editor')) customElements.define('anker-eufy-homebase-card-editor', EufyHomebaseCardEditor);
+if (!customElements.get('anker-eufy-homebase-card')) customElements.define('anker-eufy-homebase-card', EufyHomebaseCard);
 window.customCards = window.customCards || [];
-if (!window.customCards.some(c => c.type === 'eufy-homebase-card')) {
-  window.customCards.push({ type: 'eufy-homebase-card', name: 'eufy HomeBase',
+if (!window.customCards.some(c => c.type === 'anker-eufy-homebase-card')) {
+  window.customCards.push({ type: 'anker-eufy-homebase-card', name: 'eufy HomeBase',
     description: 'Security mode, what each paired device does per mode, arming groups, the HomeBase settings and status (staged)', preview: false });
 }
-console.info(`%c eufy-homebase-card %c ${CARD_VERSION} `, 'background:#273a60;color:#fff', 'background:#ddd;color:#000');
+console.info(`%c anker-eufy-homebase-card %c ${CARD_VERSION} `, 'background:#273a60;color:#fff', 'background:#ddd;color:#000');

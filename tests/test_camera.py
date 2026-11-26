@@ -50,8 +50,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.eufy_home_security import snapshots
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import snapshots
+from custom_components.anker_eufy_integration.const import (
     ATTR_IMAGE_SOURCE,
     ATTR_VIDEO_CODEC,
     CAMERA_KEY,
@@ -61,7 +61,7 @@ from custom_components.eufy_home_security.const import (
     LIVE_SNAPSHOT_COOLDOWN_SECONDS,
     THUMBNAIL_RETRY_DELAY_SECONDS,
 )
-from custom_components.eufy_home_security.snapshots import SnapshotManager
+from custom_components.anker_eufy_integration.snapshots import SnapshotManager
 
 # The real decoder command, taken before conftest's autouse fixture replaces it.
 REAL_FFMPEG_COMMAND: Final = snapshots.ffmpeg_command
@@ -568,7 +568,9 @@ async def test_an_invalid_record_id_logs_no_error_and_still_reaches_the_trigger_
     await wait_until(lambda: manager.source_for(SYNTHETIC.camera_sn) == "trigger_frame")
     await wait_until(lambda: not manager.busy)
 
-    ours = [r for r in caplog.records if r.name.startswith("custom_components.eufy_home_security")]
+    ours = [
+        r for r in caplog.records if r.name.startswith("custom_components.anker_eufy_integration")
+    ]
     assert not [r for r in ours if r.levelno >= logging.ERROR]
     assert all(str(INVALID_RID) not in r.getMessage() for r in ours)
     assert len(fake_station.history_queries) == 0

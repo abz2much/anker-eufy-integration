@@ -20,8 +20,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security.const import DOMAIN
-from custom_components.eufy_home_security.settings import setting_platform
+from custom_components.anker_eufy_integration.const import DOMAIN
+from custom_components.anker_eufy_integration.settings import setting_platform
 
 # A string setting of the HomeBase 1 (T8001), which the fake station is made to be.
 _MODEL: Final = "T8001"
@@ -69,7 +69,7 @@ async def test_a_string_setting_is_a_text_entity_that_writes_the_string(
     assert fake_station.received[-1]["mChannel"] == _STATION_CHANNEL
     assert state_of(hass, entity_id) == "tone-b"
 
-    from custom_components.eufy_home_security import text
+    from custom_components.anker_eufy_integration import text
 
     assert text.PARALLEL_UPDATES == 1
 

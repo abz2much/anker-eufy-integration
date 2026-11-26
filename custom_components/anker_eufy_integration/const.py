@@ -9,7 +9,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Final
 
-DOMAIN: Final = "eufy_home_security"
+DOMAIN: Final = "anker_eufy_integration"
 
 # The station poll is a safety net, not the main path: guard-mode changes
 # arrive by push. 45 s is the middle of a 30-60 s band.
@@ -117,7 +117,7 @@ ISSUE_MEDIA_NOT_PERSISTENT: Final = "media_not_persistent"
 MEDIA_DOCS_URL: Final = "https://www.home-assistant.io/more-info/local-media/setup-media/"
 # The integration's firewall notes (the lan_reply_blocked repair's link).
 FIREWALL_DOCS_URL: Final = (
-    "https://github.com/alaraun/homeassistant-eufy-home-security/blob/main/docs/network.md#firewall"
+    "https://github.com/abz2much/anker-eufy-integration/blob/main/docs/network.md#firewall"
 )
 # The first probe waits for the P2P starts to settle and keeps setup itself cloud-free.
 SESSION_PROBE_FIRST_DELAY_SECONDS: Final = 60
@@ -195,7 +195,7 @@ PERSON_DETECTED_KEY: Final = "person_detected"
 PET_DETECTED_KEY: Final = "pet_detected"
 VEHICLE_DETECTED_KEY: Final = "vehicle_detected"
 # The bus event for every push no entity consumes.
-EVENT_EUFY_HOME_SECURITY: Final = "eufy_home_security_event"
+EVENT_EUFY_HOME_SECURITY: Final = "anker_eufy_integration_event"
 # The detection's own time as an ISO timestamp, never its arrival time.
 ATTR_TRIGGERED_AT: Final = "triggered_at"
 # The name eufy recognised, on an identified person only.
@@ -580,8 +580,8 @@ CAMERA_FRAME_INTERVAL_SECONDS: Final = 30
 # The route the stream view answers on. The camera serial in the path is a deliberate
 # exception to the redaction rule (the library's guide advises a random token): the
 # endpoint serves loopback peers only, go2rtc's log is local, and the URL is never logged.
-STREAM_URL_PATH: Final = "/api/eufy_home_security/stream/{device_sn}"
-STREAM_VIEW_NAME: Final = "api:eufy_home_security:stream"
+STREAM_URL_PATH: Final = "/api/anker_eufy_integration/stream/{device_sn}"
+STREAM_VIEW_NAME: Final = "api:anker_eufy_integration:stream"
 # The stream URL's query key for the instance secret; the stream component redacts it.
 STREAM_AUTH_PARAM: Final = "auth"
 # Headers a reverse proxy adds; a stream request carrying any of them is refused.

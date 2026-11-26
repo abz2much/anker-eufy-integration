@@ -1,4 +1,4 @@
-"""Fork: the HomeBase "Restart" button (gap 8).
+"""The HomeBase "Restart" button.
 
 The library restarts a station with ``Station.async_restart`` (1034). A restart is
 alarm-affecting (the station does not alarm while it boots), so the button is disabled
@@ -32,7 +32,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import errors
+from custom_components.anker_eufy_integration import errors
 
 _RESTART_KEY: Final = "restart"
 _HUB_REBOOT: Final = 1034
@@ -74,7 +74,7 @@ async def test_the_homebase_gets_a_restart_button_disabled_under_configuration(
 
     registry = er.async_get(hass)
     entity_id = registry.async_get_entity_id(
-        BUTTON_DOMAIN, "eufy_home_security", _restart_unique_id()
+        BUTTON_DOMAIN, "anker_eufy_integration", _restart_unique_id()
     )
     assert entity_id is not None
     registered = registry.async_get(entity_id)
@@ -176,7 +176,7 @@ async def test_no_restart_button_where_the_library_cannot_restart_the_station(
 
     registry = er.async_get(hass)
     assert (
-        registry.async_get_entity_id(BUTTON_DOMAIN, "eufy_home_security", _restart_unique_id())
+        registry.async_get_entity_id(BUTTON_DOMAIN, "anker_eufy_integration", _restart_unique_id())
         is None
     )
     await _unload(hass, entry)

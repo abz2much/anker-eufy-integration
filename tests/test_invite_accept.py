@@ -40,9 +40,9 @@ from pytest_homeassistant.common import MockConfigEntry
 from pytest_homeassistant.components.diagnostics import get_diagnostics_for_config_entry
 from pytest_homeassistant.typing import ClientSessionGenerator
 
-from custom_components.eufy_home_security import errors, runtime
-from custom_components.eufy_home_security.const import DOMAIN
-from custom_components.eufy_home_security.repairs import PendingInvitesFix
+from custom_components.anker_eufy_integration import errors, runtime
+from custom_components.anker_eufy_integration.const import DOMAIN
+from custom_components.anker_eufy_integration.repairs import PendingInvitesFix
 
 # Synthetic invitations as the cloud lists them.
 _HOME_NAME: Final = "Synthetic Cottage"

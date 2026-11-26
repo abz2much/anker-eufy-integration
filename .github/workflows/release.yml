@@ -39,7 +39,7 @@ jobs:
         env:
           TAG: ${{ github.ref_name }}
         run: |
-          version=$(jq -r .version custom_components/eufy_home_security/manifest.json)
+          version=$(jq -r .version custom_components/anker_eufy_integration/manifest.json)
           test "v$version" = "$TAG" || { echo "tag $TAG != manifest.json version $version"; exit 1; }
       - name: Release notes from CHANGELOG.md
         env:

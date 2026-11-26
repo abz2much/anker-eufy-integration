@@ -15,8 +15,8 @@ from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 
-from custom_components.eufy_home_security import runtime
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration import runtime
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 CODE = "123456"
 NEW_PASSWORD = "synthetic-new-password"

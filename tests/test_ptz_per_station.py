@@ -11,8 +11,8 @@ from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security import detections
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections
+from custom_components.anker_eufy_integration.const import (
     DEFAULT_PRESET_KEY,
     DOMAIN,
     LIVE_PRESET_KEY,

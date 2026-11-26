@@ -79,8 +79,8 @@ from homeassistant.exceptions import HomeAssistantError
 from pytest_homeassistant.common import MockConfigEntry
 from pytest_homeassistant.typing import ClientSessionGenerator
 
-from custom_components.eufy_home_security import detections, errors, streaming
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections, errors, streaming
+from custom_components.anker_eufy_integration.const import (
     CAMERA_KEY,
     CAPTURE_LIVE_IMAGE_KEY,
     CONF_LIVE_SNAPSHOT,
@@ -101,7 +101,7 @@ LIVE_STOP: Final = 1004
 TS_PACKET: Final = 188
 TS_SYNC: Final = 0x47
 # The integration's own logger: every assertion about records reads only this one.
-LOGGER: Final = "custom_components.eufy_home_security"
+LOGGER: Final = "custom_components.anker_eufy_integration"
 # The debug line of a live view yielding the media slot, after the camera.
 YIELD_REASON: Final = "aborting, a media operation needs the station's one media slot"
 # The host a test TLS certificate names: Home Assistant's domain, never 127.0.0.1.
@@ -177,7 +177,7 @@ def _stream_routes(hass: HomeAssistant) -> int:
     return sum(
         1
         for resource in hass.http.app.router.resources()
-        if str(resource.canonical).startswith("/api/eufy_home_security/stream/")
+        if str(resource.canonical).startswith("/api/anker_eufy_integration/stream/")
     )
 
 
@@ -1267,7 +1267,7 @@ def test_a_loopback_peer_with_the_secret_is_allowed(hass: HomeAssistant, peer: s
     registry = streaming.stream_registry(hass)
     view = streaming.EufyStreamView(registry)
     request = make_mocked_request(
-        "GET", f"/api/eufy_home_security/stream/x?auth={registry.secret}", transport=_Peer(peer)
+        "GET", f"/api/anker_eufy_integration/stream/x?auth={registry.secret}", transport=_Peer(peer)
     )
     assert view._refusal(request) is None
 
@@ -1478,7 +1478,7 @@ async def test_a_codec_change_end_is_logged_as_a_reconnect_and_the_rejoin_wakes_
     broadcast = StreamBroadcast(open_stream, settle=0.0, fill_audio=False, name="test")
     registry.broadcasts[SYNTHETIC.camera_sn] = broadcast
     view = streaming.EufyStreamView(registry)
-    path = f"/api/eufy_home_security/stream/x?auth={registry.secret}"
+    path = f"/api/anker_eufy_integration/stream/x?auth={registry.secret}"
 
     def no_failure(err: BaseException) -> str:
         raise AssertionError(f"a codec-change end classified as a failure: {err!r}")

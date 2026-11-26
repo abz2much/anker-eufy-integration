@@ -61,9 +61,9 @@ from homeassistant.helpers import issue_registry as ir
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.eufy_home_security import async_unload_entry, errors, runtime
-from custom_components.eufy_home_security.config_flow import EufyHomeSecurityConfigFlow
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import async_unload_entry, errors, runtime
+from custom_components.anker_eufy_integration.config_flow import EufyHomeSecurityConfigFlow
+from custom_components.anker_eufy_integration.const import (
     DOMAIN,
     EXC_AUTH_FAILED,
     GUARD_MODE_KEY,

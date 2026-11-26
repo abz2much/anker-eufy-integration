@@ -3,7 +3,7 @@
 Files land under the ``local`` media directory (``/media`` in a container, else
 ``<config>/media``), so **Media > My media** browses them without any extra code:
 
-    eufy_home_security/<camera name>/<YYYY-MM-DD_HH-MM-SS>_<camera name>_<kind>.jpg
+    anker_eufy_integration/<camera name>/<YYYY-MM-DD_HH-MM-SS>_<camera name>_<kind>.jpg
 
 ``<camera name>`` is the device's name in Home Assistant (a user's rename included) made
 file-safe, with ``_<last 4 of serial>`` added when two of the entry's cameras clean to the

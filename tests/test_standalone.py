@@ -58,8 +58,8 @@ from pytest_homeassistant.common import (
     async_fire_time_changed,
 )
 
-from custom_components.eufy_home_security import diagnostics, errors, history, snapshots
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import diagnostics, errors, history, snapshots
+from custom_components.anker_eufy_integration.const import (
     BATTERY_KEY,
     CAMERA_KEY,
     CONF_CAMERA_IMAGE,
@@ -78,7 +78,7 @@ from custom_components.eufy_home_security.const import (
     STANDALONE_IMAGE_RETRY_DELAY_SECONDS,
     STANDALONE_THUMBNAIL_DELAY_SECONDS,
 )
-from custom_components.eufy_home_security.settings import setting_platform
+from custom_components.anker_eufy_integration.settings import setting_platform
 
 SN = "T8170P0000000001"
 
@@ -217,7 +217,7 @@ async def test_a_standalone_station_sets_up_from_cache_without_waking(
 async def test_a_standalone_station_has_one_of_each_entity_and_no_duplicate_ids(
     hass: HomeAssistant, seed_warm_cache, built_clients, fake_station, fake_cloud, caplog
 ):
-    caplog.set_level(10, logger="custom_components.eufy_home_security")
+    caplog.set_level(10, logger="custom_components.anker_eufy_integration")
     entry = await set_up_warm(hass, seed_warm_cache)
 
     ent_reg = er.async_get(hass)
@@ -342,14 +342,14 @@ async def test_a_standalone_camera_lists_no_station_recordings(
 async def test_a_detection_naming_the_standalone_station_reaches_its_entities(
     hass: HomeAssistant, seed_warm_cache, built_clients, fake_station, fake_cloud, caplog
 ):
-    caplog.set_level(10, logger="custom_components.eufy_home_security")
+    caplog.set_level(10, logger="custom_components.anker_eufy_integration")
     entry = await set_up_warm(hass, seed_warm_cache)
-    events = hass.data.setdefault("eufy_home_security_event_tests", [])
+    events = hass.data.setdefault("anker_eufy_integration_event_tests", [])
 
     def capture(ev):
         events.append(ev)
 
-    hass.bus.async_listen("eufy_home_security_event", capture)
+    hass.bus.async_listen("anker_eufy_integration_event", capture)
 
     router = entry.runtime_data.router
     router.handle(detection_event(DetectionType.MOTION, t_ms=now_ms(), device_sn=SN, station_sn=SN))
@@ -403,13 +403,13 @@ async def test_a_cloud_detection_of_the_standalone_camera_reaches_its_entities(
     follows (a command, so it wakes the camera); the fake has no such row, and that
     raises nothing.
     """
-    caplog.set_level(10, logger="custom_components.eufy_home_security")
+    caplog.set_level(10, logger="custom_components.anker_eufy_integration")
     entry = await set_up_warm(hass, seed_warm_cache)
     person_id = entity_id_for(hass, "binary_sensor", SN, PERSON_DETECTED_KEY)
     det_id = entity_id_for(hass, "event", SN, DETECTION_EVENT_KEY)
     person_states = record_states(hass, person_id)
     det_states = record_states(hass, det_id)
-    fallback = async_capture_events(hass, "eufy_home_security_event")
+    fallback = async_capture_events(hass, "anker_eufy_integration_event")
     inner = {
         "msg_type": 18,
         "event_type": int(DetectionType.PERSON),
@@ -703,7 +703,7 @@ async def test_a_live_capture_that_fails_while_the_session_is_replaced_names_the
     built_clients[-1].cache.set_replaced()
     fake_station.answer_conn_init = False
 
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await hass.services.async_call(
         "button",
@@ -724,7 +724,8 @@ async def test_a_live_capture_that_fails_while_the_session_is_replaced_names_the
     error_records = [
         r
         for r in caplog.records
-        if r.levelno >= logging.ERROR and r.name.startswith("custom_components.eufy_home_security")
+        if r.levelno >= logging.ERROR
+        and r.name.startswith("custom_components.anker_eufy_integration")
     ]
     assert not error_records
 
@@ -954,7 +955,7 @@ async def test_the_t8170_streaming_quality_write_restarts_its_live_view(
     select_state = hass.states.get(select_id)
     assert select_state is not None
     target = next(o for o in select_state.attributes["options"] if o != current)
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
     await hass.services.async_call(
         "select", "select_option", {"entity_id": select_id, "option": target}, blocking=True
     )
@@ -1173,7 +1174,7 @@ async def test_in_hd_modes_a_cloud_detection_shows_a_live_keyframe_as_its_hd_ima
     the climb, decoded and shown as the detection's HD image at the detection's time,
     and saved as its still. In hd the delayed thumbnail is fetched too and saved beside
     it, never shown over it; hd_only fetches no thumbnail."""
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
     entry = await set_up_warm(hass, seed_warm_cache, options={CONF_CAMERA_IMAGE: mode})
     manager = entry.runtime_data.snapshots
     fetches = _count_fetches(monkeypatch)
@@ -1550,7 +1551,7 @@ async def test_a_still_older_than_the_detection_is_retried_once_later(
 async def test_a_retry_that_finds_an_older_still_again_gives_up_and_keeps_the_image(
     hass: HomeAssistant, seed_warm_cache, built_clients, fake_station, fake_cloud, caplog
 ):
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
     entry = await set_up_warm(hass, seed_warm_cache, options=_thumbnail_mode())
     manager = entry.runtime_data.snapshots
     first = now_ms() - 120_000
@@ -1581,7 +1582,7 @@ async def test_a_later_detections_still_is_given_up_at_once(
     hass: HomeAssistant, seed_warm_cache, built_clients, fake_station, fake_cloud, caplog
 ):
     """The camera's newest still is a later detection's: nothing shown, no retry."""
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
     entry = await set_up_warm(hass, seed_warm_cache, options=_thumbnail_mode())
     manager = entry.runtime_data.snapshots
     t = now_ms() - 120_000

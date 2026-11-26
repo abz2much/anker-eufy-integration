@@ -68,8 +68,8 @@ from pytest_homeassistant.common import (
     async_fire_time_changed,
 )
 
-from custom_components.eufy_home_security import detections, errors, runtime
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections, errors, runtime
+from custom_components.anker_eufy_integration.const import (
     CONF_SCAN_REGIONS,
     DETECTION_EVENT_KEY,
     DOMAIN,
@@ -87,7 +87,7 @@ _NOTICE_KEYS = ("credentials_refreshed", "credentials_refreshed_login")
 _OTHER_ACCOUNT_ID: Final = "f" * 40
 _MISMATCH_KEY: Final = "account_id_mismatch"
 # The integration's and the library's own loggers.
-_OUR_LOGGERS: Final = ("custom_components.eufy_home_security", "eufy_home_security")
+_OUR_LOGGERS: Final = ("custom_components.anker_eufy_integration", "eufy_home_security")
 # The library's one WARNING per connection when a station stamps another account.
 _MISMATCH_WARNING: Final = "stamps its records with another account id"
 # The issue registry's storage document.
@@ -478,7 +478,7 @@ async def test_no_repair_issue_names_a_serial_or_an_owner_id(
     rejected_key: None,
 ) -> None:
     """Issue ids, data, placeholders and the integration's log carry no serial or secret."""
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
     seed_warm_cache()
     entry = add_entry(hass)
     await _load_with_rejected_key(hass, entry)
@@ -502,7 +502,7 @@ async def test_no_repair_issue_names_a_serial_or_an_owner_id(
     own_lines = [
         record.getMessage()
         for record in caplog.records
-        if record.name.startswith("custom_components.eufy_home_security")
+        if record.name.startswith("custom_components.anker_eufy_integration")
     ]
     assert own_lines, "the integration logged nothing; the log check would pass vacuously"
     for line in own_lines:

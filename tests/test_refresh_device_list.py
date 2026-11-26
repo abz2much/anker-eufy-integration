@@ -26,8 +26,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security import errors
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import errors
+from custom_components.anker_eufy_integration.const import (
     CONF_SCAN_REGIONS,
     DOMAIN,
     REFRESH_DEVICE_LIST_KEY,

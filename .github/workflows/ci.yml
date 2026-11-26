@@ -27,7 +27,7 @@ jobs:
         run: |
           uv export --frozen --all-groups --no-emit-package eufy-home-security -o "$RUNNER_TEMP/requirements.txt"
           uv pip sync "$RUNNER_TEMP/requirements.txt"
-          uv pip install --no-deps "$(jq -r '.requirements[0]' custom_components/eufy_home_security/manifest.json)"
+          uv pip install --no-deps "$(jq -r '.requirements[0]' custom_components/anker_eufy_integration/manifest.json)"
           uv pip check
       - name: ruff check
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}

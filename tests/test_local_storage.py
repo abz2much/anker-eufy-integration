@@ -17,7 +17,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration.const import (
     DOMAIN,
     EMMC_FREE_KEY,
     EMMC_PROBLEM_KEY,
@@ -27,11 +27,11 @@ from custom_components.eufy_home_security.const import (
     EMMC_USED_SPACE_KEY,
     EMMC_WEAR_KEY,
 )
-from custom_components.eufy_home_security.sensor import EMMC_STATE_OPTIONS, MEDIUM_NOT_USABLE
+from custom_components.anker_eufy_integration.sensor import EMMC_STATE_OPTIONS, MEDIUM_NOT_USABLE
 
 SN = "T8410P0000000001"
 CHANNEL = 0
-_STORAGE_LOGGER = "custom_components.eufy_home_security.storage"
+_STORAGE_LOGGER = "custom_components.anker_eufy_integration.storage"
 
 
 def _indoor_entry() -> dict[str, Any]:

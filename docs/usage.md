@@ -246,11 +246,11 @@ and live view work in both codecs.
 ## Event history
 
 Every camera and preset image is also saved to the media folder, under **Media → My
-media → eufy_home_security**, and so are event videos and recorded clips:
+media → anker_eufy_integration**, and so are event videos and recorded clips:
 
 ```
-<media>/eufy_home_security/<camera>/<date>_<time>_<camera>_<kind>.jpg
-<media>/eufy_home_security/<camera>/<date>_<time>_<camera>_<kind>.mp4
+<media>/anker_eufy_integration/<camera>/<date>_<time>_<camera>_<kind>.jpg
+<media>/anker_eufy_integration/<camera>/<date>_<time>_<camera>_<kind>.mp4
 ```
 
 - `<camera>`: the camera's name in Home Assistant, made file-safe. Two cameras whose
@@ -307,8 +307,8 @@ from then on is copied into the event history as an MP4:
 
 Whatever the option, the recordings a HomeBase keeps for a camera are listed on
 request (the camera card's **Station** list, over the websocket commands
-`eufy_home_security/recordings`, `eufy_home_security/recordings/play` and
-`eufy_home_security/recordings/fetch`). Each can be played or saved:
+`anker_eufy_integration/recordings`, `anker_eufy_integration/recordings/play` and
+`anker_eufy_integration/recordings/fetch`). Each can be played or saved:
 
 - **Play** streams the recording to the viewer and saves nothing. Home Assistant
   repackages the recording's video and sound into HLS in memory (no re-encoding,
@@ -355,7 +355,7 @@ the event history:
 - With a response asked for, it returns:
 
   ```yaml
-  media_content_id: media-source://media_source/local/eufy_home_security/Front_door/2026-10-02_08-35-59_Front_door_live.mp4
+  media_content_id: media-source://media_source/local/anker_eufy_integration/Front_door/2026-10-02_08-35-59_Front_door_live.mp4
   duration: 30.0   # seconds, by the camera's clock
   complete: true   # false when the stream ended before the duration
   ```
@@ -408,7 +408,7 @@ Which cameras get these: [devices.md](devices.md#pan-tilt-presets-and-zoom).
 | `eufy_home_security.zoom` | `direction`: `in`, `out` |
 | `eufy_home_security.save_preset` | optional `preset` (overwrite a slot) and `make_default`; returns `{"preset": n}` |
 | `eufy_home_security.delete_preset` | clear slot `preset` |
-| `eufy_home_security/preset_image` (websocket) | `entity_id`, `preset`, `image` (base64 JPEG, at most 2 MB): keeps the picture as that set slot's **Preset n image**, as a capture does; no camera I/O. The camera card's **Save view** sends its frame of the live video here |
+| `anker_eufy_integration/preset_image` (websocket) | `entity_id`, `preset`, `image` (base64 JPEG, at most 2 MB): keeps the picture as that set slot's **Preset n image**, as a capture does; no camera I/O. The camera card's **Save view** sends its frame of the live video here |
 
 - Every press and action wakes the camera.
 - A saved view's slot shows no image until it is captured, unless the camera card

@@ -1257,7 +1257,7 @@ wheels = [
 ]
 
 [[package]]
-name = "homeassistant-eufy-home-security"
+name = "anker-eufy-integration"
 version = "0.0.0"
 source = { virtual = "." }
 

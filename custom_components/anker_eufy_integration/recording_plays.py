@@ -82,7 +82,7 @@ PLAY_MAX_BYTES: Final = 96 * 1024 * 1024
 # The library writes at the recording's own pace: a playlist growing faster than it
 # plays makes Home Assistant's player catch up at up to twice the speed.
 PLAY_REALTIME: Final = True
-RECORDING_URL: Final = "/api/eufy_home_security/recording/{token}/{name}"
+RECORDING_URL: Final = "/api/anker_eufy_integration/recording/{token}/{name}"
 RECORDING_VIEW_NAME: Final = f"api:{DOMAIN}:recording_hls"
 _PLAYLIST: Final = "playlist.m3u8"
 # One spelling per file: ASCII digits, no leading zero.

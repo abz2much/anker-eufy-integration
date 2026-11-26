@@ -32,15 +32,15 @@ from homeassistant.setup import async_setup_component
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.eufy_home_security import (
+from custom_components.anker_eufy_integration import (
     VariantReset,
     repairs,
     variant_mark,
     variant_reset_plan,
     variant_reset_summary,
 )
-from custom_components.eufy_home_security.const import ATTR_IN_USE, DOMAIN
-from custom_components.eufy_home_security.settings import SettingEntitySpec, setting_specs
+from custom_components.anker_eufy_integration.const import ATTR_IN_USE, DOMAIN
+from custom_components.anker_eufy_integration.settings import SettingEntitySpec, setting_specs
 
 AI_EMPOWER_PARAM = 1299
 PRIMARY = "detection_type_set"

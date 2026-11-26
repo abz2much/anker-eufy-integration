@@ -175,8 +175,8 @@ instance 2.
 | Data | Location | Removed |
 |---|---|---|
 | eufy session, password, device keys, cloud push registration | Home Assistant's `.storage` | on removal of the integration (the sign-in hold-off is kept) |
-| Last image per camera and preset | `<config>/.cache/eufy_home_security/` (not in backups) | on removal |
-| Event history images and videos | `<media>/eufy_home_security/` | by the retention option; kept on removal |
+| Last image per camera and preset | `<config>/.cache/anker_eufy_integration/` (not in backups) | on removal |
+| Event history images and videos | `<media>/anker_eufy_integration/` | by the retention option; kept on removal |
 | Which recordings were copied (event videos and the card's Station list), and when event videos were switched on | Home Assistant's `.storage` | by the retention option; on removal |
 
 Event history images and videos are visible to everyone who can open Home Assistant's

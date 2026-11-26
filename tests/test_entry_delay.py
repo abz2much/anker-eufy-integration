@@ -59,13 +59,13 @@ from pytest_homeassistant.common import (
     async_fire_time_changed_exact,
 )
 
-from custom_components.eufy_home_security import detections
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections
+from custom_components.anker_eufy_integration.const import (
     ATTR_DELAY_SECONDS,
     ATTR_DELAY_UNTIL,
     ATTR_VALUE_SOURCE,
 )
-from custom_components.eufy_home_security.coordinator import ModeRead
+from custom_components.anker_eufy_integration.coordinator import ModeRead
 
 DOOR_SN: Final = "T8900P0000000001"
 _DOOR_CHANNEL: Final = 2

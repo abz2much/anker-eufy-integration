@@ -46,8 +46,8 @@ from homeassistant.helpers import issue_registry as ir
 from homeassistant.setup import async_setup_component
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import diagnostics, errors, runtime
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import diagnostics, errors, runtime
+from custom_components.anker_eufy_integration.const import (
     CONF_CLOUD_PUSH,
     CONF_SESSION_PROBE,
     DOMAIN,

@@ -55,7 +55,7 @@ from eufy_home_security import (
     redact_serial,
 )
 
-from . import detections, errors, fork_restart, presets, ptz, runtime, stale_devices
+from . import detections, errors, presets, ptz, restart_button, runtime, stale_devices
 from .const import (
     CAPTURE_LIVE_IMAGE_KEY,
     CAPTURE_PRESET_KEY,
@@ -131,11 +131,11 @@ async def async_setup_entry(
     manager = entry.runtime_data.snapshots
     preset_manager = entry.runtime_data.presets
     entities: list[ButtonEntity] = [EufyRefreshDeviceListButton(entry)]
-    # Fork: the HomeBase "Restart" button (fork_restart.py).
+    # The HomeBase "Restart" button (restart_button.py).
     entities.extend(
-        fork_restart.EufyRestartButton(coordinator)
+        restart_button.EufyRestartButton(coordinator)
         for coordinator in entry.runtime_data.coordinators.values()
-        if fork_restart.has_restart(coordinator)
+        if restart_button.has_restart(coordinator)
     )
     entities.extend(
         EufyCameraButton(coordinator, device_sn, manager, preset_manager, description)

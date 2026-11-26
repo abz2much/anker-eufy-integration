@@ -2,7 +2,7 @@
 
 Three websocket commands and one view, registered once per Home Assistant instance:
 
-- ``eufy_home_security/recordings`` ``{entity_id, days?, limit?, before?, day?}`` lists the
+- ``anker_eufy_integration/recordings`` ``{entity_id, days?, limit?, before?, day?}`` lists the
   camera's recordings on the station's disk, newest first: start, end, length, size,
   whether it has settled, the kind of its detection's still when known, the media id
   of its MP4 once stored, and a signed URL of its thumbnail. ``days`` is the window
@@ -19,7 +19,7 @@ Three websocket commands and one view, registered once per Home Assistant instan
   for ``LIST_CACHE_SECONDS`` per camera and arguments, and identical queries in flight
   share one. A standalone camera keeps no recordings on a station: ``supported`` False,
   nothing is queried.
-- ``eufy_home_security/recordings/fetch`` ``{entity_id, ref}`` stores one
+- ``anker_eufy_integration/recordings/fetch`` ``{entity_id, ref}`` stores one
   recording in the event history exactly as the event-videos sync does
   (``recordings.StoredRecordings``: same name, same Store, so the sync never fetches
   it again and the retention covers it) and returns its ``media_content_id`` and a
@@ -27,11 +27,11 @@ Three websocket commands and one view, registered once per Home Assistant instan
   file still exists returns without a download. The station plays it off its disk: no
   camera is woken. A ``ref`` no fresh listing holds is looked up on the station
   (``Station.async_history_record_by_ref``).
-- ``eufy_home_security/recordings/play`` ``{entity_id, ref}`` (a subscription) plays one
+- ``anker_eufy_integration/recordings/play`` ``{entity_id, ref}`` (a subscription) plays one
   settled recording straight to a viewer as fMP4 HLS made in memory and saves nothing
   (``recording_plays.RecordingPlays``): an empty result, then the playlist URL as an
   event, then one event ends the play.
-- ``/api/eufy_home_security/recording_thumb/<entity id>/<ref>`` serves a
+- ``/api/anker_eufy_integration/recording_thumb/<entity id>/<ref>`` serves a
   recording's still off the station's disk as ``image/jpeg``, behind Home Assistant's
   auth (the listing hands out signed paths), kept in a small in-memory LRU; 404 for a
   still that is obfuscated or absent.

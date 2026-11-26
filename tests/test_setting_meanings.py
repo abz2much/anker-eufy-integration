@@ -49,9 +49,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry, async_capture_events
 
-from custom_components.eufy_home_security import settings
-from custom_components.eufy_home_security.const import DOMAIN
-from custom_components.eufy_home_security.settings import (
+from custom_components.anker_eufy_integration import settings
+from custom_components.anker_eufy_integration.const import DOMAIN
+from custom_components.anker_eufy_integration.settings import (
     MEANING_TYPING,
     EntityTyping,
     entity_typing,
@@ -87,7 +87,7 @@ _D = BinarySensorDeviceClass
 _EN_PATH: Final = (
     Path(__file__).resolve().parent.parent
     / "custom_components"
-    / "eufy_home_security"
+    / "anker_eufy_integration"
     / "translations"
     / "en.json"
 )

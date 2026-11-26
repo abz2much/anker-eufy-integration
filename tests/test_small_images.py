@@ -30,9 +30,9 @@ from PIL import Image
 from pytest_homeassistant.common import MockConfigEntry
 from pytest_homeassistant.typing import ClientSessionGenerator
 
-from custom_components.eufy_home_security import small_images, still_cache
-from custom_components.eufy_home_security.const import CAMERA_KEY, LAST_EVENT_IMAGE_KEY
-from custom_components.eufy_home_security.snapshots import SnapshotManager
+from custom_components.anker_eufy_integration import small_images, still_cache
+from custom_components.anker_eufy_integration.const import CAMERA_KEY, LAST_EVENT_IMAGE_KEY
+from custom_components.anker_eufy_integration.snapshots import SnapshotManager
 
 FULL_WIDTH: Final = 960
 FULL_HEIGHT: Final = 540
@@ -105,7 +105,7 @@ async def test_a_new_still_gets_a_small_copy_on_disk_and_the_picture_points_at_i
     state = hass.states.get(_camera_id(hass))
     assert state is not None
     picture = state.attributes["entity_picture"]
-    assert picture.startswith(f"/api/eufy_home_security/image/{_camera_id(hass)}/small?v=")
+    assert picture.startswith(f"/api/anker_eufy_integration/image/{_camera_id(hass)}/small?v=")
     assert f"token={state.attributes['access_token']}" in picture
 
     await _show(hass, entry, fake_station, jpeg(FULL_WIDTH, FULL_HEIGHT, (200, 30, 30)))
@@ -170,8 +170,12 @@ async def test_the_small_image_view_serves_by_token_and_caches_the_current_versi
     assert (await anonymous.get(f"{path}?token=wrong")).status == 403
     logged_in = await hass_client()
     assert (await logged_in.get(path)).status == 200
-    assert (await logged_in.get("/api/eufy_home_security/image/camera.nope/small")).status == 404
-    assert (await anonymous.get("/api/eufy_home_security/image/camera.nope/small")).status == 401
+    assert (
+        await logged_in.get("/api/anker_eufy_integration/image/camera.nope/small")
+    ).status == 404
+    assert (
+        await anonymous.get("/api/anker_eufy_integration/image/camera.nope/small")
+    ).status == 401
     assert await hass.config_entries.async_unload(entry.entry_id)
     await hass.async_block_till_done()
 
@@ -215,7 +219,7 @@ async def test_a_still_that_does_not_decode_serves_the_full_image(
     assert not _small_file(hass, entry).exists()
 
     client = await hass_client()
-    response = await client.get(f"/api/eufy_home_security/image/{_camera_id(hass)}/small")
+    response = await client.get(f"/api/anker_eufy_integration/image/{_camera_id(hass)}/small")
     assert response.status == 200
     assert await response.read() == image
     assert await hass.config_entries.async_unload(entry.entry_id)
@@ -237,7 +241,7 @@ async def test_the_last_event_image_entity_shares_the_cameras_small_copy(
     state = hass.states.get(image_id)
     assert state is not None
     picture = state.attributes["entity_picture"]
-    assert picture.startswith(f"/api/eufy_home_security/image/{image_id}/small?v=")
+    assert picture.startswith(f"/api/anker_eufy_integration/image/{image_id}/small?v=")
     assert f"token={state.attributes['access_token']}" in picture
     response = await (await hass_client_no_auth()).get(picture)
     assert response.status == 200

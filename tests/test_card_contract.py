@@ -33,9 +33,11 @@ from eufy_home_security.devices.model_settings import (
     settings_of,
 )
 
-from custom_components.eufy_home_security import card, const, preset_upload, station_recordings
+from custom_components.anker_eufy_integration import card, const, preset_upload, station_recordings
 
-_ROOT: Final = Path(__file__).resolve().parent.parent / "custom_components" / "eufy_home_security"
+_ROOT: Final = (
+    Path(__file__).resolve().parent.parent / "custom_components" / "anker_eufy_integration"
+)
 _SOURCE: Final = card.CARD_FILE.read_text(encoding="utf-8")
 _STRINGS: Final = json.loads((_ROOT / "strings.json").read_text(encoding="utf-8"))
 
@@ -151,7 +153,7 @@ def test_every_power_reading_key_the_card_looks_for_is_built() -> None:
 
 
 def test_every_action_the_card_calls_is_registered() -> None:
-    """``eufy_home_security.<action>`` calls name actions in services.yaml."""
+    """``anker_eufy_integration.<action>`` calls name actions in services.yaml."""
     called = set(re.findall(r"_(?:move|ptz)\([^,]+, '([a-z_]+)'", _SOURCE))
     assert called
     services = yaml.safe_load((_ROOT / "services.yaml").read_text(encoding="utf-8"))
@@ -171,7 +173,7 @@ def test_the_record_action_the_card_calls_is_registered() -> None:
 def _registered_ws_types() -> set[str]:
     """Websocket command types this integration registers (literal or ``f"{DOMAIN}/…"``)."""
     integration = "\n".join(p.read_text(encoding="utf-8") for p in _ROOT.glob("*.py"))
-    registered = set(re.findall(r"[\"'](eufy_home_security/[a-z_/]+)[\"']", integration))
+    registered = set(re.findall(r"[\"'](anker_eufy_integration/[a-z_/]+)[\"']", integration))
     registered |= {
         f"{const.DOMAIN}/{suffix}"
         for suffix in re.findall(r"f[\"']\{DOMAIN\}/([a-z_/]+)[\"']", integration)
@@ -181,7 +183,7 @@ def _registered_ws_types() -> set[str]:
 
 def test_the_settings_layout_command_the_card_sends_is_registered() -> None:
     """Settings tabs come from ``LAYOUT_WS``, sent as ``{ type: LAYOUT_WS, device_id }``."""
-    assert _names_ws("LAYOUT_WS") == "eufy_home_security/settings_layout"
+    assert _names_ws("LAYOUT_WS") == "anker_eufy_integration/settings_layout"
     assert _names_ws("LAYOUT_WS") in _registered_ws_types()
     sent = re.findall(r"\{ type: LAYOUT_WS, ([^}]*) \}", _SOURCE)
     assert sent, "the card's layout request"
@@ -208,7 +210,7 @@ def test_the_station_recording_commands_the_card_sends_are_registered() -> None:
     ``STATION_FETCH_WS``); the integration must register that same type string.
     """
     sent = {_names_ws(name) for name in ("STATION_WS", "STATION_FETCH_WS")}
-    assert sent == {"eufy_home_security/recordings", "eufy_home_security/recordings/fetch"}
+    assert sent == {"anker_eufy_integration/recordings", "anker_eufy_integration/recordings/fetch"}
     missing = sorted(sent - _registered_ws_types())
     assert not missing, f"the card sends websocket commands nothing registers: {missing}"
 
@@ -251,7 +253,7 @@ def test_the_station_play_command_the_card_subscribes_to_is_registered() -> None
 
     Fails until the integration's play command is merged with the card.
     """
-    assert _names_ws("STATION_PLAY_WS") == "eufy_home_security/recordings/play"
+    assert _names_ws("STATION_PLAY_WS") == "anker_eufy_integration/recordings/play"
     assert _names_ws("STATION_PLAY_WS") in _registered_ws_types()
 
 

@@ -47,8 +47,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import errors, history
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import errors, history
+from custom_components.anker_eufy_integration.const import (
     ATTR_COMPLETE,
     ATTR_DURATION,
     ATTR_MEDIA_CONTENT_ID,
@@ -63,7 +63,7 @@ from custom_components.eufy_home_security.const import (
 
 CAMERA_NAME: Final = "Front"
 # The integration's own logger.
-LOGGER: Final = "custom_components.eufy_home_security"
+LOGGER: Final = "custom_components.anker_eufy_integration"
 TS_BYTES: Final = b"\x47" + b"\x00" * 187
 
 

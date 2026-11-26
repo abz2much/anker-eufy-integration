@@ -44,8 +44,8 @@ from homeassistant.const import EntityCategory, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security.const import DOMAIN, FIRMWARE_KEY
-from custom_components.eufy_home_security.settings import (
+from custom_components.anker_eufy_integration.const import DOMAIN, FIRMWARE_KEY
+from custom_components.anker_eufy_integration.settings import (
     is_per_mode,
     is_per_mode_entity,
     setting_platform,
@@ -53,7 +53,7 @@ from custom_components.eufy_home_security.settings import (
 )
 
 _COMPONENT_ROOT: Final = (
-    Path(__file__).resolve().parent.parent / "custom_components" / "eufy_home_security"
+    Path(__file__).resolve().parent.parent / "custom_components" / "anker_eufy_integration"
 )
 _STRINGS_PATH: Final = _COMPONENT_ROOT / "strings.json"
 _EN_PATH: Final = _COMPONENT_ROOT / "translations" / "en.json"

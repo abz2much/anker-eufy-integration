@@ -22,7 +22,7 @@ from packaging.requirements import InvalidRequirement, Requirement
 from packaging.utils import canonicalize_name
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-_COMPONENT_ROOT = _REPO_ROOT / "custom_components" / "eufy_home_security"
+_COMPONENT_ROOT = _REPO_ROOT / "custom_components" / "anker_eufy_integration"
 _MANIFEST_PATH = _COMPONENT_ROOT / "manifest.json"
 _HACS_PATH = _REPO_ROOT / "hacs.json"
 _PYPROJECT_PATH = _REPO_ROOT / "pyproject.toml"
@@ -228,7 +228,7 @@ def test_manifest_and_hacs_json() -> None:
         f"this file before any of this integration's code runs"
     )
 
-    assert manifest["domain"] == "eufy_home_security", manifest["domain"]
+    assert manifest["domain"] == "anker_eufy_integration", manifest["domain"]
     assert manifest["iot_class"] == "local_push", (
         f"iot_class must be local_push, got {manifest['iot_class']!r}: detections, "
         f"doorbell presses and alarm state arrive by local push from the base, and the "
@@ -347,7 +347,7 @@ def test_requirements_are_valid_pep_440_and_not_pinned_by_home_assistant() -> No
 def test_manifest_loggers_name_the_library() -> None:
     # `eufy_home_security` covers the library's `.wire`, `.secrets` and every
     # other child logger. Home Assistant adds
-    # `custom_components.eufy_home_security` for the integration itself
+    # `custom_components.anker_eufy_integration` for the integration itself
     # (components/logger/helpers.py), so listing it here would be redundant.
     # `firebase_messaging` is the cloud push client, which logs outside the
     # library's tree.
@@ -357,7 +357,7 @@ def test_manifest_loggers_name_the_library() -> None:
     )
 
     # Fail-first: every staged break must be flagged.
-    assert _logger_violations(["custom_components.eufy_home_security"]), (
+    assert _logger_violations(["custom_components.anker_eufy_integration"]), (
         "the logger guard failed to flag the integration's own logger in place of the library's"
     )
     assert _logger_violations([]), "the logger guard failed to flag an empty logger list"
@@ -376,7 +376,7 @@ def test_component_tree_is_integration_only(tmp_path: Path) -> None:
 
     violations = _integration_only_violations(shipped)
     assert violations == [], (
-        f"the shipped custom_components/eufy_home_security/ tree must carry only "
+        f"the shipped custom_components/anker_eufy_integration/ tree must carry only "
         f"integration code: an argument parser has no business inside a Home "
         f"Assistant process. The library ships its "
         f"own CLI. Offending modules: {violations}"
@@ -463,7 +463,7 @@ def _remedy_error_keys() -> set[str]:
     Read from the shipped constants rather than a hand list, so an error added by
     a later change is held to the remedy bar without anybody remembering to list it.
     """
-    from custom_components.eufy_home_security import const
+    from custom_components.anker_eufy_integration import const
 
     return {
         value
@@ -555,7 +555,7 @@ def test_every_step_and_error_the_flow_can_show_has_a_translation() -> None:
     or error key added later without its string is caught here rather than by
     a user staring at an untranslated form.
     """
-    from custom_components.eufy_home_security import const
+    from custom_components.anker_eufy_integration import const
 
     document = json.loads(_EN_PATH.read_text())
     runtime = document.get("config", {})
@@ -602,7 +602,7 @@ _RELEASE_PLEASE_CONFIG_PATH = _REPO_ROOT / "release-please-config.json"
 _RELEASE_PLEASE_MANIFEST_PATH = _REPO_ROOT / ".release-please-manifest.json"
 _MANIFEST_VERSION_FILE = {
     "type": "json",
-    "path": "custom_components/eufy_home_security/manifest.json",
+    "path": "custom_components/anker_eufy_integration/manifest.json",
     "jsonpath": "$.version",
 }
 
@@ -613,11 +613,7 @@ def _release_version_violations(
     """Every way manifest.json's version and the release-please setup disagree."""
     violations: list[str] = []
     released = release_manifest.get(".")
-    # Fork: a "+fork.N" build of the released version (see CHANGES-FROM-UPSTREAM.md).
-    manifest_version_base: object = manifest_version
-    if isinstance(manifest_version, str):
-        manifest_version_base = re.sub(r"\+fork\.\d+$", "", manifest_version)
-    if manifest_version_base != released:
+    if manifest_version != released:
         violations.append(
             f"manifest.json version {manifest_version!r} != release-please version {released!r}"
         )
@@ -631,7 +627,7 @@ def _release_version_violations(
 
 def test_the_config_entry_is_version_2_2_and_the_manifest_carries_the_release_version() -> None:
     """The flow creates 2.2 entries; manifest.json carries the version release-please releases."""
-    from custom_components.eufy_home_security.config_flow import EufyHomeSecurityConfigFlow
+    from custom_components.anker_eufy_integration.config_flow import EufyHomeSecurityConfigFlow
 
     release_manifest = json.loads(_RELEASE_PLEASE_MANIFEST_PATH.read_text())
     config = json.loads(_RELEASE_PLEASE_CONFIG_PATH.read_text())
@@ -709,13 +705,13 @@ def test_the_options_flow_offers_exactly_its_sixteen_options() -> None:
     from eufy_home_security import DEFAULT_STATION_SESSIONS
     from homeassistant.config_entries import OptionsFlowWithReload
 
-    from custom_components.eufy_home_security.config_flow import (
+    from custom_components.anker_eufy_integration.config_flow import (
         OPTIONS_SCHEMA,
         OPTIONS_SECTIONS,
         EufyHomeSecurityConfigFlow,
         EufyHomeSecurityOptionsFlow,
     )
-    from custom_components.eufy_home_security.const import (
+    from custom_components.anker_eufy_integration.const import (
         CONF_ALARM_TIMEOUT,
         CONF_CAMERA_IMAGE,
         CONF_CLOUD_PUSH,
@@ -879,7 +875,7 @@ def test_image_labels_say_whether_an_image_is_from_an_event_or_live() -> None:
 
     Refresh event image shows the newest recorded event's image, not a live picture.
     """
-    from custom_components.eufy_home_security.const import (
+    from custom_components.anker_eufy_integration.const import (
         CAPTURE_LIVE_IMAGE_KEY,
         CONF_CAMERA_IMAGE,
         OPTIONS_STEP_INIT,

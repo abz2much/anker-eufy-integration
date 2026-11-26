@@ -12,7 +12,7 @@
       "extra-files": [
         {
           "type": "json",
-          "path": "custom_components/eufy_home_security/manifest.json",
+          "path": "custom_components/anker_eufy_integration/manifest.json",
           "jsonpath": "$.version"
         }
       ]

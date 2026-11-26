@@ -1,6 +1,6 @@
-# eufy-homebase-card
+# anker-eufy-homebase-card
 
-One card per eufy HomeBase (`eufy_home_security` integration). It shows the security mode and switches it, draws
+One card per eufy HomeBase (`anker_eufy_integration` integration). It shows the security mode and switches it, draws
 the HomeBase with its paired devices and what each does in a mode, and has sections for the devices' actions per
 mode, the schedule, the arming groups, the HomeBase's settings (cross-camera tracking included) and its status. The
 custom modes are edited from the header menu.
@@ -8,14 +8,14 @@ custom modes are edited from the header menu.
 ## Install
 
 The card comes with the integration, next to the camera card ([card.md](card.md) § Install): the integration
-serves `/eufy_home_security/eufy-homebase-card.js` and keeps its dashboard resource up to date. Add it: edit a
-dashboard → **Add card** → **eufy HomeBase**, or a card with `type: custom:eufy-homebase-card`. Resources in YAML
-mode: add `/eufy_home_security/eufy-homebase-card.js` as a `module` resource.
+serves `/anker_eufy_integration/anker-eufy-homebase-card.js` and keeps its dashboard resource up to date. Add it: edit a
+dashboard → **Add card** → **eufy HomeBase**, or a card with `type: custom:anker-eufy-homebase-card`. Resources in YAML
+mode: add `/anker_eufy_integration/anker-eufy-homebase-card.js` as a `module` resource.
 
 ## Options
 
 ```yaml
-type: custom:eufy-homebase-card
+type: custom:anker-eufy-homebase-card
 device_id: 0123456789abcdef0123456789abcdef   # the HomeBase device (the editor's HomeBase picker)
 name: House                                  # optional: the header name (default: the HomeBase's name)
 ```
@@ -78,7 +78,7 @@ name: House                                  # optional: the header name (defaul
     The last activation (who, when) shows in the editor. A member Home Assistant does not know stays in the group
     and is listed greyed.
   - **Settings:** the HomeBase's settings in tabs. Tabs, their names and their order come from the integration's
-    settings layout (websocket `eufy_home_security/settings_layout`), so a new setting needs no card change.
+    settings layout (websocket `anker_eufy_integration/settings_layout`), so a new setting needs no card change.
     Detection also holds cross-camera tracking when the HomeBase reports it: the devices it follows (chips for
     the devices the integration lists as eligible, cameras and doorbells and other paired devices the eufy app
     offers, never sensors; **All cameras** = every eligible device), the tracking groups (each a row of chips to
@@ -109,15 +109,15 @@ name: House                                  # optional: the header name (defaul
 | what | sent as | when |
 |---|---|---|
 | security mode | `select.select_option` on the HomeBase's Security mode select (the option the integration names for the mode) | Set |
-| actions and delays of one mode | websocket `eufy_home_security/homebase/mode_table/set`: one call per changed mode with every change of that mode and `expect_revision` | Set |
+| actions and delays of one mode | websocket `anker_eufy_integration/homebase/mode_table/set`: one call per changed mode with every change of that mode and `expect_revision` | Set |
 | a setting | `switch.turn_on`/`turn_off`, `number.set_value`, `select.select_option` on its entity | Set |
-| arming groups | websocket `eufy_home_security/arming_groups/create`, `update`, `delete`, `activate` | Set |
-| custom modes | websocket `eufy_home_security/homebase/custom_mode/create` `{name}`, `rename` `{mode, name}`, `delete` `{mode}`, each with `expect_revision` | Set |
-| schedule | websocket `eufy_home_security/homebase/schedule/set`: the whole schedule (`slots` with weekday 0 = Sunday, `start`, `end` (`24:00` = midnight), `mode`; `default` when changed) and `expect_revision` | Set |
-| cross-camera tracking | websocket `eufy_home_security/homebase/cross_camera/set`: `cameras` (device ids from `cross_camera.eligible`, at least `min_cameras`; `null` = every eligible device) and/or `groups`, with `expect_revision`; one call for both | Set |
-| sound / stop the alarm | websocket `eufy_home_security/homebase/alarm` `{action: sound, seconds: 30}` / `{action: stop}` | Set |
-| restart | websocket `eufy_home_security/homebase/restart` | Set |
-| Stop alarm (header) | websocket `eufy_home_security/homebase/alarm` `{action: stop}` | at once, only while the alarm sounds |
+| arming groups | websocket `anker_eufy_integration/arming_groups/create`, `update`, `delete`, `activate` | Set |
+| custom modes | websocket `anker_eufy_integration/homebase/custom_mode/create` `{name}`, `rename` `{mode, name}`, `delete` `{mode}`, each with `expect_revision` | Set |
+| schedule | websocket `anker_eufy_integration/homebase/schedule/set`: the whole schedule (`slots` with weekday 0 = Sunday, `start`, `end` (`24:00` = midnight), `mode`; `default` when changed) and `expect_revision` | Set |
+| cross-camera tracking | websocket `anker_eufy_integration/homebase/cross_camera/set`: `cameras` (device ids from `cross_camera.eligible`, at least `min_cameras`; `null` = every eligible device) and/or `groups`, with `expect_revision`; one call for both | Set |
+| sound / stop the alarm | websocket `anker_eufy_integration/homebase/alarm` `{action: sound, seconds: 30}` / `{action: stop}` | Set |
+| restart | websocket `anker_eufy_integration/homebase/restart` | Set |
+| Stop alarm (header) | websocket `anker_eufy_integration/homebase/alarm` `{action: stop}` | at once, only while the alarm sounds |
 | Disarm | `alarm_control_panel.alarm_disarm` on the HomeBase's alarm panel | at once, only while the alarm sounds |
 
 - Everything else is **staged**: ✕ / Set appear in the header; nothing reaches the HomeBase before Set. Staged
@@ -132,7 +132,7 @@ name: House                                  # optional: the header name (defaul
 - Set sends one write at a time: the mode tables, the settings, new and renamed custom modes, the schedule,
   cross-camera tracking, deleted custom modes, the group edits, the mode, the group activations, the alarm, the
   restart. A row reads `sending` until the HomeBase reports the value (the integration's live
-  updates, websocket `eufy_home_security/homebase/subscribe`), then shows it; `Not applied` after 30 s or when
+  updates, websocket `anker_eufy_integration/homebase/subscribe`), then shows it; `Not applied` after 30 s or when
   the write is refused. A refused write's message shows over the drawing; a closed section with a failed write
   has a red toggle, and the header counts the failed writes.
 - **Changed elsewhere:** when the HomeBase's configuration changed since the card read it (the eufy app, another
@@ -144,10 +144,10 @@ name: House                                  # optional: the header name (defaul
 
 | command | use |
 |---|---|
-| `eufy_home_security/homebase` `{device_id}` | the HomeBase: modes with names and select options, support per part (with what affects the alarm), action flags, delay choices, devices, mode tables, schedule, cross-camera tracking (picks, groups, `eligible` devices, `min_cameras`), alarm state and last alarm, status, revision |
-| `eufy_home_security/homebase/subscribe` `{device_id}` | the same payload on every change; the card unsubscribes when it leaves the page |
-| `eufy_home_security/settings_layout` `{device_id}` | Settings tabs: section ids, headings, order, entity ids, which of them affect the alarm |
-| `eufy_home_security/arming_groups/list` / `logs` | the groups, their members and candidates; a group's last activations |
+| `anker_eufy_integration/homebase` `{device_id}` | the HomeBase: modes with names and select options, support per part (with what affects the alarm), action flags, delay choices, devices, mode tables, schedule, cross-camera tracking (picks, groups, `eligible` devices, `min_cameras`), alarm state and last alarm, status, revision |
+| `anker_eufy_integration/homebase/subscribe` `{device_id}` | the same payload on every change; the card unsubscribes when it leaves the page |
+| `anker_eufy_integration/settings_layout` `{device_id}` | Settings tabs: section ids, headings, order, entity ids, which of them affect the alarm |
+| `anker_eufy_integration/arming_groups/list` / `logs` | the groups, their members and candidates; a group's last activations |
 
 Settings rows read their entities' states in Home Assistant; the card keeps no list of settings, sections, modes or
 devices of its own.

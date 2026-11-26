@@ -1,6 +1,6 @@
 """A station recording played straight to a viewer (``recording_plays.py``).
 
-The websocket subscription ``eufy_home_security/recordings/play`` on Home Assistant's
+The websocket subscription ``anker_eufy_integration/recordings/play`` on Home Assistant's
 test client, the library's ``FakeStation`` behind it, and the real remux and HLS view.
 ``Station.async_play_recording`` is scripted by :class:`Player`, which writes real
 MPEG-TS made by ``recording_media.make_ts``; one test plays through the real library.
@@ -44,12 +44,16 @@ from pytest_homeassistant.typing import (
 )
 from recording_media import Part, audio_only, make_ts, split_at
 
-from custom_components.eufy_home_security import recording_hls, recording_plays, station_recordings
-from custom_components.eufy_home_security.const import CAMERA_KEY
+from custom_components.anker_eufy_integration import (
+    recording_hls,
+    recording_plays,
+    station_recordings,
+)
+from custom_components.anker_eufy_integration.const import CAMERA_KEY
 
 _DAY_FACTOR: Final = 100_000
 _ROW_TIME: Final = "%Y-%m-%d %H:%M:%S"
-_URL: Final = re.compile(r"/api/eufy_home_security/recording/([0-9a-f]{32})/playlist\.m3u8")
+_URL: Final = re.compile(r"/api/anker_eufy_integration/recording/([0-9a-f]{32})/playlist\.m3u8")
 HLS_MIME: Final = "application/vnd.apple.mpegurl"
 # The playback command the station gets for a play, and the download command.
 RECORD_VIEW: Final = 1025
@@ -1125,7 +1129,7 @@ async def test_the_view_answers_404_for_unknown_tokens_and_files(
         "init00.mp4": 404,
     }
     statuses = {name: (await http.get(f"{base}/{name}")).status for name in names}
-    unknown = (await http.get(f"/api/eufy_home_security/recording/{'0' * 32}/seg0.m4s")).status
+    unknown = (await http.get(f"/api/anker_eufy_integration/recording/{'0' * 32}/seg0.m4s")).status
 
     assert statuses == names
     assert unknown == 404
@@ -1275,7 +1279,7 @@ async def test_an_unload_waits_for_the_library_and_a_slow_remux_thread(
     await _subscribe(client, _camera(hass), ref)
     await wait_until(lambda: _plays(entry).diagnostics()["active"] == 2)
     libraries = [
-        t for t in asyncio.all_tasks() if t.get_name() == "eufy_home_security recording play"
+        t for t in asyncio.all_tasks() if t.get_name() == "anker_eufy_integration recording play"
     ]
 
     assert await hass.config_entries.async_unload(entry.entry_id)
@@ -1301,7 +1305,7 @@ async def test_stopping_the_plays_returns_once_the_library_calls_are_done(
     await _subscribe(client, _camera(hass), await _ref(client, _camera(hass)))
     await asyncio.wait_for(player.entered.wait(), 5)
     (library,) = [
-        t for t in asyncio.all_tasks() if t.get_name() == "eufy_home_security recording play"
+        t for t in asyncio.all_tasks() if t.get_name() == "anker_eufy_integration recording play"
     ]
 
     await _plays(entry).async_stop()
@@ -1313,7 +1317,7 @@ async def test_stopping_the_plays_returns_once_the_library_calls_are_done(
 
 def test_a_second_entry_registers_no_second_view(hass: HomeAssistant) -> None:
     """The view is registered once per Home Assistant instance."""
-    entry = MockConfigEntry(domain="eufy_home_security")
+    entry = MockConfigEntry(domain="anker_eufy_integration")
     registered: list[object] = []
 
     class Http:
@@ -1346,7 +1350,7 @@ async def test_a_library_call_cancelled_by_home_assistant_ends_the_play(
     reply = await _play(client, _camera(hass), await _ref(client, _camera(hass)))
     assert reply["success"]
     (library,) = [
-        t for t in asyncio.all_tasks() if t.get_name() == "eufy_home_security recording play"
+        t for t in asyncio.all_tasks() if t.get_name() == "anker_eufy_integration recording play"
     ]
 
     library.cancel()

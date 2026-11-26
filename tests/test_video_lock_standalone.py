@@ -24,8 +24,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import async_fire_time_changed
 
-from custom_components.eufy_home_security import detections
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import detections
+from custom_components.anker_eufy_integration.const import (
     CONF_CAMERA_IMAGE,
     LOCK_KEY,
     PERSON_DETECTED_KEY,
@@ -155,7 +155,7 @@ async def test_a_standalone_video_lock_without_live_stream_is_never_woken_for_im
     no event image, whatever picture the push names."""
     model = model_for_serial(NO_LIVE_SN)
     assert model is not None and model.kind is DeviceKind.LOCK
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
     entry = await set_up_warm(hass, seed_warm_cache, options={CONF_CAMERA_IMAGE: "hd"})
     station = entry.runtime_data.coordinators[NO_LIVE_SN].station
     assert station.is_standalone

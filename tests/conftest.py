@@ -57,12 +57,12 @@ from pytest_homeassistant.common import (
     async_fire_time_changed,
 )
 
-from custom_components.eufy_home_security import runtime, snapshots
-from custom_components.eufy_home_security.config_flow import (
+from custom_components.anker_eufy_integration import runtime, snapshots
+from custom_components.anker_eufy_integration.config_flow import (
     OPTIONS_SECTIONS,
     EufyHomeSecurityConfigFlow,
 )
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration.const import (
     DOMAIN,
     GUARD_MODE_KEY,
 )

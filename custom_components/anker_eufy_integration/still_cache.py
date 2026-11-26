@@ -2,7 +2,7 @@
 
 Home Assistant's cache directory holds data an integration can regenerate: it is not in
 backups (``hass.config.cache_path``). Every still the snapshot and preset managers show
-is written there, one entry per key under ``.cache/eufy_home_security/<entry id>/``:
+is written there, one entry per key under ``.cache/anker_eufy_integration/<entry id>/``:
 ``<key>.jpg`` and a ``<key>.json`` sidecar with the still's metadata and the JPEG's size.
 Memory stays the serving path; the disk is written through on every new still and read
 once, at setup, before the platforms add their entities.

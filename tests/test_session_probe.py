@@ -26,8 +26,8 @@ from homeassistant.config_entries import SOURCE_REAUTH, ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir
 
-from custom_components.eufy_home_security import runtime
-from custom_components.eufy_home_security.const import CONF_SESSION_PROBE, DOMAIN
+from custom_components.anker_eufy_integration import runtime
+from custom_components.anker_eufy_integration.const import CONF_SESSION_PROBE, DOMAIN
 
 # Past every clock these tests advance: the library's hourly cloud-state refresh (a
 # device-list fetch of its own, tested in the library) stays out of the call counts, so
@@ -45,7 +45,7 @@ async def test_the_first_probe_runs_a_minute_after_setup_and_a_kick_out_becomes_
 ) -> None:
     entry = await set_up_warm(hass, seed_warm_cache)
     fake_cloud.call_errors = [SessionReplacedError("kicked", code=26084)]
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await advance_to_poll(hass, 61)
     await hass.async_block_till_done()
@@ -75,7 +75,7 @@ async def test_a_healthy_session_is_probed_at_a_minute_and_again_at_six_hours_wi
 ) -> None:
     """One device-list read at a minute and one at six hours, no login, no issue."""
     entry = await set_up_warm(hass, seed_warm_cache)
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await advance_to_poll(hass, 61)
     await hass.async_block_till_done()
@@ -114,7 +114,7 @@ async def test_a_lapsed_key_identity_is_re_keyed_without_a_login_and_the_probe_s
     entry = await set_up_warm(hass, seed_warm_cache)
     exchanges = fake_cloud.key_exchanges
     fake_cloud.call_errors = [FakeCloud.refusal(463, 4404, "get identity error")]
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await advance_to_poll(hass, 61)
     await hass.async_block_till_done()
@@ -143,7 +143,7 @@ async def test_a_key_identity_a_new_exchange_does_not_restore_is_reported_not_hi
     entry = await set_up_warm(hass, seed_warm_cache)
     refusal = FakeCloud.refusal(463, 4404, "get identity error")
     fake_cloud.call_errors = [refusal, FakeCloud.refusal(463, 4404, "get identity error")]
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await advance_to_poll(hass, 61)
     await hass.async_block_till_done()
@@ -173,7 +173,7 @@ async def test_with_the_option_off_no_probe_runs(
 ) -> None:
     """With the option off nothing is read from the cloud over six hours."""
     entry = await set_up_warm(hass, seed_warm_cache, options={CONF_SESSION_PROBE: False})
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await advance_to_poll(hass, 61)
     await hass.async_block_till_done()
@@ -214,7 +214,7 @@ async def test_a_latched_store_is_not_probed_and_a_deleted_issue_comes_back(
     ir.async_delete_issue(hass, DOMAIN, issue_id)
     assert ir.async_get(hass).async_get_issue(DOMAIN, issue_id) is None
 
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
     await advance_to_poll(hass, 61)
     await hass.async_block_till_done()
 
@@ -312,7 +312,7 @@ async def test_the_latch_mirror_recreates_an_issue_the_user_deleted(
 ) -> None:
     entry = await set_up_warm(hass, seed_warm_cache)
     fake_cloud.call_errors = [SessionReplacedError("kicked", code=26084)]
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     await advance_to_poll(hass, 61)
     await hass.async_block_till_done()
@@ -403,7 +403,7 @@ async def test_no_probe_runs_after_the_entry_is_unloaded(
     caplog: pytest.LogCaptureFixture,
 ) -> None:
     entry = await set_up_warm(hass, seed_warm_cache)
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration")
 
     assert await hass.config_entries.async_unload(entry.entry_id)
     await hass.async_block_till_done()

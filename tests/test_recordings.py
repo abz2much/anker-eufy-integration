@@ -55,8 +55,8 @@ from pytest_homeassistant.typing import (
     WebSocketGenerator,
 )
 
-from custom_components.eufy_home_security import history, recordings, station_recordings
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import history, recordings, station_recordings
+from custom_components.anker_eufy_integration.const import (
     CAMERA_KEY,
     CONF_EVENT_HISTORY_DAYS,
     CONF_EVENT_VIDEOS,

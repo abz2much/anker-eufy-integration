@@ -21,7 +21,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import entity_registry as er
 
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration.const import (
     ATTR_LOCK_STATE,
     ATTR_RAW_VALUE,
     DOMAIN,

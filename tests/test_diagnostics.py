@@ -58,7 +58,7 @@ from pytest_homeassistant.components.diagnostics import (
 )
 from pytest_homeassistant.typing import ClientSessionGenerator
 
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 _TOP_LEVEL_KEYS = frozenset(
     {
@@ -304,7 +304,7 @@ async def test_the_download_grades_each_cameras_live_stream_with_its_reason(
 
 def test_diagnostics_are_config_entry_only() -> None:
     """A download for the whole entry, and none per device."""
-    diagnostics = importlib.import_module("custom_components.eufy_home_security.diagnostics")
+    diagnostics = importlib.import_module("custom_components.anker_eufy_integration.diagnostics")
 
     assert callable(diagnostics.async_get_config_entry_diagnostics)
     assert not hasattr(diagnostics, "async_get_device_diagnostics")

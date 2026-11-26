@@ -8,7 +8,7 @@
 const CARD_VERSION = '2026.11.24-4';
 
 const INVALID = ['unavailable', 'unknown', 'none', ''];
-const DOMAIN = 'eufy_home_security';
+const DOMAIN = 'anker_eufy_integration';
 // Settings writes return after the station's read-back; a battery camera behind a HomeBase may need a wake first.
 const PENDING_MS = 30000;
 // A still or preset capture at the HomeBase's session budget ends the slot holder's view first (a few seconds)
@@ -70,7 +70,7 @@ const DZ_WHEEL = 0.002;
 // Save view: the integration's command that keeps a frame as a preset's picture (preset_upload.py), and the frame:
 // the live video drawn at most PRESET_PIC_W wide (aspect kept) as a JPEG, at the first quality whose size stays
 // within PRESET_PIC_MAX (the integration's limit, under the websocket's message size)
-const PRESET_IMAGE_WS = 'eufy_home_security/preset_image';
+const PRESET_IMAGE_WS = 'anker_eufy_integration/preset_image';
 const PRESET_PIC_W = 1920;
 const PRESET_PIC_Q = [0.85, 0.7, 0.5];
 const PRESET_PIC_MAX = 2 * 1024 * 1024;
@@ -93,7 +93,7 @@ const AUTO_PORTRAIT = 0.95;
 // camera entity -> its picture's width / height (still or live video), shared by the cards on the page and kept in
 // the browser (localStorage, RATIO_KEY + entity id) so a portrait card has its shape from the first render
 const RATIO = new Map();
-const RATIO_KEY = 'eufy-camera-card.ratio.';
+const RATIO_KEY = 'anker-eufy-camera-card.ratio.';
 const ratioOf = (id) => {
   if (!RATIO.has(id)) {
     let r = NaN;
@@ -114,8 +114,8 @@ const LOCK_BUSY = ['jammed', 'locking', 'unlocking', 'opening', 'unknown'];
 const IMG_CACHE = 40;
 // Still request sizes (16:9): HA scales a camera JPEG to the smallest libjpeg factor at least this large
 const STILL_WIDTHS = [640, 960, 1280, 1920];
-// The integration's still history in HA's media folder: <media>/eufy_home_security/<camera name>/<file>.jpg
-const HISTORY_ROOT = 'media-source://media_source/local/eufy_home_security';
+// The integration's still history in HA's media folder: <media>/anker_eufy_integration/<camera name>/<file>.jpg
+const HISTORY_ROOT = 'media-source://media_source/local/anker_eufy_integration';
 // Tiles or station rows a History sub-tab shows first, and how many each Show more adds
 const HISTORY_PAGE = 10;
 // HA's date picker (ha-date-input) is lazy-loaded by HA: a card-helpers input_datetime row imports it. Loaded once per
@@ -149,15 +149,15 @@ const HIST_TABS = [
 ];
 // The integration's websocket commands for the station's recordings: the list, and one recording fetched from the
 // station into the history folder ({media_content_id, url}; Save)
-const STATION_WS = 'eufy_home_security/recordings';
-const STATION_FETCH_WS = 'eufy_home_security/recordings/fetch';
+const STATION_WS = 'anker_eufy_integration/recordings';
+const STATION_FETCH_WS = 'anker_eufy_integration/recordings/fetch';
 // One recording played from the station, saving nothing (Play): a subscription whose events are {url, mime_type}
 // (the integration's HLS playlist: it grows while the station sends and ends with the recording), then one
 // {end: 'complete'} or {end: 'error', code, message}, which only says that no more data comes. The playlist stays
 // served after the end until the card unsubscribes, at most 1800 s after the end event; unsubscribing ends the play
 // and frees what arrived. A refused play rejects with {code, message}. It holds one of the HomeBase's sessions while
 // the station sends.
-const STATION_PLAY_WS = 'eufy_home_security/recordings/play';
+const STATION_PLAY_WS = 'anker_eufy_integration/recordings/play';
 // Texts by the integration's error code where the card words it its own way; any other code shows its message
 const PLAY_ERRORS = {
   busy: 'All sessions to the HomeBase are in use',
@@ -190,7 +190,7 @@ const KINDS = {
   event: ['Event', 'mdi:image-outline'], live: ['Snapshot', 'mdi:camera-iris'],
 };
 
-// translation_key -> role, for the eufy_home_security integration (controls the card places itself)
+// translation_key -> role, for the anker_eufy_integration integration (controls the card places itself)
 const ROLES = {
   live_zoom: 'zoom', default_preset: 'defaultPreset',
   pan_left: 'panLeft', pan_right: 'panRight', tilt_up: 'tiltUp', tilt_down: 'tiltDown',
@@ -210,7 +210,7 @@ const ROW_DOMAINS = ['select', 'number', 'switch', 'light'];
 const BRI = '~brightness';
 // The integration's settings layout of a device: { sections: [{ id, heading, order, entity_ids }] }. Settings tabs,
 // their names and order come only from it; an entity in no section goes under More.
-const LAYOUT_WS = 'eufy_home_security/settings_layout';
+const LAYOUT_WS = 'anker_eufy_integration/settings_layout';
 // The section of the guard-mode settings (the HomeBase card's): a row only when `settings_include` names it
 const MODES_SECTION = 'modes';
 // The section whose tab also shows the power readings
@@ -408,11 +408,11 @@ class EufyCameraCard extends HTMLElement {
     this._dzG = null;       // the gesture from where its pointers began: { r, d, s, u } a pinch, { r, p, x, y } a drag
   }
 
-  static getConfigElement() { return document.createElement('eufy-camera-card-editor'); }
+  static getConfigElement() { return document.createElement('anker-eufy-camera-card-editor'); }
   static getStubConfig(hass) {
     const id = hass && Object.keys(hass.states).find(e => e.startsWith('camera.') && hass.entities && hass.entities[e]
       && hass.entities[e].platform === DOMAIN);
-    return { type: 'custom:eufy-camera-card', entity: id || '' };
+    return { type: 'custom:anker-eufy-camera-card', entity: id || '' };
   }
 
   setConfig(config) {
@@ -599,7 +599,7 @@ class EufyCameraCard extends HTMLElement {
     return `${u}${u.includes('?') ? '&' : '?'}${q}`;
   }
 
-  // A tile picture: the integration's small copy (entity_picture /api/eufy_home_security/image/<id>/small?v=..&token=..)
+  // A tile picture: the integration's small copy (entity_picture /api/anker_eufy_integration/image/<id>/small?v=..&token=..)
   // fetched by its token-free URL with the login header, so the browser keeps it (private, immutable) across token
   // rotations and reloads, and shown as an object URL. Other pictures, or a failed fetch, use _picUrl.
   _tileUrl(st) {
@@ -4353,7 +4353,7 @@ const EDITOR_HELPERS = {
   double_tap_fullscreen: 'A double tap on the picture enters or leaves full screen; a single tap then acts a quarter second later',
   digital_zoom: 'Pinch with two fingers, or Ctrl + mouse wheel, to enlarge the picture up to 4x and drag to look around; back to 1x when live view starts or stops and on leaving full screen. The camera itself does not move',
   live_buttons: 'Buttons on the live view bar, e.g. a door lock (Open or Unlock) for a doorbell, a gate, a light, a script; each needs a second press within 4 s',
-  history_folder: 'The camera\'s folder under Media › eufy_home_security; only when the camera was renamed after its stills were saved',
+  history_folder: 'The camera\'s folder under Media › anker_eufy_integration; only when the camera was renamed after its stills were saved',
   auto_live: 'Wakes the camera on every opening: costs battery',
   live_on_detection: 'Starts timed live view when the camera detects motion, a person, a vehicle or a pet while the card is shown. Wakes the camera on every detection: costs battery',
   settings_include: 'Settings shows the camera\'s settings by section; entities named here join them (a guard-mode action or delay under Modes, an entity in no section under More)',
@@ -4448,11 +4448,11 @@ class EufyCameraCardEditor extends HTMLElement {
   }
 }
 
-if (!customElements.get('eufy-camera-card-editor')) customElements.define('eufy-camera-card-editor', EufyCameraCardEditor);
-if (!customElements.get('eufy-camera-card')) customElements.define('eufy-camera-card', EufyCameraCard);
+if (!customElements.get('anker-eufy-camera-card-editor')) customElements.define('anker-eufy-camera-card-editor', EufyCameraCardEditor);
+if (!customElements.get('anker-eufy-camera-card')) customElements.define('anker-eufy-camera-card', EufyCameraCard);
 window.customCards = window.customCards || [];
-if (!window.customCards.some(c => c.type === 'eufy-camera-card')) {
-  window.customCards.push({ type: 'eufy-camera-card', name: 'eufy camera',
+if (!window.customCards.some(c => c.type === 'anker-eufy-camera-card')) {
+  window.customCards.push({ type: 'anker-eufy-camera-card', name: 'eufy camera',
     description: 'Still until started, timed or continuous live view, pan/tilt/zoom, presets, history and the camera\'s settings (staged); one or several cameras', preview: false });
 }
-console.info(`%c eufy-camera-card %c ${CARD_VERSION} `, 'background:#273a60;color:#fff', 'background:#ddd;color:#000');
+console.info(`%c anker-eufy-camera-card %c ${CARD_VERSION} `, 'background:#273a60;color:#fff', 'background:#ddd;color:#000');

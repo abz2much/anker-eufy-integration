@@ -50,8 +50,8 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import MockConfigEntry, async_fire_time_changed
 
-from custom_components.eufy_home_security import snapshots
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration import snapshots
+from custom_components.anker_eufy_integration.const import (
     ATTR_IMAGE_SOURCE,
     ATTR_IMAGE_UPDATED,
     ATTR_TRIGGERED_AT,
@@ -66,7 +66,7 @@ from custom_components.eufy_home_security.const import (
     REFRESH_IMAGE_KEY,
     THUMBNAIL_RETRY_DELAY_SECONDS,
 )
-from custom_components.eufy_home_security.snapshots import SnapshotManager
+from custom_components.anker_eufy_integration.snapshots import SnapshotManager
 
 # What fake_ffmpeg.py answers for a keyframe that decrypted: a JPEG declaring 3840x2160.
 FOUR_K_JPEG_PREFIX: Final = b"\xff\xd8\xff\xc0\x00\x11\x08\x08\x70\x0f\x00"

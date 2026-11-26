@@ -26,8 +26,8 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import issue_registry as ir
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import errors, runtime
-from custom_components.eufy_home_security.const import DOMAIN, FIREWALL_DOCS_URL
+from custom_components.anker_eufy_integration import errors, runtime
+from custom_components.anker_eufy_integration.const import DOMAIN, FIREWALL_DOCS_URL
 
 _STATION_IP = "192.0.2.10"
 _OTHER_IP = "192.0.2.11"

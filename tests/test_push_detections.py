@@ -42,14 +42,14 @@ from homeassistant.const import STATE_ON
 from homeassistant.core import HomeAssistant
 from pytest_homeassistant.common import MockConfigEntry, async_capture_events
 
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration.const import (
     CONF_CAMERA_IMAGE,
     DETECTION_EVENT_KEY,
     EVENT_EUFY_HOME_SECURITY,
     MOTION_DETECTED_KEY,
     PERSON_DETECTED_KEY,
 )
-from custom_components.eufy_home_security.snapshots import SnapshotManager
+from custom_components.anker_eufy_integration.snapshots import SnapshotManager
 
 FACE_JPEG: Final = b"\xff\xd8FACE-CROP\xff\xd9"
 SCENE_JPEG: Final = b"\xff\xd8PUSH-PICTURE\xff\xd9"
@@ -296,7 +296,7 @@ async def test_a_failed_source_falls_to_the_next_one(
         )
 
     monkeypatch.setattr(EufySecurity, "async_push_image", fetch)
-    caplog.set_level(logging.DEBUG, logger="custom_components.eufy_home_security.snapshots")
+    caplog.set_level(logging.DEBUG, logger="custom_components.anker_eufy_integration.snapshots")
     entry = await set_up_warm(hass, seed_warm_cache)
     manager = _manager(entry)
 

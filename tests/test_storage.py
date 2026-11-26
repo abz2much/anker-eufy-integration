@@ -48,8 +48,8 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
 from pytest_homeassistant.common import MockConfigEntry, async_capture_events
 
-from custom_components.eufy_home_security.binary_sensor import STORAGE_BINARY_SENSORS
-from custom_components.eufy_home_security.const import (
+from custom_components.anker_eufy_integration.binary_sensor import STORAGE_BINARY_SENSORS
+from custom_components.anker_eufy_integration.const import (
     DISK_FORMATTING_KEY,
     DISK_FREE_KEY,
     DISK_PROBLEM_KEY,
@@ -70,8 +70,8 @@ from custom_components.eufy_home_security.const import (
     POLL_INTERVAL_SECONDS,
     STORAGE_POLL_INTERVAL_SECONDS,
 )
-from custom_components.eufy_home_security.sensor import STATION_DIAGNOSTICS, STORAGE_SENSORS
-from custom_components.eufy_home_security.storage import StorageCoordinator, StoragePart
+from custom_components.anker_eufy_integration.sensor import STATION_DIAGNOSTICS, STORAGE_SENSORS
+from custom_components.anker_eufy_integration.storage import StorageCoordinator, StoragePart
 
 _DISK_SENSOR_KEYS: Final = (
     DISK_USED_KEY,
@@ -87,7 +87,7 @@ _EMMC_SENSOR_KEYS: Final = (
     EMMC_SIZE_KEY,
     EMMC_WEAR_KEY,
 )
-_STORAGE_LOGGER: Final = "custom_components.eufy_home_security.storage"
+_STORAGE_LOGGER: Final = "custom_components.anker_eufy_integration.storage"
 
 
 def _registered(hass: HomeAssistant, domain: str, key: str) -> str | None:

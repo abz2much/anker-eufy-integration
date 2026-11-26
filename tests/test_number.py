@@ -58,8 +58,8 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry
 
-from custom_components.eufy_home_security import errors, number
-from custom_components.eufy_home_security.const import DOMAIN
+from custom_components.anker_eufy_integration import errors, number
+from custom_components.anker_eufy_integration.const import DOMAIN
 
 # A range setting of the synthetic camera (T8160): 5-60 s, written as an ECB scalar.
 _RETRIGGER = "trigger_interval_time"
