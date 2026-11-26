@@ -3,6 +3,14 @@
 import asyncio
 
 import pytest
+from anker_eufy_security import (
+    AuthenticationError,
+    DevicesChanged,
+    LoginLimitedError,
+    RateLimitedError,
+    SessionReplacedError,
+)
+from anker_eufy_security.testing import SYNTHETIC
 from conftest import (
     SENSOR_SN,
     add_motion_sensor,
@@ -12,14 +20,6 @@ from conftest import (
     state_of,
     wait_until,
 )
-from eufy_home_security import (
-    AuthenticationError,
-    DevicesChanged,
-    LoginLimitedError,
-    RateLimitedError,
-    SessionReplacedError,
-)
-from eufy_home_security.testing import SYNTHETIC
 from homeassistant.const import STATE_UNAVAILABLE, EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError

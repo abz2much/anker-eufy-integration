@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, override
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from eufy_home_security import (
+from anker_eufy_security import (
     EufySecurityError,
     GuardMode,
     Station,

@@ -46,7 +46,7 @@ from typing import TYPE_CHECKING
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.event import async_call_later, async_track_time_interval
 
-from eufy_home_security import EufySecurityError, LoginNeed
+from anker_eufy_security import EufySecurityError, LoginNeed
 
 from . import errors
 from .const import (

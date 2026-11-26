@@ -32,7 +32,7 @@ from homeassistant.helpers.selector import (
     TextSelectorType,
 )
 
-from eufy_home_security import (
+from anker_eufy_security import (
     CloudInvite,
     EufySecurityError,
     InviteCodeError,

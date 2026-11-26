@@ -5,8 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 import pytest
-from conftest import add_entry, setup_entry
-from eufy_home_security import (
+from anker_eufy_security import (
     CipherUnusableError,
     ConnectionChanged,
     DisconnectCause,
@@ -14,7 +13,8 @@ from eufy_home_security import (
     GuardMode,
     KeyRejectedError,
 )
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from conftest import add_entry, setup_entry
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir

@@ -42,7 +42,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.restore_state import RestoreEntity
 
-from eufy_home_security import (
+from anker_eufy_security import (
     CommandRejectedError,
     CommandUnsupportedError,
     DeviceBusyError,

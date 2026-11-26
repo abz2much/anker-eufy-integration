@@ -16,7 +16,7 @@ from typing import TYPE_CHECKING, Any, Final
 
 from homeassistant.components.diagnostics import async_redact_data
 
-from eufy_home_security import (
+from anker_eufy_security import (
     EufySecurityError,
     GuardMode,
     Station,

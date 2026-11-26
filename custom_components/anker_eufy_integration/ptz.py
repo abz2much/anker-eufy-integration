@@ -18,7 +18,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountRejectedError,
     CommandError,
     CommandNotAppliedError,

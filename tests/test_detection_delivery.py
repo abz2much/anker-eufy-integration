@@ -16,6 +16,19 @@ from dataclasses import dataclass, field
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import (
+    DetectionDelivery,
+    DetectionDeliveryReport,
+    DevicesChanged,
+    EventSource,
+    GuardMode,
+    GuardModeChanged,
+    StationConfigChanged,
+    entity_unique_id,
+    guard_mode_label,
+    redact_serial,
+)
+from anker_eufy_security.testing import FakeCloud, FakeStation
 from conftest import (
     SENSOR_SN,
     SYNTHETIC,
@@ -28,19 +41,6 @@ from conftest import (
     state_of,
     wait_until,
 )
-from eufy_home_security import (
-    DetectionDelivery,
-    DetectionDeliveryReport,
-    DevicesChanged,
-    EventSource,
-    GuardMode,
-    GuardModeChanged,
-    StationConfigChanged,
-    entity_unique_id,
-    guard_mode_label,
-    redact_serial,
-)
-from eufy_home_security.testing import FakeCloud, FakeStation
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.components.event import DOMAIN as EVENT_DOMAIN
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN

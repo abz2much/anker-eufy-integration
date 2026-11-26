@@ -4,10 +4,10 @@ pan/tilt, live video, and no presets or zoom."""
 from typing import Any
 
 import pytest
+from anker_eufy_security import Station
+from anker_eufy_security.p2p.messages import STANDALONE_RECEIPT_LEN
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from conftest import entity_id_for, set_up_warm
-from eufy_home_security import Station
-from eufy_home_security.p2p.messages import STANDALONE_RECEIPT_LEN
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.components.camera import CameraEntityFeature
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError

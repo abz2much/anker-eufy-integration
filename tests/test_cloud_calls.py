@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+from anker_eufy_security.testing import FakeCloud
 from conftest import cloud_calls
-from eufy_home_security.testing import FakeCloud
 
 
 def _calls(*calls: str) -> list[str]:

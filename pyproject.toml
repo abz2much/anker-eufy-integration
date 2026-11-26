@@ -1,5 +1,5 @@
 [project]
-# Not "eufy-home-security": that normalises to the library's name, and uv then refuses
+# Not "anker-eufy-security": that normalises to the library's name, and uv then refuses
 # the editable library source ("conflicting URLs").
 name = "anker-eufy-integration"
 # The release version lives in custom_components/anker_eufy_integration/manifest.json.
@@ -31,14 +31,14 @@ dev = [
     "av==19.0.0",
     # The library, at the manifest's pin. Editable from the sibling checkout via
     # [tool.uv.sources]; CI installs the PyPI release instead (.github/workflows/ci.yml).
-    "eufy-home-security==0.4.19",
+    "anker-eufy-security==0.1.0",
     "ruff",
     "mypy",
 ]
 
 [tool.uv.sources]
 # Relative path, editable: the venv imports the sibling checkout's src/.
-eufy-home-security = { path = "../python-eufy_home_security", editable = true }
+anker-eufy-security = { path = "../anker-eufy-security", editable = true }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

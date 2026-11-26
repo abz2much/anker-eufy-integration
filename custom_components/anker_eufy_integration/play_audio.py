@@ -9,7 +9,7 @@ P2P channel 1 at real time, and a 1700 ``{"commandType":1002}`` (CMD_END_SPEAK) 
 The library sends no audio, so this reaches two of its private members, here only: the
 stream's owning session (``MediaStream._session``) and that session's P2P transport
 (``StationSession._transport``). Check :func:`async_talk` whenever the pinned
-``eufy-home-security`` version changes.
+``anker-eufy-security`` version changes.
 """
 
 from __future__ import annotations
@@ -25,9 +25,9 @@ import probatio as vol
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 
-from eufy_home_security import EufySecurityError
-from eufy_home_security.devices.recipes import Recipe, RecipeCommand
-from eufy_home_security.p2p.xzyh import encode_frame
+from anker_eufy_security import EufySecurityError
+from anker_eufy_security.devices.recipes import Recipe, RecipeCommand
+from anker_eufy_security.p2p.xzyh import encode_frame
 
 from . import errors
 from .const import DOMAIN

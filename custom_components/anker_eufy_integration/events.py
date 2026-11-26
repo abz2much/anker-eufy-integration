@@ -116,7 +116,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_call_later
 
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountMismatch,
     AlarmChanged,
     AlarmDelayChanged,

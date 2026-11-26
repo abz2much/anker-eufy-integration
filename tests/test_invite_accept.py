@@ -18,8 +18,7 @@ from pathlib import Path
 from typing import Any, Final
 
 import pytest
-from conftest import set_up_warm
-from eufy_home_security import (
+from anker_eufy_security import (
     CloudApiError,
     CommunicationError,
     EufySecurity,
@@ -28,8 +27,9 @@ from eufy_home_security import (
     NoCachedSessionError,
     SessionReplacedError,
 )
-from eufy_home_security.cloud.crypto import invite_seal
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from anker_eufy_security.cloud.crypto import invite_seal
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from conftest import set_up_warm
 from homeassistant.components.repairs import RepairsFlowManager, repairs_flow_manager
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import CoreState, HomeAssistant

@@ -12,18 +12,7 @@ from datetime import timedelta
 from typing import Any
 
 import pytest
-from conftest import (
-    SENSOR_SN,
-    add_entry,
-    add_motion_sensor,
-    advance_to_poll,
-    alarm_changed,
-    cloud_calls,
-    set_up_warm,
-    setup_entry,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     AuthenticationError,
     CloudProblem,
     CommunicationError,
@@ -37,12 +26,23 @@ from eufy_home_security import (
     StationState,
     entity_unique_id,
 )
-from eufy_home_security.testing import (
+from anker_eufy_security.testing import (
     SYNTHETIC,
     FakeCloud,
     FakeStation,
     camera_device,
     station_device,
+)
+from conftest import (
+    SENSOR_SN,
+    add_entry,
+    add_motion_sensor,
+    advance_to_poll,
+    alarm_changed,
+    cloud_calls,
+    set_up_warm,
+    setup_entry,
+    wait_until,
 )
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.update import DOMAIN as UPDATE_DOMAIN

@@ -6,6 +6,10 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import EufySecurity
+from anker_eufy_security.devices.model_settings import settings_of
+from anker_eufy_security.devices.timezones import encode_zone
+from anker_eufy_security.testing import SYNTHETIC, FakeStation
 from conftest import (
     entity_id_for,
     record_states,
@@ -14,10 +18,6 @@ from conftest import (
     setting_param,
     state_of,
 )
-from eufy_home_security import EufySecurity
-from eufy_home_security.devices.model_settings import settings_of
-from eufy_home_security.devices.timezones import encode_zone
-from eufy_home_security.testing import SYNTHETIC, FakeStation
 from homeassistant.components.select import ATTR_OPTION, ATTR_OPTIONS, SERVICE_SELECT_OPTION
 from homeassistant.components.select import DOMAIN as SELECT_DOMAIN
 from homeassistant.const import ATTR_ENTITY_ID, STATE_UNAVAILABLE, STATE_UNKNOWN, EntityCategory

@@ -9,8 +9,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from conftest import add_entry, setup_entry
-from eufy_home_security import (
+from anker_eufy_security import (
     ConnectionChanged,
     EufySecurity,
     HostSource,
@@ -18,7 +17,8 @@ from eufy_home_security import (
     Station,
     redact_serial,
 )
-from eufy_home_security.testing import SYNTHETIC, FakeStation
+from anker_eufy_security.testing import SYNTHETIC, FakeStation
+from conftest import add_entry, setup_entry
 from homeassistant.components import network
 from homeassistant.config_entries import ConfigEntryDisabler
 from homeassistant.core import Event, HomeAssistant

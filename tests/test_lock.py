@@ -10,9 +10,9 @@ from collections.abc import Callable
 from typing import Final
 
 import pytest
+from anker_eufy_security import EventSource, SecurityEvent, entity_unique_id
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from conftest import entity_id_for, record_states, set_up_warm, state_of, wait_until
-from eufy_home_security import EventSource, SecurityEvent, entity_unique_id
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from homeassistant.components.cover import DOMAIN as COVER_DOMAIN
 from homeassistant.components.lock import DOMAIN as LOCK_DOMAIN
 from homeassistant.components.lock import LockState as HALockState

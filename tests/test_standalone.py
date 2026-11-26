@@ -9,23 +9,9 @@ from datetime import datetime, timedelta
 from typing import Any
 from urllib.parse import urlparse
 
-import eufy_home_security.station
+import anker_eufy_security.station
 import pytest
-from conftest import (
-    add_entry,
-    advance_to_poll,
-    cloud_calls,
-    detection_event,
-    entity_id_for,
-    now_ms,
-    record_states,
-    set_up_warm,
-    setting_param,
-    setup_entry,
-    state_of,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     CameraImage,
     CloudDevice,
     CommandNotAppliedError,
@@ -41,11 +27,25 @@ from eufy_home_security import (
     StationUnreachableError,
     entity_unique_id,
 )
-from eufy_home_security.devices import Setting, SettingControl, SettingRole, SettingShown
-from eufy_home_security.devices.model_settings import settings_of
-from eufy_home_security.p2p.messages import STANDALONE_RECEIPT_LEN
-from eufy_home_security.push.decode import decode_push
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, v1_still
+from anker_eufy_security.devices import Setting, SettingControl, SettingRole, SettingShown
+from anker_eufy_security.devices.model_settings import settings_of
+from anker_eufy_security.p2p.messages import STANDALONE_RECEIPT_LEN
+from anker_eufy_security.push.decode import decode_push
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, v1_still
+from conftest import (
+    add_entry,
+    advance_to_poll,
+    cloud_calls,
+    detection_event,
+    entity_id_for,
+    now_ms,
+    record_states,
+    set_up_warm,
+    setting_param,
+    setup_entry,
+    state_of,
+    wait_until,
+)
 from homeassistant.components.camera import async_get_image, async_get_stream_source
 from homeassistant.const import STATE_UNAVAILABLE, EntityCategory
 from homeassistant.core import HomeAssistant
@@ -1014,7 +1014,7 @@ _T8170_CLIMB = [(1280, 720), (1920, 1080), (2880, 1616)]
 @pytest.fixture(autouse=True)
 def short_size_settle(monkeypatch: pytest.MonkeyPatch) -> None:
     """A full-resolution live image waits this long for the picture size to settle."""
-    monkeypatch.setattr(eufy_home_security.station, "SETTLE_STANDALONE", 0.1)
+    monkeypatch.setattr(anker_eufy_security.station, "SETTLE_STANDALONE", 0.1)
 
 
 def _serve_newest_still(station: FakeStation, t_ms: int, jpeg: bytes) -> None:

@@ -36,7 +36,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_registry as er
 from homeassistant.util.hass_dict import HassKey
 
-from eufy_home_security import Station, entity_unique_id, redact_serial
+from anker_eufy_security import Station, entity_unique_id, redact_serial
 
 from . import detections, errors, presets
 from .const import ATTR_PRESET, CAMERA_KEY, DOMAIN, PRESET_MAX_INDEX

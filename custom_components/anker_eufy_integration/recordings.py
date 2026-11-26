@@ -58,7 +58,7 @@ from homeassistant.helpers.event import async_call_later, async_track_time_inter
 from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 
-from eufy_home_security import (
+from anker_eufy_security import (
     ClipWriter,
     EufySecurityError,
     HistoryRecord,
@@ -68,7 +68,7 @@ from eufy_home_security import (
     Station,
     redact_serial,
 )
-from eufy_home_security.station import RECORDING_QUIET
+from anker_eufy_security.station import RECORDING_QUIET
 
 from . import errors
 from .const import (

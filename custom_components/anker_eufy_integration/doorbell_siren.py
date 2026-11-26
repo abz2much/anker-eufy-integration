@@ -19,7 +19,7 @@ from homeassistant.core import CALLBACK_TYPE, callback
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.event import async_call_later
 
-from eufy_home_security import EufySecurityError
+from anker_eufy_security import EufySecurityError
 
 from . import detections, errors
 from .const import DOMAIN, SIREN_KEY

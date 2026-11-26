@@ -35,7 +35,7 @@ from homeassistant.helpers.selector import (
     TextSelectorType,
 )
 
-from eufy_home_security import (
+from anker_eufy_security import (
     DEFAULT_STATION_SESSIONS,
     IMAGE_SOURCES,
     MIN_STATION_SESSIONS,

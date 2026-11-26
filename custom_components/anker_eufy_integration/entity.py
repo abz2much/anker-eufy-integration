@@ -11,7 +11,7 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from eufy_home_security import (
+from anker_eufy_security import (
     CommandError,
     DeviceTimeoutError,
     EufySecurityError,
@@ -20,7 +20,7 @@ from eufy_home_security import (
     UnsupportedError,
     entity_unique_id,
 )
-from eufy_home_security.devices.model_settings import Value
+from anker_eufy_security.devices.model_settings import Value
 
 from . import errors, runtime
 from .const import (

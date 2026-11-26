@@ -41,7 +41,11 @@ The last synced upstream commit is recorded in CHANGES-FROM-UPSTREAM.md.
 
 ## The library
 
-The integration installs `eufy-home-security` from PyPI at the version pinned in
-`custom_components/anker_eufy_integration/manifest.json`. For local development,
-`uv sync` installs it editable from a sibling checkout at `../python-eufy_home_security`
+The integration installs our own library, `anker-eufy-security` (import
+`anker_eufy_security`, [source](https://github.com/abz2much/anker-eufy-security)), from
+PyPI at the version pinned in `custom_components/anker_eufy_integration/manifest.json`.
+It is based on alaraun's `eufy-home-security` under its own name, so it never shares an
+installed copy with the upstream integration's library. Upstream code that imports
+`eufy_home_security` must import `anker_eufy_security` when it comes in. For local
+development, `uv sync` installs it editable from a sibling checkout at `../anker-eufy-security`
 (`pyproject.toml`). That rewrites `uv.lock` locally: do not commit that change.

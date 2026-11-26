@@ -11,12 +11,12 @@ from types import SimpleNamespace
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import DetectionType, ImageSource, SecurityEvent, Station
+from anker_eufy_security.devices import DeviceKind, Support, model_for_serial
+from anker_eufy_security.p2p.messages import STANDALONE_RECEIPT_LEN
+from anker_eufy_security.push.decode import decode_push
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from conftest import entity_id_for, now_ms, record_states, set_up_warm, state_of, wait_until
-from eufy_home_security import DetectionType, ImageSource, SecurityEvent, Station
-from eufy_home_security.devices import DeviceKind, Support, model_for_serial
-from eufy_home_security.p2p.messages import STANDALONE_RECEIPT_LEN
-from eufy_home_security.push.decode import decode_push
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.components.lock import DOMAIN as LOCK_DOMAIN
 from homeassistant.components.lock import LockState
 from homeassistant.config_entries import ConfigEntry

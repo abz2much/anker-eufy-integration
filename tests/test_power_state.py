@@ -13,6 +13,10 @@ from collections.abc import Callable
 from typing import Final
 
 import pytest
+from anker_eufy_security import EufySecurity, SettingRole, Station, entity_unique_id
+from anker_eufy_security.devices import Setting
+from anker_eufy_security.devices.model_settings import settings_of
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from conftest import (
     SENSOR_SN,
     add_entry,
@@ -24,10 +28,6 @@ from conftest import (
     state_of,
     wait_until,
 )
-from eufy_home_security import EufySecurity, SettingRole, Station, entity_unique_id
-from eufy_home_security.devices import Setting
-from eufy_home_security.devices.model_settings import settings_of
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.components.sensor import ATTR_STATE_CLASS
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN

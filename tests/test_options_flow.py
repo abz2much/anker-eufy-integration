@@ -12,11 +12,7 @@ from typing import Any
 
 import probatio as vol
 import pytest
-from conftest import (
-    configure_options,
-    set_up_warm,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     DEFAULT_STATION_SESSIONS,
     IMAGE_SOURCES,
     MIN_STATION_SESSIONS,
@@ -25,7 +21,11 @@ from eufy_home_security import (
     ImageSource,
     entity_unique_id,
 )
-from eufy_home_security.testing import SYNTHETIC, FakeStation
+from anker_eufy_security.testing import SYNTHETIC, FakeStation
+from conftest import (
+    configure_options,
+    set_up_warm,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType, InvalidData, section
 from homeassistant.helpers import entity_registry as er

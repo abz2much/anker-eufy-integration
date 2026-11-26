@@ -14,9 +14,9 @@ from pathlib import Path
 from typing import Any, Final, Self
 
 import pytest
+from anker_eufy_security import DeviceTimeoutError, EufySecurity, entity_unique_id
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from conftest import set_up_warm
-from eufy_home_security import DeviceTimeoutError, EufySecurity, entity_unique_id
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import HomeAssistant

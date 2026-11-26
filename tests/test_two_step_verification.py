@@ -6,10 +6,10 @@ from collections.abc import Callable
 from typing import Any
 
 import pytest
+from anker_eufy_security import AuthenticationError, EufySecurity, SessionCache
+from anker_eufy_security.cloud import const as cloud_const
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud
 from conftest import cloud_calls, set_up_warm
-from eufy_home_security import AuthenticationError, EufySecurity, SessionCache
-from eufy_home_security.cloud import const as cloud_const
-from eufy_home_security.testing import SYNTHETIC, FakeCloud
 from homeassistant.config_entries import SOURCE_USER, ConfigEntry, ConfigEntryState
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.core import HomeAssistant

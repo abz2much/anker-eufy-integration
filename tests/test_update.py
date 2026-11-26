@@ -18,9 +18,9 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Final
 
+from anker_eufy_security import EufySecurity, entity_unique_id
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from conftest import SENSOR_SN, add_motion_sensor, entity_id_for, set_up_warm
-from eufy_home_security import EufySecurity, entity_unique_id
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.components.update import (
     ATTR_INSTALLED_VERSION,

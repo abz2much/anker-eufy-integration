@@ -10,6 +10,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Final
 
+from anker_eufy_security import DetectionType, EufySecurity, SecurityEvent, entity_unique_id
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from conftest import (
     SENSOR_SN,
     add_motion_sensor,
@@ -18,8 +20,6 @@ from conftest import (
     set_up_warm,
     state_of,
 )
-from eufy_home_security import DetectionType, EufySecurity, SecurityEvent, entity_unique_id
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.const import STATE_UNKNOWN
 from homeassistant.core import HomeAssistant

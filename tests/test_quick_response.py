@@ -13,9 +13,9 @@ from typing import Any, Final
 
 import pytest
 import voluptuous as vol
+from anker_eufy_security import DeviceTimeoutError, EufySecurity, entity_unique_id
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from conftest import set_up_warm
-from eufy_home_security import DeviceTimeoutError, EufySecurity, entity_unique_id
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.components.button import SERVICE_PRESS
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN

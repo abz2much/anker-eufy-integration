@@ -20,7 +20,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from eufy_home_security import LockReading, LockState, LockStateChanged, UnsupportedError
+from anker_eufy_security import LockReading, LockState, LockStateChanged, UnsupportedError
 
 from . import detections, errors
 from .const import ATTR_LOCK_STATE, ATTR_RAW_VALUE, LOCK_KEY

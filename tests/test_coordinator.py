@@ -14,6 +14,17 @@ from datetime import timedelta
 from typing import Any
 
 import pytest
+from anker_eufy_security import (
+    CommunicationError,
+    EufySecurity,
+    Event,
+    GuardMode,
+    GuardModeChanged,
+    ParamChanged,
+    Station,
+    StationState,
+)
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from conftest import (
     add_entry,
     advance_to_poll,
@@ -28,17 +39,6 @@ from conftest import (
     state_of,
     wait_until,
 )
-from eufy_home_security import (
-    CommunicationError,
-    EufySecurity,
-    Event,
-    GuardMode,
-    GuardModeChanged,
-    ParamChanged,
-    Station,
-    StationState,
-)
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.number.const import DOMAIN as NUMBER_DOMAIN
 from homeassistant.config_entries import ConfigEntryState
@@ -50,7 +50,7 @@ from pytest_homeassistant.common import async_fire_time_changed
 from custom_components.anker_eufy_integration.const import CONNECTION_LOSS_GRACE_SECONDS
 
 # The loggers whose lines a user's log would carry: the integration's and the library's.
-_OUR_LOGGERS = ("custom_components.anker_eufy_integration", "eufy_home_security")
+_OUR_LOGGERS = ("custom_components.anker_eufy_integration", "anker_eufy_security")
 
 # A verified camera setting with a number entity: shows when a pushed dump arrives.
 _RETRIGGER = "trigger_interval_time"
@@ -493,7 +493,7 @@ async def test_a_station_that_never_came_up_on_first_setup_is_retried_then_loads
     assert cloud_calls(fake_cloud) == []
 
     ours = [record for record in caplog.records if record.name.startswith(_OUR_LOGGERS)]
-    assert any(record.name.startswith("eufy_home_security") for record in ours), (
+    assert any(record.name.startswith("anker_eufy_security") for record in ours), (
         "no library log record was captured, so the serial check below is vacuous"
     )
     warnings = [
@@ -529,7 +529,7 @@ async def test_an_idle_disconnect_is_not_an_outage_for_a_homebase(
     seed_warm_cache: Callable[..., None],
 ) -> None:
     """An idle disconnect does not mark the HomeBase unavailable."""
-    from eufy_home_security import ConnectionChanged, DisconnectCause
+    from anker_eufy_security import ConnectionChanged, DisconnectCause
 
     entry = await set_up_warm(hass, seed_warm_cache)
     entity_id = panel_entity_id(hass)
@@ -557,7 +557,7 @@ async def test_a_session_lost_while_home_assistant_stops_is_not_an_outage(
     caplog: pytest.LogCaptureFixture,
 ) -> None:
     """Stopping HA ends every session; the loss logs no ERROR and marks nothing."""
-    from eufy_home_security import ConnectionChanged, DisconnectCause, StationUnreachableError
+    from anker_eufy_security import ConnectionChanged, DisconnectCause, StationUnreachableError
     from homeassistant.core import CoreState
 
     entry = await set_up_warm(hass, seed_warm_cache)
@@ -590,7 +590,7 @@ async def test_a_session_lost_while_home_assistant_stops_is_not_an_outage(
 
 
 def _lost(cause: Any) -> Any:
-    from eufy_home_security import ConnectionChanged, StationUnreachableError
+    from anker_eufy_security import ConnectionChanged, StationUnreachableError
 
     return ConnectionChanged(
         station_sn=SYNTHETIC.station_sn,
@@ -609,7 +609,7 @@ async def test_a_session_lost_while_running_is_an_outage_after_the_grace(
     cause: str,
 ) -> None:
     """A lost session stays available through the grace, then shows unavailable."""
-    from eufy_home_security import DisconnectCause
+    from anker_eufy_security import DisconnectCause
 
     entry = await set_up_warm(hass, seed_warm_cache)
     coordinator = entry.runtime_data.coordinators[SYNTHETIC.station_sn]
@@ -641,7 +641,7 @@ async def test_a_session_back_within_the_grace_never_shows_unavailable(
 ) -> None:
     """A HomeBase drop that reconnects within seconds is not an outage: no ERROR, no
     unavailable state, and the reconnect still reads the station."""
-    from eufy_home_security import ConnectionChanged, DisconnectCause
+    from anker_eufy_security import ConnectionChanged, DisconnectCause
 
     entry = await set_up_warm(hass, seed_warm_cache)
     coordinator = entry.runtime_data.coordinators[SYNTHETIC.station_sn]

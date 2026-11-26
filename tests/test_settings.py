@@ -13,6 +13,21 @@ from types import SimpleNamespace
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import (
+    MODES_SECTION,
+    EufySecurity,
+    SettingRole,
+    SettingShown,
+    Station,
+    entity_unique_id,
+)
+from anker_eufy_security.devices import MODE_ACTION_FLAGS, Scope, SettingControl, SettingKind
+from anker_eufy_security.devices.model_settings import (
+    bundled_codes,
+    mode_table_settings,
+    settings_of,
+)
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from conftest import (
     SENSOR_SN,
     add_entry,
@@ -23,21 +38,6 @@ from conftest import (
     setup_entry,
     state_of,
 )
-from eufy_home_security import (
-    MODES_SECTION,
-    EufySecurity,
-    SettingRole,
-    SettingShown,
-    Station,
-    entity_unique_id,
-)
-from eufy_home_security.devices import MODE_ACTION_FLAGS, Scope, SettingControl, SettingKind
-from eufy_home_security.devices.model_settings import (
-    bundled_codes,
-    mode_table_settings,
-    settings_of,
-)
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.const import EntityCategory, Platform

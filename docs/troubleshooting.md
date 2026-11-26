@@ -6,7 +6,7 @@
 logger:
   logs:
     custom_components.anker_eufy_integration: debug
-    eufy_home_security: debug
+    anker_eufy_security: debug
     firebase_messaging: debug  # cloud push only
 ```
 

@@ -20,8 +20,7 @@ from typing import Any, Final
 
 import av
 import pytest
-from conftest import SYNTHETIC, add_entry, entity_id_for, setup_entry, wait_until
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountRejectedError,
     ClipWriter,
     DeviceTimeoutError,
@@ -31,7 +30,8 @@ from eufy_home_security import (
     MediaClip,
     Station,
 )
-from eufy_home_security.testing import FakeStation
+from anker_eufy_security.testing import FakeStation
+from conftest import SYNTHETIC, add_entry, entity_id_for, setup_entry, wait_until
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.core import HomeAssistant
 from homeassistant.setup import async_setup_component

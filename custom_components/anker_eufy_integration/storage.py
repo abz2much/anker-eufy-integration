@@ -37,7 +37,7 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
 
-from eufy_home_security import (
+from anker_eufy_security import (
     CommandRejectedError,
     EufySecurityError,
     Station,

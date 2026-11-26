@@ -16,10 +16,10 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from anker_eufy_security import EufySecurity, Station, entity_unique_id
+from anker_eufy_security.devices.model_settings import settings_of
+from anker_eufy_security.testing import SYNTHETIC, FakeStation
 from conftest import add_entry, entity_id_for, setup_entry
-from eufy_home_security import EufySecurity, Station, entity_unique_id
-from eufy_home_security.devices.model_settings import settings_of
-from eufy_home_security.testing import SYNTHETIC, FakeStation
 from homeassistant.components.repairs import repairs_flow_manager
 from homeassistant.config_entries import ConfigEntryDisabler, ConfigEntryState
 from homeassistant.const import Platform

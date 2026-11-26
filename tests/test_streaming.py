@@ -27,6 +27,19 @@ import av
 import pytest
 from aiohttp import web
 from aiohttp.test_utils import make_mocked_request, unused_port
+from anker_eufy_security import (
+    MIN_STATION_SESSIONS,
+    DetectionType,
+    EufySecurity,
+    Station,
+    StreamBroadcast,
+    VideoCodec,
+    redact_serial,
+)
+from anker_eufy_security.devices.model_settings import settings_of
+from anker_eufy_security.p2p import session as session_module
+from anker_eufy_security.p2p.media import MediaFrame, MediaKind
+from anker_eufy_security.testing import FakeCloud, FakeStation, camera_device
 from conftest import (
     PUSHED_THUMB_PATH,
     PUSHED_THUMBNAIL,
@@ -46,19 +59,6 @@ from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.x509.oid import NameOID
-from eufy_home_security import (
-    MIN_STATION_SESSIONS,
-    DetectionType,
-    EufySecurity,
-    Station,
-    StreamBroadcast,
-    VideoCodec,
-    redact_serial,
-)
-from eufy_home_security.devices.model_settings import settings_of
-from eufy_home_security.p2p import session as session_module
-from eufy_home_security.p2p.media import MediaFrame, MediaKind
-from eufy_home_security.testing import FakeCloud, FakeStation, camera_device
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.components.button import SERVICE_PRESS
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN

@@ -1,6 +1,6 @@
 """Constants for the Anker eufy Home Security integration.
 
-Everything about eufy itself lives in the ``eufy-home-security`` library; this
+Everything about eufy itself lives in the ``anker-eufy-security`` library; this
 module holds only the Home Assistant side's own names.
 """
 
@@ -42,7 +42,7 @@ class CameraImageMode(StrEnum):
     """The Camera image option's three choices; the stored option value.
 
     The choices and the default are the library's "Suggested configuration" table
-    (python-eufy_home_security docs/how-to/home-assistant.md, "Camera images").
+    (anker-eufy-security docs/how-to/home-assistant.md, "Camera images").
     """
 
     # HD from the recording: the thumbnail, then the trigger frame replaces it.

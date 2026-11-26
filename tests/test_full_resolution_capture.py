@@ -18,8 +18,11 @@ from pathlib import Path
 from typing import Any, Final
 from urllib.parse import urlparse
 
-import eufy_home_security.station
+import anker_eufy_security.station
 import pytest
+from anker_eufy_security import EufySecurity, ImageSource, Station
+from anker_eufy_security.station import FULL_RESOLUTION_TIMEOUT
+from anker_eufy_security.testing import FakeStation
 from conftest import (
     SYNTHETIC,
     configure_options,
@@ -27,9 +30,6 @@ from conftest import (
     set_up_warm,
     wait_until,
 )
-from eufy_home_security import EufySecurity, ImageSource, Station
-from eufy_home_security.station import FULL_RESOLUTION_TIMEOUT
-from eufy_home_security.testing import FakeStation
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.components.button import SERVICE_PRESS
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
@@ -62,7 +62,7 @@ _TS_SYNC: Final = 0x47
 @pytest.fixture(autouse=True)
 def short_size_settle(monkeypatch: pytest.MonkeyPatch) -> None:
     """A full-resolution live image waits this long for the picture size to hold."""
-    monkeypatch.setattr(eufy_home_security.station, "SETTLE_STATION", 0.1)
+    monkeypatch.setattr(anker_eufy_security.station, "SETTLE_STATION", 0.1)
 
 
 def _record_live_calls(monkeypatch: pytest.MonkeyPatch, delay: float = 0.0) -> list[dict[str, Any]]:

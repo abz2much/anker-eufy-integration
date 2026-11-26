@@ -22,14 +22,14 @@ from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import PERCENTAGE, EntityCategory, Platform
 from homeassistant.helpers import entity_registry as er
 
-from eufy_home_security import (
+from anker_eufy_security import (
     MODES_SECTION,
     Light,
     Station,
     UnsupportedError,
     entity_unique_id,
 )
-from eufy_home_security.devices import (
+from anker_eufy_security.devices import (
     MODE_ACTION_FLAGS,
     Scope,
     Setting,
@@ -39,7 +39,7 @@ from eufy_home_security.devices import (
     SettingRole,
     SettingShown,
 )
-from eufy_home_security.devices.model_settings import PARENTLESS_ONLY, mode_table_settings
+from anker_eufy_security.devices.model_settings import PARENTLESS_ONLY, mode_table_settings
 
 # The per-mode delays every paired camera or sensor carries, one per guard mode.
 _DELAY_KEYS: frozenset[str] = frozenset(s.key for s in mode_table_settings(Scope.SUB_DEVICE))

@@ -70,7 +70,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect, async_dis
 from homeassistant.util import dt as dt_util
 from homeassistant.util.signal_type import SignalType
 
-from eufy_home_security import (
+from anker_eufy_security import (
     CameraImage,
     DeviceBusyError,
     EufySecurityError,

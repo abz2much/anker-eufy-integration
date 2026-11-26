@@ -20,14 +20,14 @@ from typing import Final
 
 import pytest
 import yaml
-from eufy_home_security import MAX_PRESET_SLOTS
-from eufy_home_security.devices import (
+from anker_eufy_security import MAX_PRESET_SLOTS
+from anker_eufy_security.devices import (
     MODES_SECTION,
     SETTING_SECTIONS,
     Scope,
     SettingControl,
 )
-from eufy_home_security.devices.model_settings import (
+from anker_eufy_security.devices.model_settings import (
     bundled_codes,
     mode_table_settings,
     settings_of,

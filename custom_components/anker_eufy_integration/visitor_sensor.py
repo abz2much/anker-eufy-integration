@@ -18,7 +18,7 @@ from homeassistant.components.sensor import RestoreSensor
 from homeassistant.core import callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
-from eufy_home_security import DetectionType, SecurityEvent
+from anker_eufy_security import DetectionType, SecurityEvent
 
 from . import detections
 from .coordinator import StationCoordinator
