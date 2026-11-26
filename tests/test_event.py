@@ -143,6 +143,7 @@ def test_every_event_type_a_mapping_fires_is_declared() -> None:
         "armed_away",
         "armed_home",
         "disarmed",
+        "armed_night",
         "armed_custom",
     )
 
@@ -707,7 +708,7 @@ async def test_an_unauthenticated_alarm_trigger_or_delay_fires_the_alarm_event_m
         (63, "disarmed"),
         (6, "disarmed"),
         (2, "armed_custom"),
-        (3, "armed_custom"),
+        (3, "armed_night"),
         (47, "armed_custom"),
     ],
     ids=["away", "home", "disarmed", "off", "schedule", "custom_1", "geofence"],

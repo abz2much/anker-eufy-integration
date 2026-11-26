@@ -803,6 +803,7 @@
               "armed_away": "Armed away",
               "armed_home": "Armed home",
               "disarmed": "Disarmed",
+              "armed_night": "Armed night",
               "armed_custom": "Armed custom mode"
             }
           }

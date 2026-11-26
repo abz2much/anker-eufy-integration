@@ -97,7 +97,7 @@ _EXPECTED: dict[GuardMode | int | None, AlarmControlPanelState | None] = {
     GuardMode.AWAY: AlarmControlPanelState.ARMED_AWAY,
     GuardMode.HOME: AlarmControlPanelState.ARMED_HOME,
     GuardMode.SCHEDULE: AlarmControlPanelState.ARMED_CUSTOM_BYPASS,
-    GuardMode.CUSTOM_1: AlarmControlPanelState.ARMED_CUSTOM_BYPASS,
+    GuardMode.CUSTOM_1: AlarmControlPanelState.ARMED_NIGHT,
     GuardMode.CUSTOM_2: AlarmControlPanelState.ARMED_CUSTOM_BYPASS,
     GuardMode.CUSTOM_3: AlarmControlPanelState.ARMED_CUSTOM_BYPASS,
     GuardMode.OFF: AlarmControlPanelState.DISARMED,

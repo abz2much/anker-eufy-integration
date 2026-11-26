@@ -191,10 +191,21 @@ class EufyGuardModePanel(EufyStationEntity, AlarmControlPanelEntity, RestoreEnti
     # The class default is True; arming is a P2P command, never gated by a code.
     _attr_code_arm_required = False
     _attr_code_format = None
-    # No ARM_CUSTOM_BYPASS. Schedule and the custom modes are shown, never set.
+    # No ARM_CUSTOM_BYPASS. Schedule and Custom 2 and 3 are shown, never set; Custom 1
+    # is Night, armed with ARM_NIGHT where the station has it (``supported_features``).
     _attr_supported_features = (
         AlarmControlPanelEntityFeature.ARM_HOME | AlarmControlPanelEntityFeature.ARM_AWAY
     )
+
+    @property
+    @override
+    def supported_features(self) -> AlarmControlPanelEntityFeature:
+        """Home and away, and Night where the station can be set to Custom 1."""
+        features = self._attr_supported_features
+        config = self.coordinator.station_config
+        if config is not None and GuardMode.CUSTOM_1 in config.settable_modes:
+            features |= AlarmControlPanelEntityFeature.ARM_NIGHT
+        return features
 
     def __init__(self, coordinator: StationCoordinator, alarm_timeout_minutes: int) -> None:
         super().__init__(coordinator, GUARD_MODE_KEY)
@@ -756,6 +767,12 @@ class EufyGuardModePanel(EufyStationEntity, AlarmControlPanelEntity, RestoreEnti
         """Arm home; the panel shows arming until the station answers."""
         del code
         await self._async_set_guard_mode(GuardMode.HOME, AlarmControlPanelState.ARMING)
+
+    @override
+    async def async_alarm_arm_night(self, code: str | None = None) -> None:
+        """Arm Night (Custom 1); the panel shows arming until the station answers."""
+        del code
+        await self._async_set_guard_mode(GuardMode.CUSTOM_1, AlarmControlPanelState.ARMING)
 
     @override
     async def async_alarm_disarm(self, code: str | None = None) -> None:
