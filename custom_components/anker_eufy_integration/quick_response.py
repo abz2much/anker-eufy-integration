@@ -34,7 +34,7 @@ QUICK_RESPONSE_SCHEMA: Final[dict[str | vol.Marker, Any]] = {
 }
 
 
-def _doorbell_channel(coordinator: StationCoordinator, device_sn: str | None) -> int | None:
+def doorbell_channel(coordinator: StationCoordinator, device_sn: str | None) -> int | None:
     """The channel of a paired doorbell that plays quick responses; None otherwise."""
     station = coordinator.station
     for device in station.devices:
@@ -52,7 +52,7 @@ def quick_response_buttons(coordinator: StationCoordinator) -> list[EufyQuickRes
     return [
         EufyQuickResponseButton(coordinator, device.device_sn, key, voice_id)
         for device in coordinator.station.devices
-        if _doorbell_channel(coordinator, device.device_sn) is not None
+        if doorbell_channel(coordinator, device.device_sn) is not None
         for key, voice_id in BUILT_IN_REPLIES.items()
     ]
 
@@ -61,7 +61,7 @@ async def async_play(
     coordinator: StationCoordinator, device_sn: str | None, voice_id: int, target: str
 ) -> None:
     """Play reply ``voice_id`` at the doorbell; a failure raises a translated error."""
-    channel = _doorbell_channel(coordinator, device_sn)
+    channel = doorbell_channel(coordinator, device_sn)
     if channel is None:
         raise ServiceValidationError(
             translation_domain=DOMAIN, translation_key="quick_response_not_a_doorbell"

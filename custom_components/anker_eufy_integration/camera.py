@@ -69,6 +69,7 @@ from . import (
     detections,
     errors,
     history,
+    play_audio,
     presets,
     ptz,
     quick_response,
@@ -198,6 +199,12 @@ async def async_setup_entry(
         quick_response.SERVICE_QUICK_RESPONSE,
         quick_response.QUICK_RESPONSE_SCHEMA,
         quick_response.async_handle_quick_response,
+    )
+    # Play an audio file at the doorbell (play_audio.py).
+    platform.async_register_entity_service(
+        play_audio.SERVICE_PLAY_AUDIO,
+        play_audio.PLAY_AUDIO_SCHEMA,
+        play_audio.async_handle_play_audio,
     )
 
 

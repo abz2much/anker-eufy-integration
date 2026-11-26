@@ -551,6 +551,18 @@
     },
     "quick_response_no_answer": {
       "message": "{station} did not answer the quick response. Check that it is online and on the same network as Home Assistant."
+    },
+    "play_audio_not_a_doorbell": {
+      "message": "Play audio works only on an E340 doorbell. Choose the doorbell's camera."
+    },
+    "play_audio_path_not_allowed": {
+      "message": "Home Assistant may not read {path}. Use a file in an allowed folder, such as /media, or add the folder to allowlist_external_dirs."
+    },
+    "play_audio_unreadable": {
+      "message": "{path} could not be read as audio. Check the file exists and is a sound file."
+    },
+    "play_audio_failed": {
+      "message": "{station} did not take the audio for the doorbell. Check that it is online and on the same network as Home Assistant, then try again."
     }
   },
   "entity": {
@@ -945,6 +957,16 @@
         "voice_id": {
           "name": "Reply",
           "description": "The reply's id: 1 Excuse me, can I help you; 2 Please leave it at the door; 3 We will be right there; 100 and up your own recordings."
+        }
+      }
+    },
+    "play_audio": {
+      "name": "Play audio",
+      "description": "Plays a sound file at the doorbell's speaker, up to 60 seconds. Any format ffmpeg reads.",
+      "fields": {
+        "media_path": {
+          "name": "File",
+          "description": "The sound file's path in a folder Home Assistant may read, such as /media/doorbell/hello.mp3."
         }
       }
     }
