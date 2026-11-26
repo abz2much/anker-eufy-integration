@@ -185,7 +185,7 @@ account:
 Report a model whose `models` row is not `bundled`, has `newer_vendor_data`, or
 whose settings misbehave. Open an issue with:
 
-1. **Diagnostics**: **Settings → Devices & services → Anker eufy Home Security → ⋮ →
+1. **Diagnostics**: **Settings → Devices & services → Anker eufy Integration → ⋮ →
    Download diagnostics**. Serials are shortened, names removed. The `models` block
    gives the product code and how the library knows it.
 2. **Model and firmware** from the device page.
