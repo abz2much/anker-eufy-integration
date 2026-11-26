@@ -1063,6 +1063,48 @@ async def test_a_ring_in_the_session_of_a_face_detection_still_rings(
     await _unload(hass, entry)
 
 
+async def test_a_second_press_3_s_later_in_the_same_session_rings_again(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A face detection, then two presses 3 s apart, all in one session: two rings.
+    Home Assistant fires one event per device event; only copies of one press merge."""
+    original = detections.has_doorbell_entity
+
+    def rings(serial: str) -> bool:
+        return serial == SYNTHETIC.camera_sn or original(serial)
+
+    monkeypatch.setattr(detections, "has_doorbell_entity", rings)
+    entry = await set_up_warm(hass, seed_warm_cache)
+    ring_id = entity_id_for(hass, EVENT_DOMAIN, SYNTHETIC.camera_sn, DOORBELL_EVENT_KEY)
+    ring_states = record_states(hass, ring_id)
+    detection_states = record_states(hass, _detection_entity_id(hass))
+    deduplicator = built_clients[-1].deduplicator
+    assert deduplicator is not None
+
+    _push_session_event(
+        fake_station, DetectionType.PERSON, trigger_time=1_700_000_000_000, session_id="s-1"
+    )
+    await wait_until(lambda: len(detection_states) == 1)
+    for trigger_time in (1_700_000_006_000, 1_700_000_009_000):
+        _push_session_event(
+            fake_station,
+            DetectionType.DOORBELL_PRESS,
+            trigger_time=trigger_time,
+            session_id="s-1",
+        )
+    await wait_until(lambda: len(ring_states) == 2 or deduplicator.dropped_duplicates > 0)
+    await hass.async_block_till_done()
+
+    assert deduplicator.dropped_duplicates == 0
+    assert len(ring_states) == 2
+
+    await _unload(hass, entry)
+
+
 async def test_every_station_has_one_alarm_and_one_arming_event_entity(
     hass: HomeAssistant,
     fake_station: FakeStation,
