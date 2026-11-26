@@ -250,7 +250,7 @@ dev = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "anker-eufy-security", specifier = "==0.1.0" },
+    { name = "anker-eufy-security", specifier = "==0.1.1" },
     { name = "av", specifier = "==19.0.0" },
     { name = "mypy" },
     { name = "pytest-homeassistant", specifier = "==2026.11.0" },
@@ -261,7 +261,7 @@ dev = [
 
 [[package]]
 name = "anker-eufy-security"
-version = "0.1.0"
+version = "0.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -270,9 +270,9 @@ dependencies = [
     { name = "protobuf" },
     { name = "tzdata" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/af/8c/daed9055c90fbe2609165ef4fc5523cfaee7f0da5ecdc278f69a554fd75a/anker_eufy_security-0.1.0.tar.gz", hash = "sha256:e8b060a188b354d9375fc115a4f1ed891c0bd295256264dd4996fde18606db55", size = 1294991, upload-time = "2026-11-26T18:41:58.538Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/12/34/6f4c68efc53ba04496fc9214ff17b90fba6bf828a552057e3d063dd5da59/anker_eufy_security-0.1.1.tar.gz", hash = "sha256:94a57e193ac7be905d8161e377ca4fa65c885bd529a7ca996e25d104cdb868b4", size = 1295214, upload-time = "2026-11-26T20:04:35.823Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9c/3d/700a68863a9ef9862393375670a129ed9fd4f637cde04313170e19613752/anker_eufy_security-0.1.0-py3-none-any.whl", hash = "sha256:533840068d396a83abeb32a223a463808ab0912aa953ca0d759965cb3923d04d", size = 1519075, upload-time = "2026-11-26T18:41:56.926Z" },
+    { url = "https://files.pythonhosted.org/packages/61/51/0df16d05cc3e1b842c9e8f5abfff6b73a0b7a41c49e41395dedbb911979d/anker_eufy_security-0.1.1-py3-none-any.whl", hash = "sha256:c71720bfdc7b1e371f35259a1dc9d202fb7e03a3c7b64bbbf4962c8d4b035ae1", size = 1519171, upload-time = "2026-11-26T20:04:34.433Z" },
 ]
 
 [[package]]

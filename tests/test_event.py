@@ -1360,7 +1360,7 @@ async def test_dedupe_a_p2p_and_a_cloud_copy_of_one_detection_fire_one_event(
             "payload": base64.b64encode(json.dumps(inner).encode()).decode(),
         }
     )
-    assert cloud.dedupe_key == "unique:0123456789abcdef0123456789abcdef"
+    assert cloud.dedupe_key == "unique:0123456789abcdef0123456789abcdef:detection"
     eufy._on_push(cloud)  # the FCM listener's own entry point
     await wait_until(lambda: deduplicator.dropped_duplicates == 1)
     await hass.async_block_till_done()
