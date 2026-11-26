@@ -340,7 +340,7 @@ station only).
 
 ### Recording a clip
 
-The `eufy_home_security.record` action on a camera entity records its live stream into
+The `anker_eufy_integration.record` action on a camera entity records its live stream into
 the event history:
 
 | Field | Default | Description |
@@ -362,7 +362,7 @@ the event history:
 
   A clip whose stream ended early is kept with `complete: false`.
 
-- `eufy_home_security.stop_recording` on the same camera ends a running clip now: the part
+- `anker_eufy_integration.stop_recording` on the same camera ends a running clip now: the part
   recorded so far is saved as a complete clip (`complete: true`) and the record action
   returns. Stopped before the camera sent its first picture, nothing is saved and the record
   action raises an error. With no clip running it is refused.
@@ -402,12 +402,12 @@ Which cameras get these: [devices.md](devices.md#pan-tilt-presets-and-zoom).
 | **Default preset** select | The preset the camera returns to when idle |
 | **Live view preset** select | The preset every live view opens at |
 | **Live view zoom** number | 1×–12×, applied whenever a view opens |
-| `eufy_home_security.capture_preset` | `preset` (0-based) |
-| `eufy_home_security.goto_preset` | one-off turn to `preset` |
-| `eufy_home_security.pan_tilt` | `direction`: `left`, `right`, `up`, `down` |
-| `eufy_home_security.zoom` | `direction`: `in`, `out` |
-| `eufy_home_security.save_preset` | optional `preset` (overwrite a slot) and `make_default`; returns `{"preset": n}` |
-| `eufy_home_security.delete_preset` | clear slot `preset` |
+| `anker_eufy_integration.capture_preset` | `preset` (0-based) |
+| `anker_eufy_integration.goto_preset` | one-off turn to `preset` |
+| `anker_eufy_integration.pan_tilt` | `direction`: `left`, `right`, `up`, `down` |
+| `anker_eufy_integration.zoom` | `direction`: `in`, `out` |
+| `anker_eufy_integration.save_preset` | optional `preset` (overwrite a slot) and `make_default`; returns `{"preset": n}` |
+| `anker_eufy_integration.delete_preset` | clear slot `preset` |
 | `anker_eufy_integration/preset_image` (websocket) | `entity_id`, `preset`, `image` (base64 JPEG, at most 2 MB): keeps the picture as that set slot's **Preset n image**, as a capture does; no camera I/O. The camera card's **Save view** sends its frame of the live video here |
 
 - Every press and action wakes the camera.

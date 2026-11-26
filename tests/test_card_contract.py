@@ -162,7 +162,7 @@ def test_every_action_the_card_calls_is_registered() -> None:
 
 
 def test_the_record_action_the_card_calls_is_registered() -> None:
-    """The card's record button calls ``eufy_home_security.record`` with a response."""
+    """The card's record button calls ``anker_eufy_integration.record`` with a response."""
     called = set(re.findall(r"callService\(DOMAIN, '([a-z_]+)'", _SOURCE))
     assert "record" in called
     services = yaml.safe_load((_ROOT / "services.yaml").read_text(encoding="utf-8"))
