@@ -539,6 +539,9 @@
     },
     "garage_other_door_moving": {
       "message": "The other garage door on this camera is still moving. Try again when it has stopped."
+    },
+    "doorbell_siren_duration": {
+      "message": "The doorbell siren sounds for 1 to {max} seconds. Choose a duration in that range."
     }
   },
   "entity": {

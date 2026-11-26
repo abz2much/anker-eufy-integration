@@ -44,7 +44,7 @@ from eufy_home_security import (
     EufySecurityError,
 )
 
-from . import detections, errors
+from . import detections, doorbell_siren, errors
 from .const import SIREN_KEY, STATION_SIREN_DEFAULT_SECONDS
 from .coordinator import StationCoordinator
 from .entity import EufyDeviceEntity, EufyPushAvailability, EufyStationEntity
@@ -88,6 +88,9 @@ async def async_setup_entry(
             EufyCameraSiren(coordinator, serial, alarms)
             for serial, alarms in detections.device_siren_alarms(station).items()
         )
+    # The E340 doorbell's siren (doorbell_siren.py).
+    for coordinator in entry.runtime_data.coordinators.values():
+        entities.extend(doorbell_siren.doorbell_sirens(coordinator))
     async_add_entities(entities)
 
 
