@@ -3,7 +3,7 @@
   "packages": {
     ".": {
       "release-type": "simple",
-      "package-name": "homeassistant-eufy-home-security",
+      "package-name": "anker-eufy-integration",
       "changelog-path": "CHANGELOG.md",
       "include-v-in-tag": true,
       "include-component-in-tag": false,
@@ -15,7 +15,9 @@
           "path": "custom_components/anker_eufy_integration/manifest.json",
           "jsonpath": "$.version"
         }
-      ]
+      ],
+      "last-release-sha": "a7af6bd3581f9f5333226c581934e73a5cd670b0",
+      "release-as": "0.8.0"
     }
   }
 }
