@@ -263,8 +263,8 @@ the card never wakes a camera for it. Live view opens only on a press and ends:
 
 ## Writes
 
-- **Immediate:** pan/tilt, zoom and go-to-preset (`eufy_home_security.pan_tilt`, `.zoom`, `.goto_preset`), Record
-  (`eufy_home_security.record`), Stop recording (`eufy_home_security.stop_recording`), Save view and Replace (`eufy_home_security.save_preset`, then the picture over
+- **Immediate:** pan/tilt, zoom and go-to-preset (`anker_eufy_integration.pan_tilt`, `.zoom`, `.goto_preset`), Record
+  (`anker_eufy_integration.record`), Stop recording (`anker_eufy_integration.stop_recording`), Save view and Replace (`anker_eufy_integration.save_preset`, then the picture over
   the websocket command `anker_eufy_integration/preset_image`), the Station Play (websocket subscription
   `anker_eufy_integration/recordings/play`) and Save (`anker_eufy_integration/recordings/fetch`). Pan/tilt steps run one at a time; up to 3 presses wait
   their turn.

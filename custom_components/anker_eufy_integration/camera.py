@@ -14,7 +14,7 @@ snapshots stay on ``async_camera_image``, never taken from the stream. A camera
 without live support advertises no stream at all. The entity has no name of its
 own, the camera is its device.
 
-The camera entity is also the target of the ``eufy_home_security.capture_preset``
+The camera entity is also the target of the ``anker_eufy_integration.capture_preset``
 action: with a ``preset`` slot index it turns a pan/tilt
 camera to that preset and takes a live image of the view, which lands on that
 preset's image entity (``image.py``), never on the camera. The call returns at once;
