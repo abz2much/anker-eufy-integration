@@ -624,6 +624,9 @@
           "other": "Other problem",
           "not_usable": "Not usable"
         }
+      },
+      "last_visitor": {
+        "name": "Last visitor"
       }
     },
     "select": {
