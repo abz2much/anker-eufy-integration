@@ -17,6 +17,8 @@ from types import SimpleNamespace
 from typing import Any, Final, cast
 
 import pytest
+from anker_eufy_security import DetectionType, EufySecurity, Station
+from anker_eufy_security.testing import FakeStation
 from conftest import (
     SYNTHETIC,
     detection_event,
@@ -25,8 +27,6 @@ from conftest import (
     set_up_warm,
     wait_until,
 )
-from eufy_home_security import DetectionType, EufySecurity, Station
-from eufy_home_security.testing import FakeStation
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.components.button import SERVICE_PRESS
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN

@@ -50,7 +50,7 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.util import dt as dt_util
 from homeassistant.util.package import is_docker_env
 
-from eufy_home_security import ClipWriter, MediaClip, VideoCodec, redact_serial
+from anker_eufy_security import ClipWriter, MediaClip, VideoCodec, redact_serial
 
 from . import snapshots
 from .const import CLIP_REMUX_TIMEOUT_SECONDS, DOMAIN

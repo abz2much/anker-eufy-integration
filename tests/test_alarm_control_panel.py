@@ -11,20 +11,7 @@ from datetime import timedelta
 from types import SimpleNamespace
 
 import pytest
-from conftest import (
-    advance_to_poll,
-    alarm_changed,
-    entity_id_for,
-    now_ms,
-    panel_entity_id,
-    record_states,
-    set_guard_mode,
-    set_up_warm,
-    state_of,
-    station_event,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountRejectedError,
     AlarmStopSource,
     CameraWakeError,
@@ -53,8 +40,21 @@ from eufy_home_security import (
     StationUnreachableError,
     UnsupportedError,
 )
-from eufy_home_security.p2p import FrameType
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from anker_eufy_security.p2p import FrameType
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from conftest import (
+    advance_to_poll,
+    alarm_changed,
+    entity_id_for,
+    now_ms,
+    panel_entity_id,
+    record_states,
+    set_guard_mode,
+    set_up_warm,
+    state_of,
+    station_event,
+    wait_until,
+)
 from homeassistant.components.alarm_control_panel import ATTR_CODE_FORMAT
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.alarm_control_panel.const import (
@@ -90,7 +90,7 @@ from custom_components.anker_eufy_integration.const import (
 from custom_components.anker_eufy_integration.detections import ha_state
 
 # The loggers whose lines a user's log would carry: the integration's and the library's.
-_OUR_LOGGERS = ("custom_components.anker_eufy_integration", "eufy_home_security")
+_OUR_LOGGERS = ("custom_components.anker_eufy_integration", "anker_eufy_security")
 
 # The mode mapping, written out in full rather than derived from the function under test.
 _EXPECTED: dict[GuardMode | int | None, AlarmControlPanelState | None] = {
@@ -181,7 +181,7 @@ async def test_an_unknown_guard_mode_code_is_unknown_and_logged_once(
     # harness logs every hass_storage document it loads or writes in full, a
     # test-only line real Home Assistant never emits, so it is not in scope.
     ours = [record for record in caplog.records if record.name.startswith(_OUR_LOGGERS)]
-    assert any(record.name.startswith("eufy_home_security") for record in ours), (
+    assert any(record.name.startswith("anker_eufy_security") for record in ours), (
         "no library log record was captured, so the serial check below is vacuous"
     )
     leaking = [

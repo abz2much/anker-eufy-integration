@@ -11,8 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from conftest import cloud_calls, set_up_warm, wait_until
-from eufy_home_security import (
+from anker_eufy_security import (
     AuthenticationError,
     CommunicationError,
     EufySecurity,
@@ -29,8 +28,9 @@ from eufy_home_security import (
     StationClaims,
     StationUnreachableError,
 )
-from eufy_home_security.cloud import const as cloud_const
-from eufy_home_security.testing import SYNTHETIC, FakeCloud
+from anker_eufy_security.cloud import const as cloud_const
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud
+from conftest import cloud_calls, set_up_warm, wait_until
 from homeassistant.config_entries import SOURCE_USER, ConfigEntryState
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.core import HomeAssistant
@@ -336,7 +336,7 @@ async def test_a_failed_sign_in_keeps_the_email_and_never_echoes_the_password(
     assert _suggested_value(result, CONF_PASSWORD) is None
     assert SYNTHETIC.password not in str(result)
     # Not vacuous: the sign-in attempt was logged, and the password is in no record.
-    assert any(r.name.startswith("eufy_home_security") for r in caplog.records)
+    assert any(r.name.startswith("anker_eufy_security") for r in caplog.records)
     assert SYNTHETIC.password not in caplog.text
 
 

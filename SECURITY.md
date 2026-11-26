@@ -9,7 +9,7 @@ integration and Home Assistant versions and, if relevant, the device model and f
 but **never** credentials, tokens, serial numbers or images from your home.
 
 Problems in the protocol library go to
-[eufy-home-security](https://github.com/alaraun/python-eufy-home-security/security).
+[anker-eufy-security](https://github.com/abz2much/anker-eufy-security/security).
 
 ## What the integration handles
 

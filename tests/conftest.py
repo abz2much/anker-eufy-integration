@@ -1,9 +1,9 @@
-"""Fixtures for the integration tests, built on ``eufy_home_security.testing``.
+"""Fixtures for the integration tests, built on ``anker_eufy_security.testing``.
 
 The tests run the real library end to end: a real ``EufySecurity`` with its real
 cache, throttle and claims, wired to the library's ``FakeCloud`` and a loopback
 ``FakeStation``. They never mock the library, and they use the synthetic
-identities in ``eufy_home_security.testing.SYNTHETIC`` only, never a real serial,
+identities in ``anker_eufy_security.testing.SYNTHETIC`` only, never a real serial,
 P2P id, owner account id or e-mail.
 """
 
@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any, Final
 
 import pytest
-from eufy_home_security import (
+from anker_eufy_security import (
     DEFAULT_STATION_SESSIONS,
     AlarmChanged,
     AlarmStopSource,
@@ -33,11 +33,11 @@ from eufy_home_security import (
     StationClaims,
     entity_unique_id,
 )
-from eufy_home_security import station as station_module
-from eufy_home_security.devices import Scope, model_for_serial
-from eufy_home_security.devices.model_settings import mode_table_settings, settings_of
-from eufy_home_security.p2p import session as session_module
-from eufy_home_security.testing import (
+from anker_eufy_security import station as station_module
+from anker_eufy_security.devices import Scope, model_for_serial
+from anker_eufy_security.devices.model_settings import mode_table_settings, settings_of
+from anker_eufy_security.p2p import session as session_module
+from anker_eufy_security.testing import (
     SYNTHETIC,
     FakeCloud,
     FakeStation,

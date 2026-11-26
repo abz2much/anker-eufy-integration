@@ -15,8 +15,7 @@ from types import SimpleNamespace
 from typing import Any, Final
 
 import pytest
-from conftest import entity_id_for, seed_setting, set_up_warm, state_of
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountRejectedError,
     ClipWriter,
     CommandNotAppliedError,
@@ -30,9 +29,10 @@ from eufy_home_security import (
     StationUnreachableError,
     StreamBroadcast,
 )
-from eufy_home_security.devices.model_settings import settings_of
-from eufy_home_security.p2p.messages import STANDALONE_RECEIPT_LEN
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from anker_eufy_security.devices.model_settings import settings_of
+from anker_eufy_security.p2p.messages import STANDALONE_RECEIPT_LEN
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from conftest import entity_id_for, seed_setting, set_up_warm, state_of
 from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError

@@ -17,6 +17,8 @@ from datetime import datetime, timedelta
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import DetectionType, EufySecurity, FrameCipher, redact_serial
+from anker_eufy_security.testing import FakeStation
 from conftest import (
     PUSHED_THUMB_PATH,
     SYNTHETIC,
@@ -26,8 +28,6 @@ from conftest import (
     set_up_warm,
     wait_until,
 )
-from eufy_home_security import DetectionType, EufySecurity, FrameCipher, redact_serial
-from eufy_home_security.testing import FakeStation
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.components.camera import async_get_image
 from homeassistant.core import HomeAssistant

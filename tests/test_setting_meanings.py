@@ -16,6 +16,15 @@ from types import SimpleNamespace
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import EufySecurity, Station, entity_unique_id
+from anker_eufy_security.devices import SettingKind, SettingMeaning, SettingUnit
+from anker_eufy_security.devices.model_settings import (
+    BINARY_MEANINGS,
+    Setting,
+    bundled_codes,
+    settings_of,
+)
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from conftest import (
     add_entry,
     entity_id_for,
@@ -25,15 +34,6 @@ from conftest import (
     state_of,
     wait_until,
 )
-from eufy_home_security import EufySecurity, Station, entity_unique_id
-from eufy_home_security.devices import SettingKind, SettingMeaning, SettingUnit
-from eufy_home_security.devices.model_settings import (
-    BINARY_MEANINGS,
-    Setting,
-    bundled_codes,
-    settings_of,
-)
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 from homeassistant.components.number import DEVICE_CLASS_UNITS as NUMBER_UNITS
 from homeassistant.components.number import NumberDeviceClass

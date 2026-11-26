@@ -54,7 +54,7 @@ from homeassistant.helpers import entity_platform
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from eufy_home_security import (
+from anker_eufy_security import (
     MAX_ZOOM,
     MIN_ZOOM,
     CaptureStoppedError,

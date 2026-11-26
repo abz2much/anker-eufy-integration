@@ -1,6 +1,6 @@
 """Library-boundary proofs.
 
-The dev environment imports the local ``eufy-home-security`` library checkout,
+The dev environment imports the local ``anker-eufy-security`` library checkout,
 not a copy in site-packages, and the dependencies that library drags in still
 satisfy the pins of the installed Home Assistant.
 
@@ -30,8 +30,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 INTEGRATION_ROOT = REPO_ROOT / "custom_components" / "anker_eufy_integration"
 PYPROJECT_PATH = REPO_ROOT / "pyproject.toml"
 # The sibling checkout the editable uv path source points at.
-LIBRARY_CHECKOUT = REPO_ROOT.parent / "python-eufy_home_security"
-LIBRARY_DIST = "eufy-home-security"
+LIBRARY_CHECKOUT = REPO_ROOT.parent / "anker-eufy-security"
+LIBRARY_DIST = "anker-eufy-security"
 
 
 def _parse(path: Path) -> ast.Module:
@@ -65,19 +65,19 @@ def test_the_dev_environment_imports_the_local_checkout(tmp_path: Path) -> None:
     assert _checkout_skip_reason(tmp_path / "absent") is not None
     assert _checkout_skip_reason(LIBRARY_CHECKOUT) is None
 
-    import eufy_home_security
+    import anker_eufy_security
 
-    module_file = Path(eufy_home_security.__file__)
+    module_file = Path(anker_eufy_security.__file__)
     assert _resolves_under(module_file, LIBRARY_CHECKOUT / "src"), (
-        f"eufy_home_security imports from {module_file}, not from "
+        f"anker_eufy_security imports from {module_file}, not from "
         f"{LIBRARY_CHECKOUT / 'src'}: tests would run against a stale copy "
         f"instead of the checkout under development. Remedy: run `uv sync`; the "
-        f"dev group must carry eufy-home-security with the editable path source "
+        f"dev group must carry anker-eufy-security with the editable path source "
         f"in [tool.uv.sources]"
     )
 
-    assert eufy_home_security.__version__ == importlib.metadata.version(LIBRARY_DIST), (
-        f"eufy_home_security.__version__ ({eufy_home_security.__version__}) does "
+    assert anker_eufy_security.__version__ == importlib.metadata.version(LIBRARY_DIST), (
+        f"anker_eufy_security.__version__ ({anker_eufy_security.__version__}) does "
         f"not match the installed {LIBRARY_DIST} distribution "
         f"({importlib.metadata.version(LIBRARY_DIST)}): the imported module and "
         f"the recorded install have diverged — re-run `uv sync`"
@@ -85,7 +85,7 @@ def test_the_dev_environment_imports_the_local_checkout(tmp_path: Path) -> None:
 
     # Fail-first: a module sitting in a site-packages copy must not count as
     # the checkout, or this guard is decorative.
-    staged = tmp_path / "site-packages" / "eufy_home_security" / "__init__.py"
+    staged = tmp_path / "site-packages" / "anker_eufy_security" / "__init__.py"
     staged.parent.mkdir(parents=True)
     staged.write_text("")
     assert not _resolves_under(staged, LIBRARY_CHECKOUT / "src"), (
@@ -187,8 +187,8 @@ def test_installed_versions_satisfy_home_assistant_pins() -> None:
     )
 
     # Parser: names are PEP 503 canonical.
-    canonical = _parse_constraints("PROTOBUF==6.32.0\neufy_home.security==0.1.0\n")
-    assert set(canonical) == {"protobuf", "eufy-home-security"}, (
+    canonical = _parse_constraints("PROTOBUF==6.32.0\nanker_eufy.security==0.1.0\n")
+    assert set(canonical) == {"protobuf", "anker-eufy-security"}, (
         f"constraint names must be PEP 503 canonical, got {sorted(canonical)}"
     )
 
@@ -205,7 +205,7 @@ def test_installed_versions_satisfy_home_assistant_pins() -> None:
 
 
 _PROJECT_NAME = "anker-eufy-integration"
-_LIBRARY_SOURCE = {"path": "../python-eufy_home_security", "editable": True}
+_LIBRARY_SOURCE = {"path": "../anker-eufy-security", "editable": True}
 
 
 def _requirement_name(entry: object) -> str | None:
@@ -302,12 +302,12 @@ def test_the_uv_project_constrains_protobuf_to_the_home_assistant_pin() -> None:
         ),
         (
             "project.name",
-            staged(lambda d: d["project"].__setitem__("name", "eufy-home-security")),
+            staged(lambda d: d["project"].__setitem__("name", "anker-eufy-security")),
         ),
         (
             "tool.uv.sources",
             staged(
-                lambda d: d["tool"]["uv"]["sources"]["eufy-home-security"].__setitem__(
+                lambda d: d["tool"]["uv"]["sources"]["anker-eufy-security"].__setitem__(
                     "editable", False
                 )
             ),
@@ -634,7 +634,7 @@ def test_the_integration_parses_no_eufy_payload(tmp_path: Path) -> None:
 
     assert not hits_by_file, (
         "eufy payload parsing found in the integration; it belongs in the "
-        "eufy-home-security library (file a change request there):\n"
+        "anker-eufy-security library (file a change request there):\n"
         + "\n".join(
             f"{rel}:{line}:{tag}"
             for rel in sorted(hits_by_file)
@@ -800,7 +800,7 @@ def test_eufy_security_is_built_only_in_runtime(tmp_path: Path) -> None:
     positives: list[tuple[str, str, tuple[str, ...], set[str]]] = [
         (
             "import",
-            "from eufy_home_security import EufySecurity\n",
+            "from anker_eufy_security import EufySecurity\n",
             _INTEGRATION_PACKAGE,
             {"import"},
         ),
@@ -809,14 +809,14 @@ def test_eufy_security_is_built_only_in_runtime(tmp_path: Path) -> None:
             (
                 "from typing import TYPE_CHECKING\n"
                 "if TYPE_CHECKING:\n"
-                "    from eufy_home_security.client import EufySecurity\n"
+                "    from anker_eufy_security.client import EufySecurity\n"
             ),
             _INTEGRATION_PACKAGE,
             {"import"},
         ),
         (
             "attribute",
-            "import eufy_home_security\nX = eufy_home_security.EufySecurity\n",
+            "import anker_eufy_security\nX = anker_eufy_security.EufySecurity\n",
             _INTEGRATION_PACKAGE,
             {"attribute"},
         ),
@@ -828,7 +828,7 @@ def test_eufy_security_is_built_only_in_runtime(tmp_path: Path) -> None:
         ),
         (
             "construct_attribute",
-            "import eufy_home_security as e\n\ndef f(s):\n    return e.EufySecurity(s)\n",
+            "import anker_eufy_security as e\n\ndef f(s):\n    return e.EufySecurity(s)\n",
             _INTEGRATION_PACKAGE,
             {"attribute", "construct"},
         ),
@@ -855,7 +855,7 @@ def test_eufy_security_is_built_only_in_runtime(tmp_path: Path) -> None:
         )
 
     negatives: list[tuple[str, str]] = [
-        ("forget_account", "from eufy_home_security import async_forget_account\n"),
+        ("forget_account", "from anker_eufy_security import async_forget_account\n"),
         (
             "runtime_attribute",
             "from . import runtime\n\ndef f(h):\n    return runtime.build_client(h, 'e', None)\n",
@@ -870,7 +870,7 @@ def test_eufy_security_is_built_only_in_runtime(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# The tests run on eufy_home_security.testing, never on a stand-in
+# The tests run on anker_eufy_security.testing, never on a stand-in
 # ---------------------------------------------------------------------------
 
 # The library objects a test could replace with a mock and still look green.
@@ -1009,21 +1009,21 @@ def _test_functions_taking(tree: ast.AST, fixtures: frozenset[str]) -> list[str]
 
 def test_integration_tests_run_on_the_library_testing_package(tmp_path: Path) -> None:
     """No setup, flow or entity test replaces the library with a mock or a stand-in."""
-    import eufy_home_security
+    import anker_eufy_security
 
-    library_names = frozenset(eufy_home_security.__all__) | {"FakeStation", "FakeCloud"}
+    library_names = frozenset(anker_eufy_security.__all__) | {"FakeStation", "FakeCloud"}
     tests_root = REPO_ROOT / "tests"
     conftest = _parse(tests_root / "conftest.py")
 
     imported = {
         alias.name
         for node in ast.walk(conftest)
-        if isinstance(node, ast.ImportFrom) and node.module == "eufy_home_security.testing"
+        if isinstance(node, ast.ImportFrom) and node.module == "anker_eufy_security.testing"
         for alias in node.names
     }
     assert _TESTING_IMPORTS <= imported, (
         f"tests/conftest.py no longer imports {sorted(_TESTING_IMPORTS - imported)} from "
-        f"eufy_home_security.testing: the fixtures must build on the library's own fakes"
+        f"anker_eufy_security.testing: the fixtures must build on the library's own fakes"
     )
 
     built_clients = [
@@ -1053,7 +1053,7 @@ def test_integration_tests_run_on_the_library_testing_package(tmp_path: Path) ->
     ]
     assert not stand_ins, (
         "a test replaces the library with a mock or a stand-in; run it on "
-        "eufy_home_security.testing instead:\n" + "\n".join(stand_ins)
+        "anker_eufy_security.testing instead:\n" + "\n".join(stand_ins)
     )
 
     # Fail-first: each rule flags its staged snippet, with its own tag only.
@@ -1061,7 +1061,7 @@ def test_integration_tests_run_on_the_library_testing_package(tmp_path: Path) ->
         (
             "mock",
             (
-                "from unittest.mock import MagicMock\nfrom eufy_home_security import EufySecurity\n"
+                "from unittest.mock import MagicMock\nfrom anker_eufy_security import EufySecurity\n"
                 "client = MagicMock(spec=EufySecurity)\n"
             ),
             "mock-of-library",

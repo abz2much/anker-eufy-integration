@@ -21,6 +21,21 @@ from pathlib import Path
 from typing import Final
 
 import pytest
+from anker_eufy_security import (
+    AlarmChanged,
+    AlarmStopSource,
+    ArmingSource,
+    DetectionType,
+    EufySecurity,
+    FrameCipher,
+    PushMessageType,
+    SecurityEvent,
+    entity_unique_id,
+)
+from anker_eufy_security.devices import DeviceKind
+from anker_eufy_security.p2p import FrameType
+from anker_eufy_security.push.decode import decode_push
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from conftest import (
     PUSHED_THUMB_PATH,
     SENSOR_SN,
@@ -34,21 +49,6 @@ from conftest import (
     station_event,
     wait_until,
 )
-from eufy_home_security import (
-    AlarmChanged,
-    AlarmStopSource,
-    ArmingSource,
-    DetectionType,
-    EufySecurity,
-    FrameCipher,
-    PushMessageType,
-    SecurityEvent,
-    entity_unique_id,
-)
-from eufy_home_security.devices import DeviceKind
-from eufy_home_security.p2p import FrameType
-from eufy_home_security.push.decode import decode_push
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.components.event import DOMAIN as EVENT_DOMAIN
 from homeassistant.const import STATE_ON, STATE_UNAVAILABLE, STATE_UNKNOWN
@@ -490,7 +490,7 @@ async def test_routing_events_logs_no_serial(
         assert SYNTHETIC.station_sn not in message
         assert SYNTHETIC.camera_sn not in message
     # Non-vacuity: debug logging was really captured while the push travelled.
-    assert any(record.name.startswith("eufy_home_security") for record in caplog.records)
+    assert any(record.name.startswith("anker_eufy_security") for record in caplog.records)
 
 
 def _alarm_entity_id(hass: HomeAssistant) -> str:
@@ -998,6 +998,109 @@ async def test_a_doorbell_press_on_a_doorbell_fires_ring(
     assert state.attributes["triggered_at"] == _FAKE_TRIGGERED_AT
     assert detection_states == []
     assert events == []
+
+    await _unload(hass, entry)
+
+
+def _push_session_event(
+    fake_station: FakeStation, event_type: int, *, trigger_time: int, session_id: str
+) -> None:
+    """A camera event (cmd 2037) of the synthetic camera that names its session."""
+    inner = {
+        "msg_type": PushMessageType.INDOOR,
+        "event_type": event_type,
+        "device_sn": SYNTHETIC.camera_sn,
+        "channel": 0,
+        "trigger_time": trigger_time,
+        "session_id": session_id,
+        "push_count": 1,
+    }
+    fake_station.send_json(FrameType.NOTIFY_PAYLOAD, {"cmd": 2037, "payload": json.dumps(inner)})
+
+
+async def test_a_ring_in_the_session_of_a_face_detection_still_rings(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Live on an E340: a face detection (3102), then a press (3103) 6 s later in the
+    same session. The press is its own occurrence and fires the ring, end to end
+    through the library's deduplicator and the router."""
+    original = detections.has_doorbell_entity
+
+    def rings(serial: str) -> bool:
+        return serial == SYNTHETIC.camera_sn or original(serial)
+
+    monkeypatch.setattr(detections, "has_doorbell_entity", rings)
+    entry = await set_up_warm(hass, seed_warm_cache)
+    ring_id = entity_id_for(hass, EVENT_DOMAIN, SYNTHETIC.camera_sn, DOORBELL_EVENT_KEY)
+    ring_states = record_states(hass, ring_id)
+    detection_states = record_states(hass, _detection_entity_id(hass))
+    deduplicator = built_clients[-1].deduplicator
+    assert deduplicator is not None
+
+    _push_session_event(
+        fake_station, DetectionType.PERSON, trigger_time=1_700_000_000_000, session_id="s-1"
+    )
+    await wait_until(lambda: len(detection_states) == 1)
+    _push_session_event(
+        fake_station,
+        DetectionType.DOORBELL_PRESS,
+        trigger_time=1_700_000_006_000,
+        session_id="s-1",
+    )
+    await wait_until(lambda: len(ring_states) == 1 or deduplicator.dropped_duplicates > 0)
+    await hass.async_block_till_done()
+
+    assert deduplicator.dropped_duplicates == 0
+    assert len(ring_states) == 1
+    state = hass.states.get(ring_id)
+    assert state is not None
+    assert state.attributes["event_type"] == "ring"
+
+    await _unload(hass, entry)
+
+
+async def test_a_second_press_3_s_later_in_the_same_session_rings_again(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A face detection, then two presses 3 s apart, all in one session: two rings.
+    Home Assistant fires one event per device event; only copies of one press merge."""
+    original = detections.has_doorbell_entity
+
+    def rings(serial: str) -> bool:
+        return serial == SYNTHETIC.camera_sn or original(serial)
+
+    monkeypatch.setattr(detections, "has_doorbell_entity", rings)
+    entry = await set_up_warm(hass, seed_warm_cache)
+    ring_id = entity_id_for(hass, EVENT_DOMAIN, SYNTHETIC.camera_sn, DOORBELL_EVENT_KEY)
+    ring_states = record_states(hass, ring_id)
+    detection_states = record_states(hass, _detection_entity_id(hass))
+    deduplicator = built_clients[-1].deduplicator
+    assert deduplicator is not None
+
+    _push_session_event(
+        fake_station, DetectionType.PERSON, trigger_time=1_700_000_000_000, session_id="s-1"
+    )
+    await wait_until(lambda: len(detection_states) == 1)
+    for trigger_time in (1_700_000_006_000, 1_700_000_009_000):
+        _push_session_event(
+            fake_station,
+            DetectionType.DOORBELL_PRESS,
+            trigger_time=trigger_time,
+            session_id="s-1",
+        )
+    await wait_until(lambda: len(ring_states) == 2 or deduplicator.dropped_duplicates > 0)
+    await hass.async_block_till_done()
+
+    assert deduplicator.dropped_duplicates == 0
+    assert len(ring_states) == 2
 
     await _unload(hass, entry)
 

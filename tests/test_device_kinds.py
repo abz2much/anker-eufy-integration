@@ -14,9 +14,8 @@ from collections.abc import AsyncIterator, Callable
 from typing import Final
 
 import pytest
-from conftest import PUSHED_THUMB_PATH, PUSHED_THUMBNAIL, set_guard_mode, set_up_warm
-from eufy_home_security import EufySecurity, entity_unique_id
-from eufy_home_security.devices import (
+from anker_eufy_security import EufySecurity, entity_unique_id
+from anker_eufy_security.devices import (
     Capability,
     DeviceKind,
     Support,
@@ -24,7 +23,8 @@ from eufy_home_security.devices import (
     product_name,
     profile_for_serial,
 )
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
+from conftest import PUSHED_THUMB_PATH, PUSHED_THUMBNAIL, set_guard_mode, set_up_warm
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.components.camera import CameraEntityFeature, async_get_image
 from homeassistant.core import HomeAssistant, State

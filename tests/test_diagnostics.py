@@ -1,7 +1,7 @@
 """The config entry's diagnostics download: session health, and nobody identified.
 
 Every test sets the entry up through Home Assistant on
-``eufy_home_security.testing`` (a real ``EufySecurity`` wired to ``FakeCloud`` and a
+``anker_eufy_security.testing`` (a real ``EufySecurity`` wired to ``FakeCloud`` and a
 loopback ``FakeStation``) and downloads diagnostics through Home Assistant's own
 diagnostics endpoint, so the payload checked is the one a user attaches to a bug
 report.
@@ -18,6 +18,28 @@ from types import SimpleNamespace
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import (
+    DEFAULT_STATION_SESSIONS,
+    DetectionType,
+    EufySecurity,
+    FrameCipher,
+    redact_serial,
+)
+from anker_eufy_security.diagnostics import (
+    CAMERA_INFO_PARAM,
+    SECURITY_DEVICES,
+    SECURITY_STATIONS,
+)
+from anker_eufy_security.exceptions import CommunicationError
+from anker_eufy_security.p2p import FrameType
+from anker_eufy_security.testing import (
+    SYNTHETIC,
+    FakeCloud,
+    FakeStation,
+    camera_device,
+    security_device,
+    security_station,
+)
 from conftest import (
     detection_event,
     entity_id_for,
@@ -25,28 +47,6 @@ from conftest import (
     set_up_warm,
     setting_param,
     wait_until,
-)
-from eufy_home_security import (
-    DEFAULT_STATION_SESSIONS,
-    DetectionType,
-    EufySecurity,
-    FrameCipher,
-    redact_serial,
-)
-from eufy_home_security.diagnostics import (
-    CAMERA_INFO_PARAM,
-    SECURITY_DEVICES,
-    SECURITY_STATIONS,
-)
-from eufy_home_security.exceptions import CommunicationError
-from eufy_home_security.p2p import FrameType
-from eufy_home_security.testing import (
-    SYNTHETIC,
-    FakeCloud,
-    FakeStation,
-    camera_device,
-    security_device,
-    security_station,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir

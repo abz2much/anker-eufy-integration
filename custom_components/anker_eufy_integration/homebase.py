@@ -58,7 +58,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.event import async_call_later, async_track_state_change_event
 from homeassistant.util.hass_dict import HassKey
 
-from eufy_home_security import (
+from anker_eufy_security import (
     MODE_ACTION_ALARM_AFFECTING,
     MODE_DELAY_CHOICES,
     AccountRejectedError,
@@ -80,13 +80,13 @@ from eufy_home_security import (
     guard_mode_label,
     redact_serial,
 )
-from eufy_home_security.devices import (
+from anker_eufy_security.devices import (
     MODE_ACTION_FLAGS,
     mode_action_flags,
     mode_action_label,
     scope_for_kind,
 )
-from eufy_home_security.station import MIN_TRACKING_CAMERAS
+from anker_eufy_security.station import MIN_TRACKING_CAMERAS
 
 from . import detections
 from .const import DOMAIN, FIRMWARE_KEY, GUARD_MODE_KEY, SECURITY_MODE_KEY

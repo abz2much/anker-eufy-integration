@@ -42,7 +42,7 @@ from homeassistant.helpers.update_coordinator import UpdateFailed
 from homeassistant.util import dt as dt_util
 from homeassistant.util.hass_dict import HassKey
 
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountRejectedError,
     AuthenticationError,
     CameraWakeError,
@@ -80,8 +80,8 @@ from eufy_home_security import (
     redact,
     redact_serial,
 )
-from eufy_home_security.cloud.const import LOGIN_BUDGET, LOGIN_BUDGET_WINDOW_SECONDS, scope_country
-from eufy_home_security.devices import Support, product_name
+from anker_eufy_security.cloud.const import LOGIN_BUDGET, LOGIN_BUDGET_WINDOW_SECONDS, scope_country
+from anker_eufy_security.devices import Support, product_name
 
 from . import detections
 from .const import (

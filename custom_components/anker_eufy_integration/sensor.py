@@ -32,7 +32,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
 
-from eufy_home_security import (
+from anker_eufy_security import (
     DetectionDelivery,
     DetectionDeliveryReport,
     MediumState,
@@ -42,7 +42,7 @@ from eufy_home_security import (
     guard_mode_label,
     redact_location,
 )
-from eufy_home_security.devices import SettingKind
+from anker_eufy_security.devices import SettingKind
 
 from . import detections, visitor_sensor
 from .const import (

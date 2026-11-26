@@ -19,16 +19,7 @@ from pathlib import Path
 from typing import Any, Final
 
 import pytest
-from conftest import (
-    PUSHED_THUMB_PATH,
-    SYNTHETIC,
-    add_entry,
-    detection_event,
-    entity_id_for,
-    setup_entry,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     ClipWriter,
     DetectionType,
     DeviceTimeoutError,
@@ -38,7 +29,16 @@ from eufy_home_security import (
     Station,
     redact_serial,
 )
-from eufy_home_security.testing import FakeStation
+from anker_eufy_security.testing import FakeStation
+from conftest import (
+    PUSHED_THUMB_PATH,
+    SYNTHETIC,
+    add_entry,
+    detection_event,
+    entity_id_for,
+    setup_entry,
+    wait_until,
+)
 from fake_ffmpeg import REMUX_MAGIC
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.core import HomeAssistant

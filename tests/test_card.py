@@ -9,8 +9,8 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from anker_eufy_security.testing import FakeStation
 from conftest import set_up_warm
-from eufy_home_security.testing import FakeStation
 from homeassistant.components.lovelace.const import LOVELACE_DATA
 from homeassistant.components.lovelace.resources import ResourceStorageCollection
 from homeassistant.core import HomeAssistant

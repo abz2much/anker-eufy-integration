@@ -15,16 +15,7 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import pytest
-from conftest import (
-    SYNTHETIC,
-    detection_event,
-    entity_id_for,
-    now_ms,
-    record_states,
-    set_up_warm,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     DetectionType,
     EmptyResponseError,
     EufySecurity,
@@ -35,7 +26,16 @@ from eufy_home_security import (
     SecurityEvent,
     VideoEncryptedPictureError,
 )
-from eufy_home_security.testing import FakeStation
+from anker_eufy_security.testing import FakeStation
+from conftest import (
+    SYNTHETIC,
+    detection_event,
+    entity_id_for,
+    now_ms,
+    record_states,
+    set_up_warm,
+    wait_until,
+)
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.components.event import DOMAIN as EVENT_DOMAIN
 from homeassistant.const import STATE_ON

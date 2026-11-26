@@ -19,6 +19,9 @@ from datetime import datetime, timedelta
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import DetectionType, EufySecurity, Station, entity_unique_id
+from anker_eufy_security.devices import Evidence, Support
+from anker_eufy_security.testing import FakeCloud, FakeStation, camera_device
 from conftest import (
     PUSHED_THUMB_PATH,
     PUSHED_THUMBNAIL,
@@ -34,9 +37,6 @@ from conftest import (
     state_of,
     wait_until,
 )
-from eufy_home_security import DetectionType, EufySecurity, Station, entity_unique_id
-from eufy_home_security.devices import Evidence, Support
-from eufy_home_security.testing import FakeCloud, FakeStation, camera_device
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.alarm_control_panel import SERVICE_ALARM_ARM_HOME
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN

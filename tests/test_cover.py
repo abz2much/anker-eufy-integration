@@ -10,8 +10,7 @@ from collections.abc import AsyncIterator, Callable
 from typing import Any, Final
 
 import pytest
-from conftest import entity_id_for, record_states, set_up_warm, state_of, wait_until
-from eufy_home_security import (
+from anker_eufy_security import (
     CommandRejectedError,
     DoorNotMovedError,
     EufySecurityError,
@@ -19,9 +18,10 @@ from eufy_home_security import (
     Station,
     entity_unique_id,
 )
-from eufy_home_security.p2p.messages import STANDALONE_RECEIPT_LEN
-from eufy_home_security.station import garage as garage_module
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from anker_eufy_security.p2p.messages import STANDALONE_RECEIPT_LEN
+from anker_eufy_security.station import garage as garage_module
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from conftest import entity_id_for, record_states, set_up_warm, state_of, wait_until
 from homeassistant.components.cover import ATTR_CURRENT_POSITION, CoverEntityFeature, CoverState
 from homeassistant.components.cover import DOMAIN as COVER_DOMAIN
 from homeassistant.components.lock import DOMAIN as LOCK_DOMAIN

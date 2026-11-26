@@ -16,6 +16,19 @@ from pathlib import Path
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import (
+    AccountRejectedError,
+    ClipWriter,
+    DetectionType,
+    DeviceTimeoutError,
+    EufySecurity,
+    HistoryRecord,
+    LiveStreamLimitError,
+    MediaClip,
+    Station,
+)
+from anker_eufy_security.p2p import session as session_module
+from anker_eufy_security.testing import FakeCloud, FakeStation, camera_device
 from conftest import (
     PUSHED_THUMB_PATH,
     PUSHED_THUMBNAIL,
@@ -28,19 +41,6 @@ from conftest import (
     setup_entry,
     wait_until,
 )
-from eufy_home_security import (
-    AccountRejectedError,
-    ClipWriter,
-    DetectionType,
-    DeviceTimeoutError,
-    EufySecurity,
-    HistoryRecord,
-    LiveStreamLimitError,
-    MediaClip,
-    Station,
-)
-from eufy_home_security.p2p import session as session_module
-from eufy_home_security.testing import FakeCloud, FakeStation, camera_device
 from fake_ffmpeg import REMUX_MAGIC
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.components.http.auth import async_sign_path

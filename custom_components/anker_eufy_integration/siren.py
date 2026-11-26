@@ -34,7 +34,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from eufy_home_security import (
+from anker_eufy_security import (
     SOUND_ALARM_SECONDS,
     AlarmChanged,
     CommandError,

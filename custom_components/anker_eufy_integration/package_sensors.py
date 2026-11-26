@@ -21,7 +21,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.event import async_call_later
 from homeassistant.util import dt as dt_util
 
-from eufy_home_security import SecurityEvent
+from anker_eufy_security import SecurityEvent
 
 from . import detections
 from .coordinator import StationCoordinator

@@ -23,6 +23,8 @@ from pathlib import Path
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import DetectionType, EufySecurity, FrameCipher, Station, VideoCodec
+from anker_eufy_security.testing import FakeCloud, FakeStation, camera_device
 from conftest import (
     PUSHED_THUMB_PATH,
     PUSHED_THUMBNAIL,
@@ -35,8 +37,6 @@ from conftest import (
     state_of,
     wait_until,
 )
-from eufy_home_security import DetectionType, EufySecurity, FrameCipher, Station, VideoCodec
-from eufy_home_security.testing import FakeCloud, FakeStation, camera_device
 from fake_ffmpeg import FAKE_FFMPEG_PREFIX
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.alarm_control_panel import SERVICE_ALARM_ARM_HOME

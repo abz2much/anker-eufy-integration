@@ -17,7 +17,7 @@ from homeassistant.components.button import ButtonEntity
 from homeassistant.core import ServiceCall
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 
-from eufy_home_security import CommandRejectedError, EufySecurityError
+from anker_eufy_security import CommandRejectedError, EufySecurityError
 
 from . import errors
 from .const import DOMAIN, EXC_SESSION_REPLACED_SEE_REPAIRS

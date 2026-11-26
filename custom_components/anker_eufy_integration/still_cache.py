@@ -48,7 +48,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.json import json_bytes
 from PIL import Image, UnidentifiedImageError
 
-from eufy_home_security import redact_serial
+from anker_eufy_security import redact_serial
 
 from .const import DOMAIN
 

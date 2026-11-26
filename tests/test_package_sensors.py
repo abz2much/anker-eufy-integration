@@ -13,8 +13,7 @@ from datetime import timedelta
 from typing import Final
 
 import pytest
-from conftest import now_ms, set_up_warm, state_of
-from eufy_home_security import (
+from anker_eufy_security import (
     EufySecurity,
     EventSource,
     FrameCipher,
@@ -22,7 +21,8 @@ from eufy_home_security import (
     SecurityEvent,
     entity_unique_id,
 )
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
+from conftest import now_ms, set_up_warm, state_of
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.const import STATE_OFF, STATE_ON
 from homeassistant.core import HomeAssistant

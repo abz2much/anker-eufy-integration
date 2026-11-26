@@ -7,6 +7,13 @@ import re
 from collections.abc import Callable
 
 import pytest
+from anker_eufy_security import (
+    AuthenticationError,
+    RateLimitedError,
+    SessionCache,
+    SessionReplacedError,
+)
+from anker_eufy_security.testing.cloud import FakeCloud
 from conftest import (
     SYNTHETIC,
     add_entry,
@@ -15,13 +22,6 @@ from conftest import (
     set_up_warm,
     setup_entry,
 )
-from eufy_home_security import (
-    AuthenticationError,
-    RateLimitedError,
-    SessionCache,
-    SessionReplacedError,
-)
-from eufy_home_security.testing.cloud import FakeCloud
 from homeassistant.config_entries import SOURCE_REAUTH, ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir

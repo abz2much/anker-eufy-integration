@@ -12,24 +12,7 @@ from datetime import UTC, datetime, time
 from typing import Any, Final
 
 import pytest
-from conftest import (
-    SENSOR_SN,
-    add_entry,
-    add_motion_sensor,
-    advance_to_poll,
-    alarm_changed,
-    entity_id_for,
-    panel_entity_id,
-    record_states,
-    seed_setting,
-    set_guard_mode,
-    set_up_warm,
-    setting_param,
-    setup_entry,
-    state_of,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     MODE_ACTION_ALARM_AFFECTING,
     MODE_DELAY_CHOICES,
     SETTING_SECTIONS,
@@ -51,15 +34,32 @@ from eufy_home_security import (
     redact_serial,
     setting_section,
 )
-from eufy_home_security.devices import mode_action_label
-from eufy_home_security.p2p import FrameType
-from eufy_home_security.station import MIN_TRACKING_CAMERAS
-from eufy_home_security.testing import (
+from anker_eufy_security.devices import mode_action_label
+from anker_eufy_security.p2p import FrameType
+from anker_eufy_security.station import MIN_TRACKING_CAMERAS
+from anker_eufy_security.testing import (
     SYNTHETIC,
     FakeCloud,
     FakeStation,
     camera_device,
     mode_list_params,
+)
+from conftest import (
+    SENSOR_SN,
+    add_entry,
+    add_motion_sensor,
+    advance_to_poll,
+    alarm_changed,
+    entity_id_for,
+    panel_entity_id,
+    record_states,
+    seed_setting,
+    set_guard_mode,
+    set_up_warm,
+    setting_param,
+    setup_entry,
+    state_of,
+    wait_until,
 )
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.number import DOMAIN as NUMBER_DOMAIN

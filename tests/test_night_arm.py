@@ -10,9 +10,9 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from anker_eufy_security import EufySecurity, GuardMode
+from anker_eufy_security.testing import FakeStation
 from conftest import panel_entity_id, record_states, set_guard_mode, set_up_warm, state_of
-from eufy_home_security import EufySecurity, GuardMode
-from eufy_home_security.testing import FakeStation
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.alarm_control_panel import AlarmControlPanelEntityFeature
 from homeassistant.const import ATTR_ENTITY_ID, ATTR_SUPPORTED_FEATURES, SERVICE_ALARM_ARM_NIGHT

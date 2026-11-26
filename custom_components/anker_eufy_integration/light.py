@@ -16,8 +16,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util.color import brightness_to_value, value_to_brightness
 
-from eufy_home_security import Light
-from eufy_home_security.devices.lights import LOWEST_WRITTEN_BRIGHTNESS
+from anker_eufy_security import Light
+from anker_eufy_security.devices.lights import LOWEST_WRITTEN_BRIGHTNESS
 
 from . import errors
 from .coordinator import StationCoordinator

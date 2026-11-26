@@ -1,8 +1,8 @@
 # Supported devices
 
 Device support comes from the
-[`eufy-home-security`](https://pypi.org/project/eufy-home-security/) library
-([source](https://github.com/alaraun/python-eufy-home-security)). The
+[`anker-eufy-security`](https://pypi.org/project/anker-eufy-security/) library
+([source](https://github.com/abz2much/anker-eufy-security)). The
 integration adds no per-model code: a model the library knows gets the entities its
 capabilities and settings allow.
 
@@ -193,10 +193,10 @@ whose settings misbehave. Open an issue with:
 4. **A parameter dump**, from the library's command line on a host on the same LAN:
 
    ```bash
-   uv tool install eufy-home-security
-   eufy-security login
-   eufy-security --redact-serials status --raw
-   eufy-security --redact-serials coverage
+   uv tool install anker-eufy-security
+   anker-eufy-security login
+   anker-eufy-security --redact-serials status --raw
+   anker-eufy-security --redact-serials coverage
    ```
 
    The command line signs in to eufy itself: with Home Assistant's account it ends

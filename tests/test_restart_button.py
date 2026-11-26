@@ -11,8 +11,7 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import pytest
-from conftest import entity_id_for, set_up_warm
-from eufy_home_security import (
+from anker_eufy_security import (
     CommandNotAppliedError,
     CommunicationError,
     DeviceTimeoutError,
@@ -22,8 +21,9 @@ from eufy_home_security import (
     StationFeature,
     entity_unique_id,
 )
-from eufy_home_security.devices import Evidence, Support
-from eufy_home_security.testing import SYNTHETIC, FakeStation
+from anker_eufy_security.devices import Evidence, Support
+from anker_eufy_security.testing import SYNTHETIC, FakeStation
+from conftest import entity_id_for, set_up_warm
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.components.button import SERVICE_PRESS
 from homeassistant.const import ATTR_ENTITY_ID, EntityCategory

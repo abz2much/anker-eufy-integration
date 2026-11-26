@@ -46,7 +46,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from eufy_home_security import (
+from anker_eufy_security import (
     AlarmChanged,
     AlarmPhase,
     DetectionType,

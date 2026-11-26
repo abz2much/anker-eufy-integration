@@ -13,9 +13,9 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import CommunicationError, EufySecurity, entity_unique_id
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud
 from conftest import add_entry, configure_options, entity_id_for, set_up_warm, setup_entry
-from eufy_home_security import CommunicationError, EufySecurity, entity_unique_id
-from eufy_home_security.testing import SYNTHETIC, FakeCloud
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr

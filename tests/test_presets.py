@@ -9,16 +9,7 @@ from io import BytesIO
 from pathlib import Path
 
 import pytest
-from conftest import (
-    add_entry,
-    entity_id_for,
-    record_states,
-    set_up_warm,
-    setup_entry,
-    state_of,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountRejectedError,
     CommandNotAppliedError,
     CommandRejectedError,
@@ -32,9 +23,18 @@ from eufy_home_security import (
     UnsupportedError,
     redact_serial,
 )
-from eufy_home_security.devices import Capability, Evidence, Support
-from eufy_home_security.p2p.messages import STANDALONE_RECEIPT_LEN
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from anker_eufy_security.devices import Capability, Evidence, Support
+from anker_eufy_security.p2p.messages import STANDALONE_RECEIPT_LEN
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from conftest import (
+    add_entry,
+    entity_id_for,
+    record_states,
+    set_up_warm,
+    setup_entry,
+    state_of,
+    wait_until,
+)
 from homeassistant.components.image import async_get_image
 from homeassistant.core import Event, HomeAssistant, State, callback
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
@@ -581,7 +581,7 @@ async def test_a_failed_preset_capture_keeps_the_previous_image(
 
     # The integration's seam is the public async_preset_image; the next capture fails
     # the way a stream that ends before the camera settles does.
-    from eufy_home_security import DeviceTimeoutError
+    from anker_eufy_security import DeviceTimeoutError
 
     async def _timed_out(self, sn, preset, **kw):
         raise DeviceTimeoutError("the stream ended before the camera settled")
@@ -679,7 +679,7 @@ async def test_a_preset_capture_that_fails_while_the_session_is_replaced_names_t
 
     built_clients[-1].cache.set_replaced()
 
-    from eufy_home_security import SessionReplacedError, Station
+    from anker_eufy_security import SessionReplacedError, Station
 
     # What the library raises for a camera it cannot wake while the session is
     # latched; the integration names the session from the error.

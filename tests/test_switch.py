@@ -11,6 +11,11 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import DeviceTimeoutError, EufySecurity, Station, entity_unique_id
+from anker_eufy_security.devices import Setting
+from anker_eufy_security.devices.model_settings import settings_of
+from anker_eufy_security.p2p import session as session_module
+from anker_eufy_security.testing import SYNTHETIC, FakeStation
 from conftest import (
     add_entry,
     entity_id_for,
@@ -21,11 +26,6 @@ from conftest import (
     setup_entry,
     state_of,
 )
-from eufy_home_security import DeviceTimeoutError, EufySecurity, Station, entity_unique_id
-from eufy_home_security.devices import Setting
-from eufy_home_security.devices.model_settings import settings_of
-from eufy_home_security.p2p import session as session_module
-from eufy_home_security.testing import SYNTHETIC, FakeStation
 from homeassistant.components.switch import DOMAIN as SWITCH_DOMAIN
 from homeassistant.const import (
     ATTR_ASSUMED_STATE,

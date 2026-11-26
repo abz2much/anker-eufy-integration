@@ -25,7 +25,7 @@ jobs:
       - name: Install the locked toolchain and the library from PyPI
         id: install
         run: |
-          uv export --frozen --all-groups --no-emit-package eufy-home-security -o "$RUNNER_TEMP/requirements.txt"
+          uv export --frozen --all-groups --no-emit-package anker-eufy-security -o "$RUNNER_TEMP/requirements.txt"
           uv pip sync "$RUNNER_TEMP/requirements.txt"
           uv pip install --no-deps "$(jq -r '.requirements[0]' custom_components/anker_eufy_integration/manifest.json)"
           uv pip check

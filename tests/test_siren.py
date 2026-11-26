@@ -14,18 +14,7 @@ from types import SimpleNamespace
 from typing import Any, Final, cast
 
 import pytest
-from conftest import (
-    SENSOR_SN,
-    add_entry,
-    add_motion_sensor,
-    entity_id_for,
-    record_states,
-    set_up_warm,
-    setup_entry,
-    state_of,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountRejectedError,
     CameraWakeError,
     CipherUnusableError,
@@ -47,12 +36,23 @@ from eufy_home_security import (
     UnsupportedError,
     entity_unique_id,
 )
-from eufy_home_security import station as station_module
-from eufy_home_security.devices import Evidence, Support
-from eufy_home_security.p2p import FrameType
-from eufy_home_security.p2p import session as session_module
-from eufy_home_security.p2p.messages import STANDALONE_RECEIPT_LEN
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from anker_eufy_security import station as station_module
+from anker_eufy_security.devices import Evidence, Support
+from anker_eufy_security.p2p import FrameType
+from anker_eufy_security.p2p import session as session_module
+from anker_eufy_security.p2p.messages import STANDALONE_RECEIPT_LEN
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from conftest import (
+    SENSOR_SN,
+    add_entry,
+    add_motion_sensor,
+    entity_id_for,
+    record_states,
+    set_up_warm,
+    setup_entry,
+    state_of,
+    wait_until,
+)
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.alarm_control_panel import AlarmControlPanelState
 from homeassistant.components.event import DOMAIN as EVENT_DOMAIN

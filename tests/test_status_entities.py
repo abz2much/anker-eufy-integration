@@ -14,17 +14,17 @@ from typing import Any, Final
 
 import attr
 import pytest
-from conftest import add_entry, entity_id_for, seed_setting, setup_entry, state_of
-from eufy_home_security import (
+from anker_eufy_security import (
     EufySecurity,
     SettingRole,
     SettingShown,
     Station,
     entity_unique_id,
 )
-from eufy_home_security.devices import SettingControl, SettingKind
-from eufy_home_security.devices.model_settings import Setting, bundled_codes, settings_of
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
+from anker_eufy_security.devices import SettingControl, SettingKind
+from anker_eufy_security.devices.model_settings import Setting, bundled_codes, settings_of
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
+from conftest import add_entry, entity_id_for, seed_setting, setup_entry, state_of
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 from homeassistant.const import EntityCategory, Platform
 from homeassistant.core import HomeAssistant

@@ -3,4 +3,4 @@
 extend = "../../pyproject.toml"
 
 [lint.isort]
-known-first-party = ["eufy_home_security"]
+known-first-party = ["anker_eufy_security"]

@@ -19,8 +19,8 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.restore_state import RestoreEntity
 
-from eufy_home_security import MAX_ZOOM, MIN_ZOOM
-from eufy_home_security.devices import SettingControl
+from anker_eufy_security import MAX_ZOOM, MIN_ZOOM
+from anker_eufy_security.devices import SettingControl
 
 from . import detections, ptz, runtime
 from .const import LIVE_ZOOM_KEY, LIVE_ZOOM_STEP

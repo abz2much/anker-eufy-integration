@@ -17,7 +17,7 @@ from homeassistant.components.update import UpdateDeviceClass, UpdateEntity, Upd
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from eufy_home_security import StationState
+from anker_eufy_security import StationState
 
 from .const import ATTR_SIREN_ACTIONS, ATTR_SUBSYSTEM_FIRMWARE, FIRMWARE_KEY
 from .coordinator import StationCoordinator

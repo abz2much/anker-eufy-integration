@@ -13,6 +13,8 @@ from pathlib import Path
 from typing import Final
 
 import pytest
+from anker_eufy_security import DetectionType, EufySecurity
+from anker_eufy_security.testing import FakeStation
 from conftest import (
     SYNTHETIC,
     detection_event,
@@ -21,8 +23,6 @@ from conftest import (
     set_up_warm,
     wait_until,
 )
-from eufy_home_security import DetectionType, EufySecurity
-from eufy_home_security.testing import FakeStation
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.components.camera import async_get_image
 from homeassistant.core import HomeAssistant

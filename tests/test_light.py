@@ -14,9 +14,7 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import pytest
-from conftest import add_entry, entity_id_for, seed_setting, set_up_warm, setting_param, setup_entry
-from conftest import state_of as _state_of
-from eufy_home_security import (
+from anker_eufy_security import (
     DeviceTimeoutError,
     EufySecurity,
     Light,
@@ -24,8 +22,10 @@ from eufy_home_security import (
     entity_unique_id,
     redact_serial,
 )
-from eufy_home_security.devices import Setting
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from anker_eufy_security.devices import Setting
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from conftest import add_entry, entity_id_for, seed_setting, set_up_warm, setting_param, setup_entry
+from conftest import state_of as _state_of
 from homeassistant.components.homeassistant.exposed_entities import (
     async_expose_entity,
     async_should_expose,

@@ -54,13 +54,13 @@ _REQUIRED_MANIFEST_KEYS = (
     "version",
 )
 
-# The integration's one runtime dependency: the eufy-home-security library,
+# The integration's one runtime dependency: the anker-eufy-security library,
 # which owns all eufy logic. cryptography is not declared: Home Assistant core
 # pins it, and hassfest rejects a custom integration re-declaring a core
 # requirement. These tests hold the rule locally, including the PEP 440 shape.
 # An exact pin: Home Assistant installs a requirement only when the installed
 # version does not satisfy it, so a wildcard never upgrades an existing install.
-_LIBRARY_REQUIREMENT = "eufy-home-security==0.4.19"
+_LIBRARY_REQUIREMENT = "anker-eufy-security==0.1.0"
 _SANCTIONED_REQUIREMENTS = [_LIBRARY_REQUIREMENT]
 
 
@@ -75,7 +75,7 @@ def _load_hacs() -> dict[str, Any]:
 def _requirement_violations(requirements: list[str]) -> list[str]:
     """Names every unsanctioned, missing and duplicated requirement.
 
-    Compared by exact string, never by package name: `eufy-home-security>=0.1`
+    Compared by exact string, never by package name: `anker-eufy-security>=0.1`
     names the right package with the wrong specifier and is refused.
     """
     violations = [entry for entry in requirements if entry not in _SANCTIONED_REQUIREMENTS]
@@ -93,7 +93,7 @@ def _requirement_violations(requirements: list[str]) -> list[str]:
 
 
 # The library's tree, and the opt-in cloud push stack it runs (firebase-messaging).
-_LIBRARY_LOGGERS = ["eufy_home_security", "firebase_messaging"]
+_LIBRARY_LOGGERS = ["anker_eufy_security", "firebase_messaging"]
 
 
 def _invalid_requirements(requirements: list[str]) -> list[str]:
@@ -298,8 +298,8 @@ def test_requirements_declare_only_the_library() -> None:
     assert _requirement_violations([_LIBRARY_REQUIREMENT, _LIBRARY_REQUIREMENT]) == [
         f"duplicate: {_LIBRARY_REQUIREMENT}"
     ], "a duplicated entry must be refused even though every element is sanctioned"
-    assert _requirement_violations(["eufy-home-security>=0.1"]) == [
-        "eufy-home-security>=0.1",
+    assert _requirement_violations(["anker-eufy-security>=0.1"]) == [
+        "anker-eufy-security>=0.1",
         f"missing: {_LIBRARY_REQUIREMENT}",
     ], (
         "the guard compares exact strings, not package names: the right package "
@@ -326,11 +326,11 @@ def test_requirements_are_valid_pep_440_and_not_pinned_by_home_assistant() -> No
     )
 
     # Fail-first: each detector must flag its staged break.
-    assert _invalid_requirements(["eufy-home-security==0.1.*"]) == [], (
+    assert _invalid_requirements(["anker-eufy-security==0.1.*"]) == [], (
         "the PEP 440 guard flags the valid wildcard specifier"
     )
-    assert _invalid_requirements(["eufy-home-security==0.1.x", "bad req"]) == [
-        "eufy-home-security==0.1.x",
+    assert _invalid_requirements(["anker-eufy-security==0.1.x", "bad req"]) == [
+        "anker-eufy-security==0.1.x",
         "bad req",
     ], "the PEP 440 guard failed to flag ==0.1.x and a spaced name, both invalid"
     assert _home_assistant_pinned_requirements(["cryptography>=44.0.0"], ha_names) == [
@@ -339,13 +339,13 @@ def test_requirements_are_valid_pep_440_and_not_pinned_by_home_assistant() -> No
     assert _home_assistant_pinned_requirements(["CRYPTOGRAPHY>=44"], ha_names) == [
         "CRYPTOGRAPHY>=44"
     ], "the HA-pin guard must compare PEP 503 canonical names, not raw strings"
-    assert _home_assistant_pinned_requirements(["eufy-home-security==0.1.*"], ha_names) == [], (
+    assert _home_assistant_pinned_requirements(["anker-eufy-security==0.1.*"], ha_names) == [], (
         "the HA-pin guard flags the library, which Home Assistant does not pin"
     )
 
 
 def test_manifest_loggers_name_the_library() -> None:
-    # `eufy_home_security` covers the library's `.wire`, `.secrets` and every
+    # `anker_eufy_security` covers the library's `.wire`, `.secrets` and every
     # other child logger. Home Assistant adds
     # `custom_components.anker_eufy_integration` for the integration itself
     # (components/logger/helpers.py), so listing it here would be redundant.
@@ -361,10 +361,10 @@ def test_manifest_loggers_name_the_library() -> None:
         "the logger guard failed to flag the integration's own logger in place of the library's"
     )
     assert _logger_violations([]), "the logger guard failed to flag an empty logger list"
-    assert _logger_violations(["eufy_home_security"]), (
+    assert _logger_violations(["anker_eufy_security"]), (
         "the logger guard failed to flag a list without the push client's logger"
     )
-    assert _logger_violations("eufy_home_security"), (
+    assert _logger_violations("anker_eufy_security"), (
         "the logger guard failed to flag a string where a list is required"
     )
 
@@ -702,7 +702,7 @@ def test_the_options_flow_offers_exactly_its_sixteen_options() -> None:
     stations. No config entry update listener is registered beside the reloading
     options flow.
     """
-    from eufy_home_security import DEFAULT_STATION_SESSIONS
+    from anker_eufy_security import DEFAULT_STATION_SESSIONS
     from homeassistant.config_entries import OptionsFlowWithReload
 
     from custom_components.anker_eufy_integration.config_flow import (

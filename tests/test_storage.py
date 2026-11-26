@@ -14,6 +14,16 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import (
+    ConnectionChanged,
+    EufySecurity,
+    StationState,
+    StorageInfo,
+    entity_unique_id,
+)
+from anker_eufy_security.p2p import session as session_module
+from anker_eufy_security.p2p.storage_info import CMD_STORAGE
+from anker_eufy_security.testing import SYNTHETIC, FakeStation
 from conftest import (
     add_entry,
     advance_to_poll,
@@ -23,16 +33,6 @@ from conftest import (
     state_of,
     wait_until,
 )
-from eufy_home_security import (
-    ConnectionChanged,
-    EufySecurity,
-    StationState,
-    StorageInfo,
-    entity_unique_id,
-)
-from eufy_home_security.p2p import session as session_module
-from eufy_home_security.p2p.storage_info import CMD_STORAGE
-from eufy_home_security.testing import SYNTHETIC, FakeStation
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.const import (

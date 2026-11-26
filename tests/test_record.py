@@ -17,15 +17,7 @@ from typing import Any, Final
 
 import probatio as vol
 import pytest
-from conftest import (
-    SYNTHETIC,
-    entity_id_for,
-    record_states,
-    set_up_warm,
-    state_of,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountRejectedError,
     CameraWakeError,
     CaptureStoppedError,
@@ -38,7 +30,15 @@ from eufy_home_security import (
     StreamBroadcast,
     redact_serial,
 )
-from eufy_home_security.testing import FakeStation
+from anker_eufy_security.testing import FakeStation
+from conftest import (
+    SYNTHETIC,
+    entity_id_for,
+    record_states,
+    set_up_warm,
+    state_of,
+    wait_until,
+)
 from fake_ffmpeg import REMUX_MAGIC
 from homeassistant.components.camera import DOMAIN as CAMERA_DOMAIN
 from homeassistant.components.camera import CameraState

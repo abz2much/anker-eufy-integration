@@ -20,11 +20,11 @@
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/abz2much/anker-eufy-integration/issues",
   "loggers": [
-    "eufy_home_security",
+    "anker_eufy_security",
     "firebase_messaging"
   ],
   "requirements": [
-    "eufy-home-security==0.4.19"
+    "anker-eufy-security==0.1.0"
   ],
   "version": "0.7.0"
 }

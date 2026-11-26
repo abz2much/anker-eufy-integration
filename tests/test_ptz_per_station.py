@@ -4,10 +4,10 @@ station, not the model alone."""
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security.devices import Capability, Support, profile_for_serial
+from anker_eufy_security.p2p.messages import STANDALONE_RECEIPT_LEN
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from conftest import set_up_warm
-from eufy_home_security.devices import Capability, Support, profile_for_serial
-from eufy_home_security.p2p.messages import STANDALONE_RECEIPT_LEN
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 

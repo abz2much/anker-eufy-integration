@@ -15,6 +15,8 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import CommunicationError, EufySecurity
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from conftest import (
     add_entry,
     add_motion_sensor,
@@ -25,8 +27,6 @@ from conftest import (
     setup_entry,
     wait_until,
 )
-from eufy_home_security import CommunicationError, EufySecurity
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.components.repairs import RepairsFlowManager, repairs_flow_manager
 from homeassistant.config_entries import SOURCE_USER, ConfigEntry, ConfigEntryState
 from homeassistant.const import ATTR_ENTITY_ID, CONF_EMAIL, CONF_PASSWORD

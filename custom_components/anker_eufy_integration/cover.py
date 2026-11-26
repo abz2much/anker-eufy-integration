@@ -36,7 +36,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from eufy_home_security import (
+from anker_eufy_security import (
     CommandRejectedError,
     DeviceTimeoutError,
     DoorNotMovedError,

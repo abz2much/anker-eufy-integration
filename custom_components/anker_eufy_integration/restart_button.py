@@ -18,13 +18,13 @@ from homeassistant.components.button import ButtonEntity
 from homeassistant.const import EntityCategory
 from homeassistant.exceptions import HomeAssistantError
 
-from eufy_home_security import (
+from anker_eufy_security import (
     CommandNotAppliedError,
     CommandRejectedError,
     EufySecurityError,
     StationFeature,
 )
-from eufy_home_security.devices import Support
+from anker_eufy_security.devices import Support
 
 from . import errors
 from .const import DOMAIN, EXC_SESSION_REPLACED_SEE_REPAIRS

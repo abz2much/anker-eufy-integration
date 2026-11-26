@@ -5,15 +5,15 @@ from __future__ import annotations
 from collections.abc import Callable
 
 import pytest
-from conftest import add_entry, set_up_warm, setup_entry
-from eufy_home_security import (
+from anker_eufy_security import (
     CipherKeyMissingError,
     CloudProblem,
     ConnectionChanged,
     DisconnectCause,
     EufySecurity,
 )
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
+from conftest import add_entry, set_up_warm, setup_entry
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir

@@ -30,7 +30,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.storage import Store
 from homeassistant.util.hass_dict import HassKey
 
-from eufy_home_security import (
+from anker_eufy_security import (
     DEFAULT_STATION_SESSIONS,
     MIN_STATION_SESSIONS,
     STATION_SESSION_LIMIT,

@@ -15,6 +15,16 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import pytest
+from anker_eufy_security import (
+    CommunicationError,
+    EufySecurity,
+    EufySecurityError,
+    LoginLimitedError,
+    PushChanged,
+)
+from anker_eufy_security.devices import Evidence, Support
+from anker_eufy_security.p2p import session as session_module
+from anker_eufy_security.testing import FakeCloud, FakeStation
 from conftest import (
     PUSHED_THUMB_PATH,
     PUSHED_THUMBNAIL,
@@ -27,16 +37,6 @@ from conftest import (
     setup_entry,
     wait_until,
 )
-from eufy_home_security import (
-    CommunicationError,
-    EufySecurity,
-    EufySecurityError,
-    LoginLimitedError,
-    PushChanged,
-)
-from eufy_home_security.devices import Evidence, Support
-from eufy_home_security.p2p import session as session_module
-from eufy_home_security.testing import FakeCloud, FakeStation
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.repairs import repairs_flow_manager
 from homeassistant.config_entries import ConfigEntryState

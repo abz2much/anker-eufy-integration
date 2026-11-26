@@ -12,7 +12,7 @@ from collections.abc import Set as AbstractSet
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import device_registry as dr
 
-from eufy_home_security import redact_serial
+from anker_eufy_security import redact_serial
 
 from .const import DOMAIN
 from .runtime import EufyConfigEntry

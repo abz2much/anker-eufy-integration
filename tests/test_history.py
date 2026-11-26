@@ -17,6 +17,15 @@ from pathlib import Path
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import (
+    ClipWriter,
+    DetectionType,
+    DeviceTimeoutError,
+    EufySecurity,
+    MediaClip,
+    VideoCodec,
+)
+from anker_eufy_security.testing import FakeCloud, FakeStation, camera_device
 from conftest import (
     SYNTHETIC,
     detection_event,
@@ -25,15 +34,6 @@ from conftest import (
     set_up_warm,
     wait_until,
 )
-from eufy_home_security import (
-    ClipWriter,
-    DetectionType,
-    DeviceTimeoutError,
-    EufySecurity,
-    MediaClip,
-    VideoCodec,
-)
-from eufy_home_security.testing import FakeCloud, FakeStation, camera_device
 from fake_ffmpeg import REMUX_MAGIC
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.components.button import SERVICE_PRESS

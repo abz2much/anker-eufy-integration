@@ -20,7 +20,7 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.event import async_track_entity_registry_updated_event
 from homeassistant.helpers.typing import UNDEFINED, ConfigType, UndefinedType
 
-from eufy_home_security import (
+from anker_eufy_security import (
     AuthenticationError,
     EufySecurityError,
     LoginNeed,

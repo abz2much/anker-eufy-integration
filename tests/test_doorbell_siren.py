@@ -13,9 +13,9 @@ from datetime import timedelta
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import DeviceTimeoutError, EufySecurity, entity_unique_id
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from conftest import set_up_warm, state_of
-from eufy_home_security import DeviceTimeoutError, EufySecurity, entity_unique_id
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from homeassistant.components.siren import ATTR_DURATION, SirenEntityFeature
 from homeassistant.components.siren import DOMAIN as SIREN_DOMAIN
 from homeassistant.const import (

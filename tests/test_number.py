@@ -8,16 +8,7 @@ from dataclasses import replace
 from typing import Final
 
 import pytest
-from conftest import (
-    _STATION_BLOCK,
-    entity_id_for,
-    record_states,
-    seed_setting,
-    set_up_warm,
-    setting_param,
-    state_of,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     AccountRejectedError,
     CameraWakeError,
     CommandNotAppliedError,
@@ -35,8 +26,17 @@ from eufy_home_security import (
     StationUnreachableError,
     entity_unique_id,
 )
-from eufy_home_security.devices.model_settings import settings_of
-from eufy_home_security.testing import SYNTHETIC, FakeStation
+from anker_eufy_security.devices.model_settings import settings_of
+from anker_eufy_security.testing import SYNTHETIC, FakeStation
+from conftest import (
+    _STATION_BLOCK,
+    entity_id_for,
+    record_states,
+    seed_setting,
+    set_up_warm,
+    setting_param,
+    state_of,
+)
 from homeassistant.components.number.const import (
     ATTR_MAX,
     ATTR_MIN,

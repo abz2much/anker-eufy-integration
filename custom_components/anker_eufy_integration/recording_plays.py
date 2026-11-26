@@ -46,7 +46,7 @@ from homeassistant.components.http import KEY_HASS, HomeAssistantView
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.util.hass_dict import HassKey
 
-from eufy_home_security import EufySecurityError, HistoryRecord, redact_serial
+from anker_eufy_security import EufySecurityError, HistoryRecord, redact_serial
 
 from .const import DOMAIN
 from .recording_hls import (

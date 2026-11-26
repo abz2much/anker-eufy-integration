@@ -14,6 +14,20 @@ from datetime import datetime, timedelta
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import (
+    AlarmChanged,
+    AlarmDelayChanged,
+    EufySecurity,
+    Event,
+    EventSource,
+    GuardMode,
+    GuardModeChanged,
+    GuardModeOrigin,
+    PushMessageType,
+    StationState,
+)
+from anker_eufy_security.p2p import FrameType
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from conftest import (
     add_entry,
     advance_to_poll,
@@ -29,20 +43,6 @@ from conftest import (
     station_event,
     wait_until,
 )
-from eufy_home_security import (
-    AlarmChanged,
-    AlarmDelayChanged,
-    EufySecurity,
-    Event,
-    EventSource,
-    GuardMode,
-    GuardModeChanged,
-    GuardModeOrigin,
-    PushMessageType,
-    StationState,
-)
-from eufy_home_security.p2p import FrameType
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.const import (
     ATTR_ENTITY_ID,

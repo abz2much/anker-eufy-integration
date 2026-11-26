@@ -7,12 +7,12 @@ from collections.abc import Callable
 from typing import Final
 
 import pytest
+from anker_eufy_security import EufySecurity
+from anker_eufy_security.devices import SettingControl, SettingKind
+from anker_eufy_security.devices.model_settings import settings_of
+from anker_eufy_security.testing import SYNTHETIC, FakeStation
+from anker_eufy_security.testing.cloud import FakeCloud
 from conftest import entity_id_for, seed_setting, set_up_warm, state_of
-from eufy_home_security import EufySecurity
-from eufy_home_security.devices import SettingControl, SettingKind
-from eufy_home_security.devices.model_settings import settings_of
-from eufy_home_security.testing import SYNTHETIC, FakeStation
-from eufy_home_security.testing.cloud import FakeCloud
 from homeassistant.components.text import DOMAIN as TEXT_DOMAIN
 from homeassistant.components.text.const import ATTR_VALUE, SERVICE_SET_VALUE
 from homeassistant.const import ATTR_ENTITY_ID, STATE_UNKNOWN, EntityCategory, Platform

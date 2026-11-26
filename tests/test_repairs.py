@@ -1,6 +1,6 @@
 """Repair issues for a degraded eufy cloud and a rejected station key, on the real library.
 
-Every test sets the entry up through Home Assistant on ``eufy_home_security.testing``
+Every test sets the entry up through Home Assistant on ``anker_eufy_security.testing``
 (a real ``EufySecurity`` wired to ``FakeCloud`` and a loopback ``FakeStation``) and
 drives the fix flows through Home Assistant's own repairs flow manager. The cloud
 fake's ``calls`` list is the proof of what reached eufy: nothing may log in until a
@@ -17,19 +17,7 @@ from datetime import timedelta
 from typing import Any, Final
 
 import pytest
-from conftest import (
-    add_entry,
-    advance_to_poll,
-    cloud_calls,
-    entity_id_for,
-    panel_entity_id,
-    record_states,
-    set_up_warm,
-    setup_entry,
-    state_of,
-    wait_until,
-)
-from eufy_home_security import (
+from anker_eufy_security import (
     AuthenticationError,
     CipherUnavailableError,
     CloudProblem,
@@ -45,12 +33,24 @@ from eufy_home_security import (
     SkippedDevice,
     redact_serial,
 )
-from eufy_home_security.testing import (
+from anker_eufy_security.testing import (
     SYNTHETIC,
     FakeCloud,
     FakeStation,
     camera_device,
     station_device,
+)
+from conftest import (
+    add_entry,
+    advance_to_poll,
+    cloud_calls,
+    entity_id_for,
+    panel_entity_id,
+    record_states,
+    set_up_warm,
+    setup_entry,
+    state_of,
+    wait_until,
 )
 from homeassistant.components.alarm_control_panel import DOMAIN as ALARM_DOMAIN
 from homeassistant.components.event import DOMAIN as EVENT_DOMAIN
@@ -87,7 +87,7 @@ _NOTICE_KEYS = ("credentials_refreshed", "credentials_refreshed_login")
 _OTHER_ACCOUNT_ID: Final = "f" * 40
 _MISMATCH_KEY: Final = "account_id_mismatch"
 # The integration's and the library's own loggers.
-_OUR_LOGGERS: Final = ("custom_components.anker_eufy_integration", "eufy_home_security")
+_OUR_LOGGERS: Final = ("custom_components.anker_eufy_integration", "anker_eufy_security")
 # The library's one WARNING per connection when a station stamps another account.
 _MISMATCH_WARNING: Final = "stamps its records with another account id"
 # The issue registry's storage document.
@@ -580,7 +580,8 @@ def _mismatch_warnings(caplog: pytest.LogCaptureFixture) -> int:
     return sum(
         1
         for record in caplog.records
-        if record.name.startswith("eufy_home_security") and _MISMATCH_WARNING in record.getMessage()
+        if record.name.startswith("anker_eufy_security")
+        and _MISMATCH_WARNING in record.getMessage()
     )
 
 
@@ -599,7 +600,7 @@ async def test_the_mismatched_account_id_is_in_no_log_issue_or_storage(
     ((issue_id, issue),) = _mismatch_issues(hass).items()
 
     ours = [record for record in caplog.records if record.name.startswith(_OUR_LOGGERS)]
-    assert any(record.name.startswith("eufy_home_security") for record in ours), (
+    assert any(record.name.startswith("anker_eufy_security") for record in ours), (
         "no library log record was captured, so the log check below is vacuous"
     )
     assert _mismatch_warnings(caplog) == 1
@@ -638,7 +639,7 @@ async def test_the_mismatch_issue_survives_a_reconnect_and_a_second_push(
     # short-lived session is a connection of its own, which would report the mismatch
     # once more and hide whether the reconnected session did.
     monkeypatch.setattr(detections, "snapshot_wanted", _no_snapshot)
-    caplog.set_level(logging.WARNING, logger="eufy_home_security")
+    caplog.set_level(logging.WARNING, logger="anker_eufy_security")
     entry = await set_up_warm(hass, seed_warm_cache)
     deduplicator = built_clients[-1].deduplicator
     assert deduplicator is not None

@@ -57,7 +57,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.http import HomeAssistantView
 from homeassistant.util.hass_dict import HassKey
 
-from eufy_home_security import (
+from anker_eufy_security import (
     MIN_ZOOM,
     CameraWakeError,
     EufySecurityError,

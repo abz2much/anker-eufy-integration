@@ -29,7 +29,7 @@ from homeassistant.components.alarm_control_panel.const import AlarmControlPanel
 from homeassistant.util import dt as dt_util
 from homeassistant.util.signal_type import SignalType
 
-from eufy_home_security import (
+from anker_eufy_security import (
     AlarmChanged,
     AlarmDelayChanged,
     AlarmPhase,
@@ -46,7 +46,7 @@ from eufy_home_security import (
     Station,
     StationFeature,
 )
-from eufy_home_security.devices import (
+from anker_eufy_security.devices import (
     Capability,
     DeviceKind,
     Support,

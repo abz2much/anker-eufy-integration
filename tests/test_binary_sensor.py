@@ -11,6 +11,15 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import pytest
+from anker_eufy_security import (
+    DetectionType,
+    EufySecurity,
+    FrameCipher,
+    Station,
+    entity_unique_id,
+)
+from anker_eufy_security.devices import Setting
+from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from conftest import (
     SENSOR_SN,
     add_motion_sensor,
@@ -24,15 +33,6 @@ from conftest import (
     state_of,
     wait_until,
 )
-from eufy_home_security import (
-    DetectionType,
-    EufySecurity,
-    FrameCipher,
-    Station,
-    entity_unique_id,
-)
-from eufy_home_security.devices import Setting
-from eufy_home_security.testing import SYNTHETIC, FakeCloud, FakeStation
 from homeassistant.components.binary_sensor import DOMAIN as BINARY_SENSOR_DOMAIN
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 from homeassistant.components.event import DOMAIN as EVENT_DOMAIN

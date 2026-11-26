@@ -131,7 +131,7 @@ from homeassistant.helpers.event import async_call_later
 from homeassistant.util import dt as dt_util
 from homeassistant.util.signal_type import SignalType
 
-from eufy_home_security import (
+from anker_eufy_security import (
     CameraImage,
     DeviceBusyError,
     EufySecurityError,
@@ -148,7 +148,7 @@ from eufy_home_security import (
     picture_codec,
     redact_serial,
 )
-from eufy_home_security.station import FULL_RESOLUTION_TIMEOUT
+from anker_eufy_security.station import FULL_RESOLUTION_TIMEOUT
 
 from . import detections, errors, still_cache
 from .const import (
