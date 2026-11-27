@@ -5,6 +5,13 @@ All notable changes to this project. The project follows
 release may change entities, options or actions. From 0.1.0 on, release-please writes the
 entries from the conventional commits.
 
+## [0.8.2](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.1...v0.8.2) (2026-11-27)
+
+
+### Features
+
+* delay sensors, doorbell night vision, and calibrate and turn 360 on the S340 ([#15](https://github.com/abz2much/anker-eufy-integration/issues/15)) ([a961a08](https://github.com/abz2much/anker-eufy-integration/commit/a961a0861483052ee5f9c4636ba72e5932eddda9))
+
 ## [0.8.1](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.0...v0.8.1) (2026-11-26)
 
 
