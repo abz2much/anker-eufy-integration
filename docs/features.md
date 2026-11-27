@@ -42,6 +42,21 @@ The length of each delay is set per mode in the eufy app or on the
 [HomeBase card](homebase-card.md). These sensors have not yet been seen with a real
 delay; the behaviour is covered by automated tests.
 
+## Arming event
+
+Each HomeBase's **Arming** event fires when the mode in force changes. eufy sends a
+push for a mode change only when the HomeBase's "Switching notification" for that kind
+of change is on, so the event also fires from the HomeBase's own report over the local
+network, about three seconds after the change. When a push for the same change arrives
+in that time, the event fires once, with **changed_by** saying who changed it (App,
+Keypad, Schedule and so on). Without a push, changed_by is left out, and that includes
+arming from Home Assistant. A push that arrives later than that is not fired again.
+
+The event always ends on the mode the HomeBase is in: a quick change and change back
+fires nothing, and changes keep their order. If Home Assistant missed the HomeBase's
+report, for example while the HomeBase was unreachable, the change fires when the next
+poll finds it, up to about 45 seconds late, with the time it was found.
+
 ## Last visitor
 
 Each camera has a **Last visitor** sensor. It shows the name of the last person the camera
