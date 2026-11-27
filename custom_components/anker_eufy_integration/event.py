@@ -24,7 +24,8 @@ signal with what ``detections.station_event_consumed`` accepts. The alarm event 
 triggered and stopped from the library's ``AlarmChanged`` on the station's alarm
 signal, once per transition and without the push opt-in; from a push it fires only
 an entry delay, and a trigger that was not authenticated, marked so. The arming
-event fires only from an authenticated push, naming the mode in force.
+event fires from an authenticated push, naming the mode in force, and from the
+station's own local mode report or a poll (``arming_local.py``), once per change.
 
 **The doorbell ring.** A device the library says rings (``Capability.DOORBELL_RING``:
 a doorbell, a video smart lock) also gets a ring event, fired from its doorbell
@@ -54,7 +55,7 @@ from anker_eufy_security import (
     SecurityEvent,
 )
 
-from . import detections
+from . import arming_local, detections
 from .const import (
     ALARM_EVENT_KEY,
     ARMING_EVENT_KEY,
@@ -279,7 +280,8 @@ class EufyAlarmEvent(_EufyStationEvent):
 
 
 class EufyArmingEvent(_EufyStationEvent):
-    """The guard mode the station changed to, from an authenticated push only."""
+    """The guard mode the station changed to: from an authenticated push, with who
+    changed it, or from the station's own local mode report (``arming_local.py``)."""
 
     entity_description = EventEntityDescription(
         key=ARMING_EVENT_KEY,
@@ -289,6 +291,19 @@ class EufyArmingEvent(_EufyStationEvent):
 
     def __init__(self, coordinator: StationCoordinator) -> None:
         super().__init__(coordinator, ARMING_EVENT_KEY)
+        self._local: arming_local.LocalArming | None = None
+
+    @override
+    async def async_added_to_hass(self) -> None:
+        """Also fire from the station's own local mode report (arming_local.py)."""
+        await super().async_added_to_hass()
+        self._local = arming_local.LocalArming(self.hass, self.coordinator, self._async_fire)
+        self.async_on_remove(self._local.async_start())
+
+    @callback
+    def _async_fire(self, event_type: str, attributes: dict[str, str]) -> None:
+        self._trigger_event(event_type, attributes)
+        self.async_write_ha_state()
 
     @override
     @callback
@@ -314,5 +329,7 @@ class EufyArmingEvent(_EufyStationEvent):
         source = event.arming_source
         if source is not None:
             attributes[ATTR_CHANGED_BY] = detections.ARMING_SOURCE_LABELS[source]
-        self._trigger_event(detections.ARMING_EVENT_TYPES[state], attributes)
-        self.async_write_ha_state()
+        # A mode the local report already announced is not announced again.
+        if self._local is not None and not self._local.async_on_push(mode):
+            return
+        self._async_fire(detections.ARMING_EVENT_TYPES[state], attributes)
