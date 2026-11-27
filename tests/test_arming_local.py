@@ -421,3 +421,46 @@ async def test_an_unknown_mode_then_a_known_one_fires_the_known_one(
 
     assert fired == ["armed_home"]
     await _unload(hass, entry)
+
+
+async def test_a_late_push_for_an_earlier_change_is_corrected_by_the_next_report(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """Home fires, then a keypad Away fires, then the app's late Home push: the next
+    report of Away announces Away again, so the last event names the mode in force."""
+    entry = await set_up_warm(hass, seed_warm_cache)
+    await _handle(hass, entry, _report(GuardMode.HOME))
+    await _after(hass, GRACE + 0.5)
+    fired = _event_types(hass)
+
+    await _handle(hass, entry, _report(GuardMode.AWAY))
+    await _after(hass, GRACE + 0.5)
+    await _handle(hass, entry, _push(1))
+    await _handle(hass, entry, _report(GuardMode.AWAY))
+    await _after(hass, GRACE + 0.5)
+
+    assert fired == ["armed_away", "armed_home", "armed_away"]
+    await _unload(hass, entry)
+
+
+async def test_a_late_push_during_a_grace_is_corrected_by_the_next_report(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    entry = await set_up_warm(hass, seed_warm_cache)
+    await _handle(hass, entry, _report(GuardMode.HOME))
+    await _after(hass, GRACE + 0.5)
+    fired = _event_types(hass)
+
+    await _handle(hass, entry, _report(GuardMode.AWAY))
+    await _handle(hass, entry, _push(1))
+    await _handle(hass, entry, _report(GuardMode.AWAY))
+    await _after(hass, GRACE + 0.5)
+
+    assert fired[-1] == "armed_away"
+    await _unload(hass, entry)

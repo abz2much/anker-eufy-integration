@@ -21,7 +21,9 @@ names the mode the station is in:
   for a mode the local report announced less than ``LATE_PUSH_SECONDS`` ago is that
   change's late copy and fires nothing; any other push fires, as before.
 
-The first read at setup only records the mode. A mode the integration does not know is
+A local read or poll of a mode other than the one announced is announced after the
+grace even when it repeats the last read, so a late push for an earlier change is put
+right by the next report or poll. The first read at setup only records the mode. A mode the integration does not know is
 recorded but never announced. A change found by a poll fires when the poll finds it (up
 to the poll interval late), stamped with that time.
 """
@@ -115,15 +117,23 @@ class LocalArming:
             return
         data: StationState | None = self._coordinator.data
         mode = data.active_mode if data is not None else None
-        if mode is None or mode == self._mode:
+        if mode is None:
             return
-        self._mode = mode
-        self._async_drop_pending()
+        if mode != self._mode:
+            self._mode = mode
+            self._async_drop_pending()
         if self._announced is None:
             # The first mode ever read: a baseline, not a change.
             self._announced = mode
             return
-        if mode == self._announced or event_type_of(mode) is None:
+        if mode == self._announced:
+            # Back to what the event names (a change and change back, or a push first).
+            self._async_drop_pending()
+            return
+        # Compared with what was announced, not only with the last read: a late push
+        # for an earlier change can leave the event naming a mode no longer in force,
+        # and the next report or poll puts it right.
+        if self._pending == mode or event_type_of(mode) is None:
             return
         assert isinstance(mode, GuardMode)  # event_type_of named it
         self._pending = mode
