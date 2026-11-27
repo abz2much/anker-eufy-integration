@@ -2,7 +2,7 @@
 stored 12-hour schedule.
 
 A HomeBase (or its paired device) cannot know what eufy has published, so this is the
-one cloud read Group A adds (``EufySecurity.async_firmware_checks``, one OTA call per
+one cloud read Group A adds (``EufySecurity.async_firmware_checks``, one device-list read and one OTA call per
 HomeBase device, on the account's shared throttle). The last check's time and answers
 are stored per entry, so a restart neither adds a check nor loses what was known: the
 next check runs ``CHECK_INTERVAL`` after the stored one, or ``FIRST_CHECK_DELAY`` after
@@ -118,6 +118,8 @@ class FirmwareChecks:
         self._answers: dict[str, FirmwareAnswer] = {}
         self._checked_at: float | None = None
         self._cancel: CALLBACK_TYPE | None = None
+        # Set by ``async_stop``: a check still running then schedules nothing after it.
+        self._stopped = False
 
     def result(self, serial: str) -> FirmwareAnswer | None:
         """The last stored answer for ``serial``; None before any."""
@@ -150,7 +152,12 @@ class FirmwareChecks:
 
     @callback
     def async_stop(self) -> None:
-        """Cancel the next check."""
+        """Cancel the next check, and any a running check would schedule."""
+        self._stopped = True
+        self._cancel_timer()
+
+    @callback
+    def _cancel_timer(self) -> None:
         if self._cancel is not None:
             self._cancel()
             self._cancel = None
@@ -159,7 +166,9 @@ class FirmwareChecks:
         """Ask eufy now; store the answers and tell the update entities. A failed check
         keeps the earlier answers."""
         try:
-            checks = await self._entry.runtime_data.eufy.async_firmware_checks()
+            # A fresh device list: after a firmware install the cached record names the
+            # old version, and eufy would be asked about that one.
+            checks = await self._entry.runtime_data.eufy.async_firmware_checks(refresh=True)
         except EufySecurityError as err:
             _LOGGER.debug(
                 "Firmware check failed (%s); keeping the last answers", type(err).__name__
@@ -177,7 +186,9 @@ class FirmwareChecks:
 
     @callback
     def _schedule(self, delay: float) -> None:
-        self.async_stop()
+        self._cancel_timer()
+        if self._stopped:
+            return
         self._cancel = async_call_later(self._hass, delay, self._fire)
 
     @callback

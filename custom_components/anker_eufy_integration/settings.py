@@ -362,6 +362,15 @@ def setting_platform(setting: Setting) -> Platform | None:
 # is read off any block that reports 1198 (``SubDeviceState.battery_health``), where the
 # setting reads it only on models whose app data maps it.
 FIELD_SENSOR_KEYS: Final = frozenset({BATTERY_HEALTH_KEY})
+# The param the battery health field reads; a model whose setting reads another (the
+# T9000's 1314) keeps its setting entity.
+_FIELD_SENSOR_PARAM: Final = 1198
+
+
+def shown_by_field_sensor(setting: Setting) -> bool:
+    """Whether a device-field sensor shows ``setting`` instead: its key is in
+    ``FIELD_SENSOR_KEYS`` and it reads the field's param, or nothing."""
+    return setting.key in FIELD_SENSOR_KEYS and setting.read_param in (None, _FIELD_SENSOR_PARAM)
 
 
 def setting_specs(station: Station) -> list[SettingEntitySpec]:
@@ -393,7 +402,7 @@ def setting_specs(station: Station) -> list[SettingEntitySpec]:
         }
         primaries = {s.variant_of for s in settings if s.variant_of is not None}
         for setting in settings:
-            if setting.key in FIELD_SENSOR_KEYS:
+            if shown_by_field_sensor(setting):
                 continue
             light = lights.get(setting.key)
             platform = Platform.LIGHT if light is not None else setting_platform(setting)

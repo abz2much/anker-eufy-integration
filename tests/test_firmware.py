@@ -271,3 +271,66 @@ async def test_secondary_firmware_and_the_category_stays_diagnostic(
         assert row is not None
         assert row.entity_category is EntityCategory.DIAGNOSTIC
     await hass.config_entries.async_unload(entry.entry_id)
+
+
+async def test_an_unload_during_a_check_leaves_no_timer_behind(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    fake_cloud: FakeCloud,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """A check still running when the entry unloads schedules nothing after it."""
+    import asyncio
+
+    entry = await _set_up(hass, seed_warm_cache)
+    checks = entry.runtime_data.firmware
+    assert checks is not None
+    started: list[int] = []
+    never = asyncio.Event()
+
+    async def slow(*, refresh: bool = False) -> Any:
+        started.append(1)
+        await never.wait()
+        return []
+
+    entry.runtime_data.eufy.async_firmware_checks = slow
+    await _run_first_check(hass)
+    assert started == [1]
+
+    await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert checks._cancel is None
+    async_fire_time_changed(hass, dt_util.utcnow() + CHECK_INTERVAL * 3)
+    await hass.async_block_till_done()
+    assert started == [1]
+
+
+async def test_the_check_asks_with_a_fresh_device_list(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    fake_cloud: FakeCloud,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """After a firmware install the cached record is stale; the check reads the list
+    again, so eufy is asked about the version the camera now runs."""
+    _versions(fake_cloud)
+    fake_station.params[0][7013] = "3.4.4.0"  # installed since the list was cached
+    entry = await _set_up(hass, seed_warm_cache)
+    # The cloud's list now names the new version; the cache keeps its own copy.
+    fake_cloud.devices = [
+        {**device, "main_sw_version": "3.4.4.0"}
+        if device["device_sn"] == SYNTHETIC.camera_sn
+        else device
+        for device in fake_cloud.devices
+    ]
+
+    await _run_first_check(hass)
+
+    state = hass.states.get(_camera_update(hass))
+    assert state is not None
+    assert state.attributes["installed_version"] == "3.4.4.0"
+    assert state.state == STATE_OFF
+    await hass.config_entries.async_unload(entry.entry_id)
