@@ -47,6 +47,7 @@ from anker_eufy_security.devices import SettingKind
 from . import delay_sensors, detections, visitor_sensor
 from .const import (
     ATTR_VALUE,
+    BATTERY_HEALTH_KEY,
     BATTERY_KEY,
     BATTERY_TEMPERATURE_KEY,
     DETECTED_EVENTS_KEY,
@@ -230,6 +231,17 @@ DEVICE_FIELD_SENSORS: Final = (
         # Raw solar input; its scale is model specific, so no unit or device class.
         state_class=SensorStateClass.MEASUREMENT,
         read=lambda device: device.solar_intensity,
+        battery=True,
+    ),
+    # Read off any block that reports 1198, whatever the model's app data says; the
+    # library's ``battery_healthy`` setting is left out for it (``setting_specs``).
+    EufyDeviceFieldDescription(
+        key=BATTERY_HEALTH_KEY,
+        translation_key="battery_health",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        read=lambda device: device.battery_health,
         battery=True,
     ),
     EufyDeviceFieldDescription(

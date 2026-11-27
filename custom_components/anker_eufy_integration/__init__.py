@@ -90,6 +90,7 @@ from .events import EventRouter
 from .presets import PresetManager, preset_capture_key, preset_image_key
 from .runtime import EufyConfigEntry
 from .settings import (
+    FIELD_SENSOR_KEYS,
     SettingEntitySpec,
     is_per_mode_entity,
     is_setting_row,
@@ -1262,6 +1263,15 @@ def _async_forget_dropped_setting_entities(
             (device.device_sn, (station, device.device_sn))
             for device in station.sub_devices
             if device.device_sn and device.device_sn != station.serial
+        )
+        # A device-field sensor reuses its setting's row (``FIELD_SENSOR_KEYS``).
+        built.update(
+            entity_unique_id(serial, key)
+            for serial in (
+                station.serial,
+                *(d.device_sn for d in station.sub_devices if d.device_sn),
+            )
+            for key in FIELD_SENSOR_KEYS
         )
         for spec in setting_specs(station):
             serial = spec.device_sn or station.serial

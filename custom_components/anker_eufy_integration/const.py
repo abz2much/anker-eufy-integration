@@ -169,6 +169,9 @@ CHARGING_KEY: Final = "charging"
 SOLAR_CHARGING_KEY: Final = "solar_charging"
 SOLAR_INTENSITY_KEY: Final = "solar_intensity"
 BATTERY_TEMPERATURE_KEY: Final = "battery_temperature"
+# Battery health (param 1198) as a device field: the key of the library's
+# ``battery_healthy`` setting, so a T8160's row from that setting is reused.
+BATTERY_HEALTH_KEY: Final = "battery_healthy"
 WORKING_DAYS_KEY: Final = "working_days"
 DETECTED_EVENTS_KEY: Final = "detected_events"
 RECORDED_EVENTS_KEY: Final = "recorded_events"

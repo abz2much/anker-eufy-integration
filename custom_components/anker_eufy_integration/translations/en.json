@@ -666,6 +666,9 @@
       },
       "last_visitor": {
         "name": "Last visitor"
+      },
+      "battery_health": {
+        "name": "Battery health"
       }
     },
     "select": {
