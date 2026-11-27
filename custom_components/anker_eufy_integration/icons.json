@@ -79,6 +79,12 @@
       },
       "save_view": {
         "default": "mdi:content-save-outline"
+      },
+      "calibrate": {
+        "default": "mdi:crosshairs-gps"
+      },
+      "rotate_360": {
+        "default": "mdi:rotate-360"
       }
     },
     "image": {
@@ -194,6 +200,9 @@
     },
     "stop_recording": {
       "service": "mdi:stop-circle-outline"
+    },
+    "chime": {
+      "service": "mdi:bell-ring"
     }
   }
 }

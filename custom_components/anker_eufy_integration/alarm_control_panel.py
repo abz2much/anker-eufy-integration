@@ -13,6 +13,7 @@ from homeassistant.components.alarm_control_panel.const import (
     AlarmControlPanelState,
 )
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
+from homeassistant.helpers import entity_platform
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.event import async_call_later
@@ -31,7 +32,7 @@ from anker_eufy_security import (
     StationState,
 )
 
-from . import delay_sensors, detections, errors
+from . import chime, delay_sensors, detections, errors
 from .const import (
     ATTR_DELAY_SECONDS,
     ATTR_DELAY_UNTIL,
@@ -87,6 +88,10 @@ async def async_setup_entry(
     async_add_entities(
         EufyGuardModePanel(coordinator, alarm_timeout)
         for coordinator in entry.runtime_data.coordinators.values()
+    )
+    # Play a ringtone on the HomeBase (chime.py).
+    entity_platform.async_get_current_platform().async_register_entity_service(
+        chime.SERVICE_CHIME, chime.CHIME_SCHEMA, chime.async_handle_chime
     )
 
 

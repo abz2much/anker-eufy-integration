@@ -119,3 +119,26 @@ data:
 Home Assistant opens the doorbell's live stream while the sound plays and closes it
 afterwards, which uses some battery. The HomeBase may report an alarm event as the sound
 starts; this does not sound an alarm.
+
+## Calibrate and turn 360°
+
+The SoloCam S340 has two more buttons. **Calibrate** re-centres the camera's pan and tilt;
+it is under Configuration on the camera's device page. **Turn 360°** turns the camera once
+round. Both are sent over the local network, as other eufy projects send them to this
+camera. They have not yet been tested on real hardware.
+
+## HomeBase chime
+
+The `anker_eufy_integration.chime` action plays a ringtone on a HomeBase. eufy plays it
+only on a HomeBase with no doorbell paired, so the action refuses a HomeBase that has
+one. It has not yet been tested on real hardware, and the ringtone numbers are not
+documented by eufy.
+
+```yaml
+action: anker_eufy_integration.chime
+target:
+  entity_id: alarm_control_panel.back_homebase
+data:
+  ringtone: 419
+```
+

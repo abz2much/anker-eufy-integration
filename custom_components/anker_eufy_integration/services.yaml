@@ -151,3 +151,19 @@ play_audio:
       example: /media/doorbell/hello.mp3
       selector:
         text:
+
+chime:
+  target:
+    entity:
+      integration: anker_eufy_integration
+      domain: alarm_control_panel
+  fields:
+    ringtone:
+      required: true
+      example: 419
+      selector:
+        number:
+          min: 0
+          max: 65535
+          step: 1
+          mode: box
