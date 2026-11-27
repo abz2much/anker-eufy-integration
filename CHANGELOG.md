@@ -5,6 +5,13 @@ All notable changes to this project. The project follows
 release may change entities, options or actions. From 0.1.0 on, release-please writes the
 entries from the conventional commits.
 
+## [0.8.4](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.3...v0.8.4) (2026-11-27)
+
+
+### Features
+
+* **diagnostics:** list each device's local param ids and the firmware check per device ([#19](https://github.com/abz2much/anker-eufy-integration/issues/19)) ([3d940aa](https://github.com/abz2much/anker-eufy-integration/commit/3d940aaebb8bad56ccb1d8e5aeacbc36b59e84ef))
+
 ## [0.8.3](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.2...v0.8.3) (2026-11-27)
 
 
