@@ -572,6 +572,9 @@
     },
     "chime_failed": {
       "message": "{station} did not take the chime. Check that it is online and on the same network as Home Assistant."
+    },
+    "night_vision_failed": {
+      "message": "{station} did not take the night vision change. Check that the doorbell is online and on the same network as Home Assistant."
     }
   },
   "entity": {
@@ -680,6 +683,14 @@
       },
       "security_mode": {
         "name": "Security mode"
+      },
+      "doorbell_night_vision": {
+        "name": "Night vision",
+        "state": {
+          "off": "Off",
+          "infrared": "Infrared",
+          "spotlight": "Spotlight"
+        }
       }
     },
     "siren": {

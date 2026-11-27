@@ -110,6 +110,9 @@
           "schedule": "mdi:calendar-clock",
           "disarmed": "mdi:shield-off"
         }
+      },
+      "doorbell_night_vision": {
+        "default": "mdi:weather-night"
       }
     },
     "number": {
