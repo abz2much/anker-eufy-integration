@@ -5,6 +5,13 @@ All notable changes to this project. The project follows
 release may change entities, options or actions. From 0.1.0 on, release-please writes the
 entries from the conventional commits.
 
+## [0.8.5](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.4...v0.8.5) (2026-11-27)
+
+
+### Features
+
+* Connected sensors, battery health on every camera, and firmware offers ([#21](https://github.com/abz2much/anker-eufy-integration/issues/21)) ([cafa227](https://github.com/abz2much/anker-eufy-integration/commit/cafa227369866c1fbab07def89585b9f7438d196))
+
 ## [0.8.4](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.3...v0.8.4) (2026-11-27)
 
 
