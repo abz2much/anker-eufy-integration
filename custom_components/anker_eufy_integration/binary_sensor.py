@@ -46,7 +46,7 @@ from homeassistant.util import dt as dt_util
 
 from anker_eufy_security import SecurityEvent, StationState, StorageMedium, SubDeviceState
 
-from . import detections, package_sensors
+from . import connectivity, detections, package_sensors
 from .const import (
     ATTR_POWER_SOURCE,
     ATTR_SOLAR_CHARGING,
@@ -290,6 +290,10 @@ async def async_setup_entry(
             )
         # The doorbell's package sensors (package_sensors.py).
         entities.extend(package_sensors.package_sensors(coordinator, hold))
+        # The HomeBase's and each paired device's Connected sensor (connectivity.py).
+        if (connected := connectivity.station_connected_sensor(coordinator)) is not None:
+            entities.append(connected)
+        entities.extend(connectivity.device_connected_sensors(coordinator))
     async_add_entities(entities)
     for coordinator in entry.runtime_data.coordinators.values():
         _async_add_state_binary_sensors(entry, coordinator, async_add_entities)

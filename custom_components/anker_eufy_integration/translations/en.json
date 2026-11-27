@@ -781,6 +781,9 @@
       },
       "package_stranded": {
         "name": "Package stranded"
+      },
+      "connected": {
+        "name": "Connected"
       }
     },
     "button": {

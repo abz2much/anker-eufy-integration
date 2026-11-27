@@ -180,6 +180,10 @@ STORAGE_PROBLEM_KEY: Final = "storage_problem"
 ATTR_SOLAR_CHARGING: Final = "solar_charging"
 ATTR_POWER_SOURCE: Final = "power_source"
 ATTR_STORAGE_STATUS: Final = "storage_status"
+# The Connected sensors (connectivity.py): a HomeBase's session, a paired device's 1131.
+CONNECTED_KEY: Final = "connected"
+# A paired device's raw offline reason (1131 above 1), which the app never names.
+ATTR_OFFLINE_CODE: Final = "offline_code"
 # The station's subsystem versions by param id (the subsystems are unnamed).
 ATTR_SUBSYSTEM_FIRMWARE: Final = "subsystem_firmware"
 # The raw per-mode siren action, by lower-case guard mode name.
