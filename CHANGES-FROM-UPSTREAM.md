@@ -28,3 +28,4 @@ The Python library is our own `anker-eufy-security` (import `anker_eufy_security
 `manifest.json`. Its own name means it never shares an installed copy with the upstream
 integration's library, so the two pins are independent. Its changes from upstream are in
 that repository's CHANGES-FROM-UPSTREAM.md.
+| **Outdoor Siren** (T8970) siren: the doorbell siren entity also for this model, on for 1-30 s (default 10) and off. The eufy app offers it no alarm button, so the library has no table entry. Command 1202 (SET_DEVS_TONE_FILE) with the seconds on the siren's channel, as bropat's `triggerDeviceAlarmSound`; not yet proven on hardware. | `doorbell_siren.py` (model added), `tests/test_doorbell_siren.py` | Local P2P | bropat eufy-security-client (`http/station.ts`, `triggerDeviceAlarmSound`), read only | MIT |

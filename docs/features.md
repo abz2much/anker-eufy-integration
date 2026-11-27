@@ -77,6 +77,13 @@ data:
   duration: 5
 ```
 
+## Outdoor Siren
+
+The Outdoor Siren (T8970) has a **Siren** entity that works the same way as the
+doorbell's: it sounds for 10 seconds, or for the duration you give from 1 to 30 seconds,
+and turning it off stops it. It uses the same local command as the doorbell siren, which
+other eufy projects use for this siren too. It has not yet been tested on real hardware.
+
 ## Quick replies
 
 The E340 doorbell has a button for each of eufy's three built-in replies: "Excuse me, can
