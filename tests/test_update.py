@@ -25,6 +25,7 @@ from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
 from homeassistant.components.update import (
     ATTR_INSTALLED_VERSION,
     ATTR_LATEST_VERSION,
+    UpdateEntityFeature,
 )
 from homeassistant.components.update import DOMAIN as UPDATE_DOMAIN
 from homeassistant.const import (
@@ -119,9 +120,9 @@ async def test_every_device_has_a_firmware_update_entity_with_unknown_state(
         # None, so Home Assistant gives the entity no state at all.
         assert state.attributes[ATTR_LATEST_VERSION] is None, serial
         assert state.state == STATE_UNKNOWN, serial
-        # No install: the feature is absent, which is also why the category
-        # defaults to diagnostic.
-        assert state.attributes[ATTR_SUPPORTED_FEATURES] == 0, serial
+        # No install, only progress (the station's own "installing" flag); the
+        # category is set to diagnostic explicitly (checked below).
+        assert state.attributes[ATTR_SUPPORTED_FEATURES] == UpdateEntityFeature.PROGRESS, serial
         # The integration's own icon, served from its brand/ directory.
         assert (
             state.attributes[ATTR_ENTITY_PICTURE] == f"/api/brands/integration/{DOMAIN}/icon.png"

@@ -54,6 +54,7 @@ from .const import (
 if TYPE_CHECKING:
     from .coordinator import StationCoordinator
     from .events import EventRouter
+    from .firmware import FirmwareChecks
     from .history import EventHistory
     from .presets import PresetManager
     from .recordings import RecordingManager
@@ -438,6 +439,7 @@ class EufyRuntimeData:
     history: EventHistory
     recordings: RecordingManager | None = None
     station_recordings: StationRecordings | None = None
+    firmware: FirmwareChecks | None = None
 
 
 type EufyConfigEntry = ConfigEntry[EufyRuntimeData]

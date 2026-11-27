@@ -258,7 +258,10 @@ _HOUSE: Final = re.compile(r"house:.+")
 
 
 def cloud_calls(cloud: FakeCloud) -> list[str]:
-    """``cloud.calls`` without the model scan (``things``) every first discovery makes.
+    """``cloud.calls`` without the model scan (``things``) every first discovery makes, and
+    without the firmware checks, which run on their own 12-hour schedule (``firmware.py``,
+    tested in ``test_firmware.py``): each ``ota:<serial>`` call, and the device-list fetch
+    the check makes right before them.
 
     One device-list fetch reads as its ``devices`` call: the house list and the per-house
     lists the same fetch asks right after it (``houses``, then ``house:<id>``, in the
@@ -268,7 +271,8 @@ def cloud_calls(cloud: FakeCloud) -> list[str]:
     # region -> "devices" right after a kept devices call, "houses" inside its house lists
     fetch: dict[str, str] = {}
     kept: list[str] = []
-    for call in cloud.calls:
+    calls = _without_firmware_checks(cloud.calls)
+    for call in calls:
         if call == "things":
             continue
         name, _, region = call.partition("@")
@@ -281,6 +285,26 @@ def cloud_calls(cloud: FakeCloud) -> list[str]:
             continue
         if name == "devices":
             fetch[region] = "devices"
+        kept.append(call)
+    return kept
+
+
+def _without_firmware_checks(calls: list[str]) -> list[str]:
+    """``calls`` without each firmware check: its ``ota:`` calls and the device-list fetch
+    (``devices`` and the house lists of the same fetch) right before them."""
+    kept: list[str] = []
+    fetch_start: int | None = None
+    for call in calls:
+        name = call.partition("@")[0]
+        if name.startswith("ota:"):
+            if fetch_start is not None:
+                del kept[fetch_start:]
+            fetch_start = None
+            continue
+        if name == "devices":
+            fetch_start = len(kept)
+        elif not (name == "houses" or _HOUSE.fullmatch(name)):
+            fetch_start = None
         kept.append(call)
     return kept
 

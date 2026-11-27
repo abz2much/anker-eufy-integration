@@ -20,11 +20,13 @@ from anker_eufy_security.devices.model_settings import settings_of
 from anker_eufy_security.testing import SYNTHETIC, FakeCloud, FakeStation, camera_device
 from conftest import (
     SENSOR_SN,
+    add_entry,
     add_motion_sensor,
     advance_to_poll,
     entity_id_for,
     seed_setting,
     set_up_warm,
+    setup_entry,
     state_of,
     wait_until,
 )
@@ -631,5 +633,126 @@ async def test_a_paired_device_with_no_serial_gets_no_entities_and_one_debug_lin
     assert str(_SERIALLESS_CHANNEL) in said
     assert SYNTHETIC.station_sn not in said
 
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+
+
+# ── Battery health (param 1198) ─────────────────────────────────────────────
+
+_S3_PRO_SN: Final = "T8162P2000000003"
+_BATTERY_HEALTH_KEY: Final = "battery_healthy"
+
+
+def _health_rows(hass: HomeAssistant, serial: str) -> list[er.RegistryEntry]:
+    """Every sensor row of ``serial`` that shows its battery health."""
+    return [
+        row
+        for row in er.async_get(hass).entities.values()
+        if row.domain == SENSOR_DOMAIN
+        and row.unique_id.startswith(f"{serial}_")
+        and "health" in row.unique_id
+    ]
+
+
+async def test_every_camera_that_reports_1198_gets_one_battery_health_sensor(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    fake_cloud: FakeCloud,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """The T8160's app data reads 1198, the T8162's leaves it unread: both get one sensor."""
+    fake_cloud.devices.append(
+        camera_device(_S3_PRO_SN, station_sn=fake_station.serial, channel=1, name="Back")
+    )
+    fake_station.params[0][1198] = "93"
+    fake_station.params[1] = {1101: "100", 1198: "94"}
+    entry = await set_up_warm(hass, seed_warm_cache)
+
+    for serial, health in ((SYNTHETIC.camera_sn, "93"), (_S3_PRO_SN, "94")):
+        (row,) = _health_rows(hass, serial)
+        assert row.unique_id == entity_unique_id(serial, _BATTERY_HEALTH_KEY)
+        state = hass.states.get(row.entity_id)
+        assert state is not None
+        assert state.state == health
+        assert state.attributes["unit_of_measurement"] == "%"
+        assert state.attributes["state_class"] == "measurement"
+
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+
+
+async def test_a_camera_without_1198_gets_no_battery_health_sensor(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    fake_station.params[0].pop(1198, None)
+    entry = await set_up_warm(hass, seed_warm_cache)
+    assert _health_rows(hass, SYNTHETIC.camera_sn) == []
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+
+
+async def test_the_old_battery_healthy_row_keeps_its_entity_id(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """A T8160's setting row from an earlier release is reused by the new sensor, not
+    forgotten by setup's dropped-setting cleanup: same entity id, history kept."""
+    fake_station.params[0][1198] = "93"
+    seed_warm_cache()
+    entry = add_entry(hass)
+    old = er.async_get(hass).async_get_or_create(
+        SENSOR_DOMAIN,
+        DOMAIN,
+        entity_unique_id(SYNTHETIC.camera_sn, _BATTERY_HEALTH_KEY),
+        config_entry=entry,
+        suggested_object_id="outdoor_front_battery_healthy_2",
+        original_name="Battery healthy",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    )
+    assert old.translation_key is None
+
+    assert await setup_entry(hass, entry)
+    # A reload runs the cleanup again, now with the camera's settings known.
+    assert await hass.config_entries.async_reload(entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert state_of(hass, old.entity_id) == "93"
+    (row,) = _health_rows(hass, SYNTHETIC.camera_sn)
+    assert row.entity_id == old.entity_id
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+
+
+async def test_the_dropped_setting_cleanup_keeps_a_field_sensors_row(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """The cleanup itself, with the camera's settings known and the row still shaped as
+    the old setting's: kept, as a field sensor now shows that unique id."""
+    from custom_components.anker_eufy_integration import _async_forget_dropped_setting_entities
+
+    fake_station.params[0][1198] = "93"
+    entry = await set_up_warm(hass, seed_warm_cache)
+    coordinators = entry.runtime_data.coordinators
+    station = coordinators[SYNTHETIC.station_sn].station
+    assert station.has_setting(_BATTERY_HEALTH_KEY, SYNTHETIC.camera_sn) is True
+    registry = er.async_get(hass)
+    (row,) = _health_rows(hass, SYNTHETIC.camera_sn)
+    # As an earlier release left it: the library's name, no translation key.
+    registry.async_update_entity(
+        row.entity_id, original_name="Battery healthy", translation_key=None
+    )
+
+    _async_forget_dropped_setting_entities(hass, entry, coordinators.values())
+
+    assert registry.async_get(row.entity_id) is not None
     assert await hass.config_entries.async_unload(entry.entry_id)
     await hass.async_block_till_done()

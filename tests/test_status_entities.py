@@ -52,6 +52,9 @@ _DOOR_CHANNEL: Final = 2
 _TAMPER_CHANNEL: Final = 3
 _STATION_CHANNEL: Final = 255
 _CAMERA_CHANNEL: Final = 0
+# A SoloCam (T8171) on its own channel, for a plain read-only status setting.
+_T8171_SN: Final = "T8171P2000000004"
+_T8171_CHANNEL: Final = 1
 _DOOR_PARAM: Final = 1550
 _LOW_POWER_PARAM: Final = 1552
 _TAMPER_PARAM: Final = 61015
@@ -339,10 +342,11 @@ async def _enabled_sensor(
     *,
     device_sn: str | None = None,
     channel: int = _STATION_CHANNEL,
+    model: str | None = None,
 ) -> tuple[MockConfigEntry, Setting, str]:
     """Set up with ``raw`` as ``key`` of the HomeBase (or of the paired ``device_sn`` on
     ``channel``), its sensor row enabled."""
-    seed_setting(fake_station, key, raw, channel=channel)
+    seed_setting(fake_station, key, raw, channel=channel, model=model)
     entry = add_entry(hass)
     assert await setup_entry(hass, entry)
     station = entry.runtime_data.coordinators[SYNTHETIC.station_sn].station
@@ -402,21 +406,27 @@ async def test_a_structured_value_is_never_the_state(
 async def test_a_json_text_of_another_setting_is_an_attribute_and_a_long_text_is_cut(
     hass: HomeAssistant,
     fake_station: FakeStation,
+    fake_cloud: FakeCloud,
     built_clients: list[EufySecurity],
     seed_warm_cache: Callable[..., None],
 ) -> None:
     """A setting not flagged structured: a JSON text is an attribute, state unknown; a
     text longer than the limit is cut to it."""
-    # The camera's open value (kind other), read-only.
-    key = "battery_healthy"
+    # A T8171's open status value (kind other), read-only. (The T8160's battery health,
+    # the synthetic camera's one such setting, is a device-field sensor now.)
+    key = "battery_residue_time"
+    fake_cloud.devices.append(
+        camera_device(_T8171_SN, station_sn=fake_station.serial, channel=_T8171_CHANNEL)
+    )
     seed_warm_cache()
     entry, setting, entity_id = await _enabled_sensor(
         hass,
         fake_station,
         key,
         json.dumps(_DOCUMENT),
-        device_sn=SYNTHETIC.camera_sn,
-        channel=_CAMERA_CHANNEL,
+        device_sn=_T8171_SN,
+        channel=_T8171_CHANNEL,
+        model="T8171",
     )
     assert setting.kind is SettingKind.OTHER
     assert not setting.structured
@@ -426,7 +436,7 @@ async def test_a_json_text_of_another_setting_is_an_attribute_and_a_long_text_is
     assert state.attributes[ATTR_VALUE] == _DOCUMENT
     await _stop(hass, entry)
 
-    seed_setting(fake_station, key, "y" * 400, channel=_CAMERA_CHANNEL)
+    seed_setting(fake_station, key, "y" * 400, channel=_T8171_CHANNEL, model="T8171")
     assert await setup_entry(hass, entry)
     state = hass.states.get(entity_id)
     assert state is not None

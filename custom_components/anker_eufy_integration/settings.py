@@ -41,6 +41,8 @@ from anker_eufy_security.devices import (
 )
 from anker_eufy_security.devices.model_settings import PARENTLESS_ONLY, mode_table_settings
 
+from .const import BATTERY_HEALTH_KEY
+
 # The per-mode delays every paired camera or sensor carries, one per guard mode.
 _DELAY_KEYS: frozenset[str] = frozenset(s.key for s in mode_table_settings(Scope.SUB_DEVICE))
 # The per-mode delays and action masks: the station's mode table, which the HomeBase card
@@ -356,6 +358,21 @@ def setting_platform(setting: Setting) -> Platform | None:
     return Platform.SENSOR
 
 
+# Settings a device-field sensor shows instead, under the same unique id: battery health
+# is read off any block that reports 1198 (``SubDeviceState.battery_health``), where the
+# setting reads it only on models whose app data maps it.
+FIELD_SENSOR_KEYS: Final = frozenset({BATTERY_HEALTH_KEY})
+# The param the battery health field reads; a model whose setting reads another (the
+# T9000's 1314) keeps its setting entity.
+_FIELD_SENSOR_PARAM: Final = 1198
+
+
+def shown_by_field_sensor(setting: Setting) -> bool:
+    """Whether a device-field sensor shows ``setting`` instead: its key is in
+    ``FIELD_SENSOR_KEYS`` and it reads the field's param, or nothing."""
+    return setting.key in FIELD_SENSOR_KEYS and setting.read_param in (None, _FIELD_SENSOR_PARAM)
+
+
 def setting_specs(station: Station) -> list[SettingEntitySpec]:
     """Every setting entity of a station and of its paired devices, in the library's order.
 
@@ -385,6 +402,8 @@ def setting_specs(station: Station) -> list[SettingEntitySpec]:
         }
         primaries = {s.variant_of for s in settings if s.variant_of is not None}
         for setting in settings:
+            if shown_by_field_sensor(setting):
+                continue
             light = lights.get(setting.key)
             platform = Platform.LIGHT if light is not None else setting_platform(setting)
             if platform is None:

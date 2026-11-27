@@ -142,3 +142,41 @@ The SoloCam S340 has two more buttons. **Calibrate** re-centres the camera's pan
 it is under Configuration on the camera's device page. **Turn 360°** turns the camera once
 round. Both are sent over the local network, as other eufy projects send them to this
 camera. They have not yet been tested on real hardware.
+
+## Connected
+
+Each HomeBase has a **Connected** sensor. It is on while Home Assistant holds the
+HomeBase's local connection, and turns off about ten seconds after that connection is
+lost. It stays visible while the HomeBase is unreachable, so you can use it in an
+automation.
+
+Each camera and sensor paired to a HomeBase also has a **Connected** sensor. It shows
+whether the HomeBase still reaches that device. When the HomeBase reports the device
+offline, the sensor is off, and any reason code the HomeBase gives is in its
+`offline_code` attribute. The device's other entities show as unavailable at that point,
+as before. While the HomeBase itself is unreachable, the device's Connected sensor is
+unavailable too, because nothing is known about the device then.
+
+## Battery health
+
+Every camera that reports its battery health has a **Battery health** sensor, in percent.
+That includes the S3 Pro (T8162) and the SoloCam S340 (T8170), whose battery health the
+eufy app does not show. On a eufyCam 3 (T8160) it replaces the earlier "Battery healthy"
+sensor and keeps that sensor's entity ID and history.
+
+## Firmware updates
+
+Each device's **Firmware update** entity now shows the version eufy offers. This is the
+one feature here that uses eufy's cloud, because only eufy knows what it has published.
+The check runs at most once every 12 hours, and not during start-up. It is remembered
+across restarts, so a restart does not cause another check.
+
+- An offer shows as an update, with eufy's release notes and a `forced` attribute.
+- The entity shows **up to date** only when eufy confirmed the version the device is
+  running now. Otherwise it stays unknown.
+- While a HomeBase installs firmware, the entity shows it as in progress. That comes from
+  the HomeBase over the local network.
+- The `secondary_firmware` attribute shows the device's second firmware version.
+
+Home Assistant cannot install firmware here: eufy installs it, or you start it in the
+eufy app.

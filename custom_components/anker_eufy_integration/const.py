@@ -169,6 +169,9 @@ CHARGING_KEY: Final = "charging"
 SOLAR_CHARGING_KEY: Final = "solar_charging"
 SOLAR_INTENSITY_KEY: Final = "solar_intensity"
 BATTERY_TEMPERATURE_KEY: Final = "battery_temperature"
+# Battery health (param 1198) as a device field: the key of the library's
+# ``battery_healthy`` setting, so a T8160's row from that setting is reused.
+BATTERY_HEALTH_KEY: Final = "battery_healthy"
 WORKING_DAYS_KEY: Final = "working_days"
 DETECTED_EVENTS_KEY: Final = "detected_events"
 RECORDED_EVENTS_KEY: Final = "recorded_events"
@@ -180,10 +183,17 @@ STORAGE_PROBLEM_KEY: Final = "storage_problem"
 ATTR_SOLAR_CHARGING: Final = "solar_charging"
 ATTR_POWER_SOURCE: Final = "power_source"
 ATTR_STORAGE_STATUS: Final = "storage_status"
+# The Connected sensors (connectivity.py): a HomeBase's session, a paired device's 1131.
+CONNECTED_KEY: Final = "connected"
+# A paired device's raw offline reason (1131 above 1), which the app never names.
+ATTR_OFFLINE_CODE: Final = "offline_code"
 # The station's subsystem versions by param id (the subsystems are unnamed).
 ATTR_SUBSYSTEM_FIRMWARE: Final = "subsystem_firmware"
 # The raw per-mode siren action, by lower-case guard mode name.
 ATTR_SIREN_ACTIONS: Final = "siren_actions"
+# The update entity's secondary firmware and whether eufy forces the offered update.
+ATTR_SECONDARY_FIRMWARE: Final = "secondary_firmware"
+ATTR_FORCED: Final = "forced"
 
 # The detection event entity's translation key and unique-id key: one per camera,
 # fired once per detection the library delivers, and again for a more specific kind.

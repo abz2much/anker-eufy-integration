@@ -38,6 +38,7 @@ from . import (
     card,
     detections,
     errors,
+    firmware,
     history,
     homebase,
     preset_upload,
@@ -90,6 +91,7 @@ from .events import EventRouter
 from .presets import PresetManager, preset_capture_key, preset_image_key
 from .runtime import EufyConfigEntry
 from .settings import (
+    FIELD_SENSOR_KEYS,
     SettingEntitySpec,
     is_per_mode_entity,
     is_setting_row,
@@ -634,6 +636,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: EufyConfigEntry) -> bool
                 storage_coordinator.async_refresh(),
                 name=f"{DOMAIN} first storage read",
             )
+    # What eufy offers for each device's firmware (firmware.py): the stored answers now,
+    # the next cloud check at least ten minutes away, so setup itself stays cloud-free.
+    firmware_checks = firmware.FirmwareChecks(hass, entry)
+    entry.runtime_data.firmware = firmware_checks
+    await firmware_checks.async_start()
+    entry.async_on_unload(firmware_checks.async_stop)
     if recording_manager is not None:
         # The stored record ids load before any detection can schedule a pass; the
         # first pass waits a minute, so setup itself queries no station history.
@@ -1263,6 +1271,15 @@ def _async_forget_dropped_setting_entities(
             for device in station.sub_devices
             if device.device_sn and device.device_sn != station.serial
         )
+        # A device-field sensor reuses its setting's row (``FIELD_SENSOR_KEYS``).
+        built.update(
+            entity_unique_id(serial, key)
+            for serial in (
+                station.serial,
+                *(d.device_sn for d in station.sub_devices if d.device_sn),
+            )
+            for key in FIELD_SENSOR_KEYS
+        )
         for spec in setting_specs(station):
             serial = spec.device_sn or station.serial
             built.add(entity_unique_id(serial, spec.key))
@@ -1545,11 +1562,13 @@ async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry[Any]) -> No
     setup failed was never unloaded, so nothing else deletes it. So does the
     setting-version reset and LAN-reply-blocked issues, which outlive an unload. The entry's cached
     stills are deleted, and with the last entry the dashboard cards' resources. The
-    record of the recordings copied into the history goes too; the files stay.
+    record of the recordings copied into the history goes too; the files stay. So do
+    the stored firmware answers.
     """
     errors.delete_reload_scoped_issues(hass, entry)
     await still_cache.async_remove_entry_cache(hass, entry.entry_id)
     await recordings.async_remove_store(hass, entry.entry_id)
+    await firmware.async_remove_store(hass, entry.entry_id)
     if not any(
         other.entry_id != entry.entry_id for other in hass.config_entries.async_entries(DOMAIN)
     ):

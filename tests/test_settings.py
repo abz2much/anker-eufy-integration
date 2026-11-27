@@ -50,6 +50,7 @@ from custom_components.anker_eufy_integration.settings import (
     is_per_mode_entity,
     setting_platform,
     setting_specs,
+    shown_by_field_sensor,
 )
 
 _COMPONENT_ROOT: Final = (
@@ -193,7 +194,8 @@ def _expected_keys(station: Station, device_sn: str | None) -> list[str]:
     """Every entity key one device contributes, in the library's order."""
     keys: list[str] = []
     for setting in station.settings_for(device_sn):
-        if setting_platform(setting) is None:
+        # A device-field sensor shows these instead (FIELD_SENSOR_KEYS).
+        if setting_platform(setting) is None or shown_by_field_sensor(setting):
             continue
         if setting.writable and setting.control is SettingControl.TOGGLES:
             keys.extend(f"{setting.key}_{member}" for member in setting.flags)
@@ -605,3 +607,13 @@ async def test_a_variant_control_is_registered_disabled(
         assert (registered.disabled_by is er.RegistryEntryDisabler.INTEGRATION) is disabled, key
     assert await hass.config_entries.async_unload(entry.entry_id)
     await hass.async_block_till_done()
+
+
+def test_only_a_setting_the_battery_health_field_covers_is_left_out() -> None:
+    """The field reads 1198. A model whose setting reads another param (the T9000's
+    1314) keeps its setting entity; one that reads 1198 or nothing leaves it out."""
+    from anker_eufy_security.devices.model_settings import settings_of
+
+    assert shown_by_field_sensor(settings_of("T8160")["battery_healthy"])
+    assert shown_by_field_sensor(settings_of("T8162")["battery_healthy"])
+    assert not shown_by_field_sensor(settings_of("T9000")["battery_healthy"])

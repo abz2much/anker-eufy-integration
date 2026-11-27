@@ -32,6 +32,8 @@ by side. Every change from that starting point is listed in
 - The E340 doorbell can sound its siren, play eufy's quick replies, play your own sound
   files, and report packages that are delivered, taken or left too long.
 - A HomeBase can be restarted from Home Assistant.
+- Connected sensors for each HomeBase and each paired device, battery health on every
+  camera that reports it, and firmware update entities that show the version eufy offers.
 - Motion, entry and smoke sensors, locks and keypads appear with the readings the
   library supports.
 
@@ -72,7 +74,7 @@ list** on the **eufy account** device.
 
 | Page | What it covers |
 |---|---|
-| [Added features](docs/features.md) | restart, Night arm, last visitor, packages, doorbell siren, quick replies, playing sound files |
+| [Added features](docs/features.md) | restart, Night arm, last visitor, packages, doorbell siren, quick replies, playing sound files, Connected, battery health, firmware updates |
 | [Usage](docs/usage.md) | options, the alarm panel, camera images, event history, live video, settings |
 | [Camera card](docs/card.md) | the dashboard card for one or more cameras |
 | [HomeBase card](docs/homebase-card.md) | the dashboard card for a HomeBase |
