@@ -5,6 +5,13 @@ All notable changes to this project. The project follows
 release may change entities, options or actions. From 0.1.0 on, release-please writes the
 entries from the conventional commits.
 
+## [0.8.3](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.2...v0.8.3) (2026-11-27)
+
+
+### Bug Fixes
+
+* fire the HomeBase arming event from the station's own local mode report ([#17](https://github.com/abz2much/anker-eufy-integration/issues/17)) ([d9ad9b9](https://github.com/abz2much/anker-eufy-integration/commit/d9ad9b9270cf3ae7ecdcb8f8a85fbf3c7f318005))
+
 ## [0.8.2](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.1...v0.8.2) (2026-11-27)
 
 
