@@ -72,6 +72,7 @@ _TOP_LEVEL_KEYS = frozenset(
         "station_recordings",
         "options",
         "account_report",
+        "firmware_checks",
     }
 )
 # A HomeBase 2 and its camera that only the security realm lists: synthetic serials.
@@ -548,6 +549,140 @@ async def test_an_account_that_lists_no_device_still_downloads_its_account_repor
     (device,) = report["devices"]
     assert device["device_sn"] == redact_serial(_HB2_SN)
     assert device["listed_by"] == [SECURITY_STATIONS]
+
+    await _unload(hass, entry)
+
+
+# A param id no model reads, on the synthetic camera's block, with a value that must
+# never reach the download.
+_PROOF_PARAM: Final = 9871
+_PROOF_VALUE: Final = "proof-value-must-not-leak"
+
+
+async def test_the_download_lists_each_devices_local_param_ids_and_no_values(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """Each station's and each paired device's local param ids, sorted; values left out."""
+    fake_station.params[0][_PROOF_PARAM] = _PROOF_VALUE
+    entry = await set_up_warm(hass, seed_warm_cache)
+
+    data = await get_diagnostics_for_config_entry(hass, hass_client, entry)
+
+    ids = _station_block(data)["local_param_ids"]
+    assert isinstance(ids, dict)
+    assert 1216 in ids["station"]
+    assert ids["station"] == sorted(ids["station"])
+    (camera,) = [d for d in ids["devices"] if d["channel"] == 0]
+    assert camera["device"] == redact_serial(SYNTHETIC.camera_sn)
+    assert _PROOF_PARAM in camera["param_ids"]
+    assert camera["param_ids"] == sorted(camera["param_ids"])
+    assert all(isinstance(i, int) for i in camera["param_ids"])
+    assert _PROOF_VALUE not in json.dumps(data)
+
+    await _unload(hass, entry)
+
+
+async def test_a_device_block_without_a_serial_is_listed_by_channel(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """A dump block on a channel the cloud list does not name keeps its ids, device null."""
+    fake_station.params[5] = {1101: "50"}
+    entry = await set_up_warm(hass, seed_warm_cache)
+
+    data = await get_diagnostics_for_config_entry(hass, hass_client, entry)
+
+    devices = _station_block(data)["local_param_ids"]["devices"]
+    (unnamed,) = [d for d in devices if d["channel"] == 5]
+    assert unnamed["device"] is None
+    assert 1101 in unnamed["param_ids"]
+
+    await _unload(hass, entry)
+
+
+async def test_local_param_ids_are_null_before_the_first_read(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """A served station with no state read yet reports no ids rather than failing."""
+    entry = await set_up_warm(hass, seed_warm_cache)
+    coordinators: dict[str, Any] = entry.runtime_data.coordinators
+    other_sn = f"{SYNTHETIC.station_sn[:5]}{'Z' * (len(SYNTHETIC.station_sn) - 5)}"
+    coordinators[other_sn] = _stand_in_coordinator(
+        other_sn, coordinators[SYNTHETIC.station_sn].station
+    )
+    try:
+        data = await get_diagnostics_for_config_entry(hass, hass_client, entry)
+    finally:
+        del coordinators[other_sn]
+
+    stations = data["stations"]
+    assert stations[redact_serial(other_sn)]["local_param_ids"] is None
+
+    await _unload(hass, entry)
+
+
+async def test_the_download_has_the_firmware_check_per_device(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    fake_cloud: FakeCloud,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """One firmware answer per HomeBase device, with no package URL or checksum."""
+    camera = next(d for d in fake_cloud.devices if d["device_sn"] == SYNTHETIC.camera_sn)
+    camera["main_sw_version"] = "3.4.3.0"
+    fake_cloud.firmware_offers = {SYNTHETIC.camera_sn: "3.5.0.0"}
+    entry = await set_up_warm(hass, seed_warm_cache)
+
+    data = await get_diagnostics_for_config_entry(hass, hass_client, entry)
+
+    checks = {c["device_sn"]: c for c in data["firmware_checks"]}
+    assert checks[redact_serial(SYNTHETIC.station_sn)]["outcome"] == "current"
+    offered = checks[redact_serial(SYNTHETIC.camera_sn)]
+    assert offered["outcome"] == "update"
+    assert offered["asked_version"] == "3.4.3.0"
+    assert offered["offered_version"] == "3.5.0.0"
+    text = json.dumps(data["firmware_checks"])
+    for leak in ("file_path", "md5", "http", SYNTHETIC.camera_sn):
+        assert leak not in text
+
+    await _unload(hass, entry)
+
+
+async def test_a_failed_firmware_check_leaves_the_download(
+    hass: HomeAssistant,
+    hass_client: ClientSessionGenerator,
+    monkeypatch: pytest.MonkeyPatch,
+    fake_station: FakeStation,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """A library error becomes the checks' error type; its message is not copied."""
+    entry = await set_up_warm(hass, seed_warm_cache)
+
+    async def failing_checks(*, refresh: bool = False) -> Any:
+        del refresh
+        raise CommunicationError("synthetic-firmware-text")
+
+    monkeypatch.setattr(entry.runtime_data.eufy, "async_firmware_checks", failing_checks)
+
+    data = await get_diagnostics_for_config_entry(hass, hass_client, entry)
+
+    assert data["firmware_checks"] == {"error": "CommunicationError"}
+    assert "stations" in data
+    assert "synthetic-firmware-text" not in json.dumps(data)
 
     await _unload(hass, entry)
 

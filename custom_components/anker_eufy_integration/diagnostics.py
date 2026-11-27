@@ -5,7 +5,8 @@ Built only from the library's redacted views and figures (cache summary,
 account store, the entry's data and its title (the e-mail) are never read. Storage
 media serials and labels, format request ids and a ``LanPath`` other than its warnings
 are left out, and the payload goes through ``async_redact_data`` for device names.
-The account report sends a few cloud requests on the held sessions, never a login.
+The account report sends a few cloud requests on the held sessions, never a login, and
+the firmware checks one OTA request per HomeBase device on the same sessions.
 """
 
 from __future__ import annotations
@@ -165,6 +166,40 @@ async def _account_report(data: EufyRuntimeData) -> dict[str, Any]:
     return report.as_dict()
 
 
+def _local_param_ids(state: StationState | None) -> dict[str, Any] | None:
+    """The param ids the station's own dump reported, for itself and per paired device.
+
+    Ids only, sorted: a value can be private. A device block the cloud list does not name
+    is listed by channel with ``device: None``. None before the first state read.
+    """
+    if state is None:
+        return None
+    return {
+        "station": sorted(state.params),
+        "devices": [
+            {
+                "channel": channel,
+                "device": None if device.serial is None else redact_serial(device.serial),
+                "param_ids": sorted(device.params),
+            }
+            for channel, device in sorted(state.devices.items())
+        ],
+    }
+
+
+async def _firmware_checks(data: EufyRuntimeData) -> list[dict[str, Any]] | dict[str, str]:
+    """The cloud OTA answer per HomeBase device, or the type of the error that stopped it.
+
+    No package URL, checksum or release notes; the library's message text is never
+    copied here.
+    """
+    try:
+        checks = await data.eufy.async_firmware_checks()
+    except EufySecurityError as err:
+        return {"error": type(err).__name__}
+    return [check.as_redacted_dict() for check in checks]
+
+
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: EufyConfigEntry
 ) -> dict[str, Any]:
@@ -203,6 +238,8 @@ async def async_get_config_entry_diagnostics(
             "unread_dump_keys": sorted(station.session.unread_dump_keys),
             # Ids of the station settings read from the cloud's copy; values can be private.
             "cloud_param_ids": list(state.cloud_param_ids) if state is not None else None,
+            # Ids of the params the station's dump reported, for itself and each device.
+            "local_param_ids": _local_param_ids(state),
             "events_received_by_cipher": data.router.events_received_by_cipher(station.serial),
             "storage": _storage_figures(station.storage),
             "presets": _preset_figures(station),
@@ -216,6 +253,7 @@ async def async_get_config_entry_diagnostics(
         }
     # Asked after every station block, so the session figures above precede its requests.
     account_report = await _account_report(data)
+    firmware_checks = await _firmware_checks(data)
     return async_redact_data(
         {
             "cache": cache,
@@ -248,6 +286,7 @@ async def async_get_config_entry_diagnostics(
             ),
             "options": dict(entry.options),
             "account_report": account_report,
+            "firmware_checks": firmware_checks,
         },
         TO_REDACT,
     )
