@@ -77,18 +77,13 @@ data:
   duration: 5
 ```
 
-## Outdoor Siren
-
-The Outdoor Siren (T8970) has a **Siren** entity that works the same way as the
-doorbell's: it sounds for 10 seconds, or for the duration you give from 1 to 30 seconds,
-and turning it off stops it. It uses the same local command as the doorbell siren, which
-other eufy projects use for this siren too. It has not yet been tested on real hardware.
-
 ## Doorbell night vision
 
 The E340 doorbell has a **Night vision** select under Configuration: Off, Infrared or
 Spotlight. It shows what the doorbell reports, and a change is sent over the local
-network as the eufy app sends it. It has not yet been tested on real hardware.
+network as the eufy app sends it. As in the eufy app, a change also sets the doorbell's
+**Bottom spotlight** switch. If the doorbell takes only part of a change, Home Assistant
+says so; choose the setting again. It has not yet been tested on real hardware.
 
 ## Quick replies
 
@@ -132,19 +127,3 @@ The SoloCam S340 has two more buttons. **Calibrate** re-centres the camera's pan
 it is under Configuration on the camera's device page. **Turn 360°** turns the camera once
 round. Both are sent over the local network, as other eufy projects send them to this
 camera. They have not yet been tested on real hardware.
-
-## HomeBase chime
-
-The `anker_eufy_integration.chime` action plays a ringtone on a HomeBase. eufy plays it
-only on a HomeBase with no doorbell paired, so the action refuses a HomeBase that has
-one. It has not yet been tested on real hardware, and the ringtone numbers are not
-documented by eufy.
-
-```yaml
-action: anker_eufy_integration.chime
-target:
-  entity_id: alarm_control_panel.back_homebase
-data:
-  ringtone: 419
-```
-

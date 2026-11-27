@@ -1,16 +1,15 @@
-"""Calibrate and turn 360° on the S340 (T8170), and the HomeBase chime.
+"""Calibrate and turn 360° on the SoloCam S340.
 
-The library sends none of these. Each follows bropat's eufy-security-client, which the
-old integration uses on this hardware:
+The library sends neither. Both follow bropat's eufy-security-client, which sends them to
+its outdoor pan/tilt camera type (the S340), on the camera's channel:
 
-- Calibrate: a 1350 command 6251 (OUTDOOR_PAN_CALIBRATION) on the camera's channel,
-  payload ``{"res": 0}``.
+- Calibrate: a 1350 command 6251 (OUTDOOR_PAN_CALIBRATION), payload ``{"res": 0}``.
 - Turn 360°: a 1700 frame ``{"commandType": 6038, "data": {"curise_type": 10}}``
-  (OUTDOOR_ROTATE) on the camera's channel.
-- Chime: a 1350 command 1718 (BAT_DOORBELL_DINGDONG_R) on channel 0, payload
-  ``{"dingdong_ringtone": <ringtone>}``, only on a HomeBase with no doorbell paired.
+  (OUTDOOR_ROTATE).
 
-Everything here runs against the fake station.
+The T8170 serial prefix also covers cameras that do not pan (the SoloCam S3n and the
+eufyCam Solo S3), told apart by the serial; only the S340 gets the buttons. Everything
+here runs against the fake station.
 """
 
 from __future__ import annotations
@@ -21,19 +20,21 @@ from typing import Any, Final
 import pytest
 from anker_eufy_security import EufySecurity
 from anker_eufy_security.testing import FakeCloud, FakeStation, camera_device
-from conftest import entity_id_for, panel_entity_id, set_up_warm
+from conftest import entity_id_for, set_up_warm
 from homeassistant.components.button import DOMAIN as BUTTON_DOMAIN
 from homeassistant.components.button import SERVICE_PRESS
-from homeassistant.const import ATTR_ENTITY_ID
+from homeassistant.const import ATTR_ENTITY_ID, EntityCategory
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant.common import MockConfigEntry
 
 _DOMAIN: Final = "anker_eufy_integration"
 _S340_SN: Final = "T8170P0000000002"
 _S340_CHANNEL: Final = 2
-_DOORBELL_SN: Final = "T8214P0000000001"
+# The 8th character tells the T8170 cameras apart: "1" is the eufyCam Solo S3.
+_SOLO_S3_SN: Final = "T8170P0100000003"
+_SOLO_S3_CHANNEL: Final = 3
 
 
 def _add(cloud: FakeCloud, station: FakeStation, serial: str, channel: int) -> None:
@@ -69,13 +70,19 @@ async def test_only_the_s340_gets_calibrate_and_turn_360(
     seed_warm_cache: Callable[..., None],
 ) -> None:
     _add(fake_cloud, fake_station, _S340_SN, _S340_CHANNEL)
+    _add(fake_cloud, fake_station, _SOLO_S3_SN, _SOLO_S3_CHANNEL)
     entry = await set_up_warm(hass, seed_warm_cache)
     registry = er.async_get(hass)
 
     for key in ("calibrate", "rotate_360"):
         assert registry.async_get_entity_id(BUTTON_DOMAIN, _DOMAIN, f"{_S340_SN}_{key}"), key
-        other = f"{fake_station.serial}_{key}"
-        assert registry.async_get_entity_id(BUTTON_DOMAIN, _DOMAIN, other) is None, key
+        for other in (fake_station.serial, _SOLO_S3_SN):
+            unique_id = f"{other}_{key}"
+            assert registry.async_get_entity_id(BUTTON_DOMAIN, _DOMAIN, unique_id) is None, key
+    calibrate = registry.async_get(entity_id_for(hass, BUTTON_DOMAIN, _S340_SN, "calibrate"))
+    turn = registry.async_get(entity_id_for(hass, BUTTON_DOMAIN, _S340_SN, "rotate_360"))
+    assert calibrate is not None and calibrate.entity_category is EntityCategory.CONFIG
+    assert turn is not None and turn.entity_category is None
     await _unload(hass, entry)
 
 
@@ -135,52 +142,4 @@ async def test_a_refused_calibrate_raises_a_translated_error(
     with pytest.raises(HomeAssistantError) as raised:
         await _press(hass, entity_id_for(hass, BUTTON_DOMAIN, _S340_SN, "calibrate"))
     assert raised.value.translation_key == "camera_move_failed"
-    await _unload(hass, entry)
-
-
-# ── the HomeBase chime ───────────────────────────────────────────────────────
-
-
-async def _chime(hass: HomeAssistant, ringtone: Any) -> None:
-    await hass.services.async_call(
-        _DOMAIN,
-        "chime",
-        {ATTR_ENTITY_ID: panel_entity_id(hass), "ringtone": ringtone},
-        blocking=True,
-    )
-    await hass.async_block_till_done()
-
-
-async def test_the_chime_sends_the_ringtone_to_the_homebase(
-    hass: HomeAssistant,
-    fake_station: FakeStation,
-    built_clients: list[EufySecurity],
-    seed_warm_cache: Callable[..., None],
-) -> None:
-    entry = await set_up_warm(hass, seed_warm_cache)
-
-    await _chime(hass, 419)
-
-    sent = _commands(fake_station, 1718)
-    assert len(sent) == 1
-    assert sent[0]["mChannel"] == 0
-    assert sent[0]["payload"] == {"dingdong_ringtone": 419}
-    await _unload(hass, entry)
-
-
-async def test_the_chime_is_refused_unsent_on_a_homebase_with_a_doorbell(
-    hass: HomeAssistant,
-    fake_station: FakeStation,
-    fake_cloud: FakeCloud,
-    built_clients: list[EufySecurity],
-    seed_warm_cache: Callable[..., None],
-) -> None:
-    """eufy plays the chime only on a HomeBase with no doorbell paired."""
-    _add(fake_cloud, fake_station, _DOORBELL_SN, 1)
-    entry = await set_up_warm(hass, seed_warm_cache)
-
-    with pytest.raises(ServiceValidationError) as raised:
-        await _chime(hass, 419)
-    assert raised.value.translation_key == "chime_has_doorbell"
-    assert _commands(fake_station, 1718) == []
     await _unload(hass, entry)

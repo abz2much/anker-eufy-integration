@@ -9,11 +9,15 @@ eufy-security-ws integration shows it from there.
 
 A choice is written as the eufy app's T8214 handler writes it (the bundled model file's
 ``nightvision_type_new``), two 1350 commands on the doorbell's channel over the local
-P2P session: 1277 ``{"night_sion": n, "channel": ch}`` and 6252 ``{"value": v}`` (the
-infrared flag), infrared with 6252 first. Bropat sends the 1277 alone.
+P2P session: 1277 ``{"night_sion": n, "channel": ch}`` and 6252 ``{"value": v}``,
+infrared with 6252 first. Bropat sends the 1277 alone. 6252 is also the doorbell's
+"Bottom spotlight" setting (``bottom_spotlight_switch``, 0 on), so a night vision change
+also sets that switch, as it does in the eufy app; a refresh after the write shows both.
 
-After a write the select shows the choice until the dump reports another value. Not yet
-proven on hardware.
+After a write the select shows the choice until the dump reports another value. A
+failure after the first command means the change may be partly applied. The T8214C,
+whose own handler writes night vision differently, gets no select. Not yet proven on
+hardware.
 """
 
 from __future__ import annotations
@@ -22,6 +26,7 @@ from typing import Final, override
 
 from homeassistant.components.select import SelectEntity
 from homeassistant.const import EntityCategory
+from homeassistant.core import callback
 from homeassistant.exceptions import HomeAssistantError
 
 from anker_eufy_security import EufySecurityError, StationState
@@ -52,6 +57,7 @@ def night_vision_selects(coordinator: StationCoordinator) -> list[EufyDoorbellNi
         EufyDoorbellNightVision(coordinator, device.device_sn, device.channel)
         for device in station.devices
         if device.device_sn[:5] in NIGHT_VISION_MODELS
+        and not device.device_sn.startswith("T8214C")
         and device.device_sn != station.serial
         and device.channel is not None
     ]
@@ -85,16 +91,24 @@ class EufyDoorbellNightVision(EufyPushAvailability, EufyDeviceEntity, SelectEnti
     @override
     def current_option(self) -> str | None:
         raw = self._raw()
-        if self._written is not None:
-            if raw == self._written[0]:
-                return self._written[1]
-            self._written = None
+        if self._written is not None and raw == self._written[0]:
+            return self._written[1]
         return _RAW.get(raw) if raw is not None else None
+
+    @callback
+    @override
+    def _handle_coordinator_update(self) -> None:
+        """Drop a written choice once the dump reports another value."""
+        raw = self._raw()
+        if self._written is not None and raw is not None and raw != self._written[0]:
+            self._written = None
+        super()._handle_coordinator_update()
 
     @override
     async def async_select_option(self, option: str) -> None:
         session = self.coordinator.station.session
         before = self._raw()
+        sent = 0
         try:
             for which, value in _WRITES[option]:
                 if which == "night":
@@ -107,12 +121,16 @@ class EufyDoorbellNightVision(EufyPushAvailability, EufyDeviceEntity, SelectEnti
                     await session.async_send_command(
                         INFRARED_FLAG, channel=self._channel, payload={"value": value}
                     )
+                sent += 1
         except EufySecurityError as err:
-            raise self._failed(err) from err
+            if sent:
+                await self.coordinator.async_request_refresh()
+            raise self._failed(err, partly=sent > 0) from err
         self._written = (before, option)
         self.async_write_ha_state()
+        await self.coordinator.async_request_refresh()
 
-    def _failed(self, err: EufySecurityError) -> HomeAssistantError:
+    def _failed(self, err: EufySecurityError, *, partly: bool) -> HomeAssistantError:
         if errors.is_session_replaced_failure(err):
             name = self.name if isinstance(self.name, str) else NIGHT_VISION_KEY
             return HomeAssistantError(
@@ -122,6 +140,6 @@ class EufyDoorbellNightVision(EufyPushAvailability, EufyDeviceEntity, SelectEnti
             )
         return HomeAssistantError(
             translation_domain=DOMAIN,
-            translation_key="night_vision_failed",
+            translation_key="night_vision_partly_applied" if partly else "night_vision_failed",
             translation_placeholders={"station": errors.station_display_name(self.coordinator)},
         )

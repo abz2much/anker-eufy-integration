@@ -567,14 +567,11 @@
     "camera_move_failed": {
       "message": "{station} did not take the camera command. Check that the camera is online and on the same network as Home Assistant."
     },
-    "chime_has_doorbell": {
-      "message": "eufy plays the chime only on a HomeBase with no doorbell paired. Choose another HomeBase."
-    },
-    "chime_failed": {
-      "message": "{station} did not take the chime. Check that it is online and on the same network as Home Assistant."
-    },
     "night_vision_failed": {
       "message": "{station} did not take the night vision change. Check that the doorbell is online and on the same network as Home Assistant."
+    },
+    "night_vision_partly_applied": {
+      "message": "{station} took only part of the night vision change, so the doorbell may be half set. Choose the setting again."
     }
   },
   "entity": {
@@ -999,16 +996,6 @@
         "media_path": {
           "name": "File",
           "description": "The sound file's path in a folder Home Assistant may read, such as /media/doorbell/hello.mp3."
-        }
-      }
-    },
-    "chime": {
-      "name": "Chime",
-      "description": "Plays a ringtone on the HomeBase. eufy plays it only on a HomeBase with no doorbell paired.",
-      "fields": {
-        "ringtone": {
-          "name": "Ringtone",
-          "description": "The ringtone's number, as the eufy app numbers it."
         }
       }
     }

@@ -169,3 +169,41 @@ async def test_a_refused_write_raises_and_keeps_the_shown_value(
     assert raised.value.translation_key == "night_vision_failed"
     assert state_of(hass, _entity(hass)) == "spotlight"
     await _unload(hass, entry)
+
+
+async def test_a_refused_second_command_says_the_change_may_be_partly_applied(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    fake_cloud: FakeCloud,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """Off sends 1277 first; the 6252 after it is refused."""
+    _add_doorbell(fake_station, fake_cloud, "1")
+    fake_station.refused_commands[6252] = -1
+    entry = await set_up_warm(hass, seed_warm_cache)
+
+    with pytest.raises(HomeAssistantError) as raised:
+        await _select(hass, "off")
+    assert raised.value.translation_key == "night_vision_partly_applied"
+    assert [cmd for cmd, _, _ in _writes(fake_station)] == [1277, 6252]
+    await _unload(hass, entry)
+
+
+async def test_a_t8214c_doorbell_gets_no_night_vision_select(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    fake_cloud: FakeCloud,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """The T8214C's own handler writes night vision differently."""
+    serial = "T8214C0000000002"
+    fake_cloud.devices.append(
+        camera_device(serial, station_sn=fake_station.serial, channel=2, name="Door C")
+    )
+    entry = await set_up_warm(hass, seed_warm_cache)
+
+    unique_id = f"{serial}_{_KEY}"
+    assert er.async_get(hass).async_get_entity_id(SELECT_DOMAIN, _DOMAIN, unique_id) is None
+    await _unload(hass, entry)

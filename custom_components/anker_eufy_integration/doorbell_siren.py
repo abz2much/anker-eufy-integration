@@ -1,14 +1,10 @@
-"""The sirens of the E340 (T8214) doorbell and the Outdoor Siren (T8970).
+"""The E340 (T8214) doorbell's siren.
 
-The eufy app offers neither model an alarm button, so the library's alarm table has no
-entry for them and the camera siren platform gives them none. The doorbell's siren was
-proven on hardware with SET_DEVS_TONE_FILE (1202) on the doorbell's channel: the value
-is the seconds to sound, 0 stops it. It is sent in the library's legacy scalar form
+The eufy app offers the T8214 no alarm button, so the library's alarm table has no
+entry for it and the camera siren platform gives it none. Its siren was proven on
+hardware with SET_DEVS_TONE_FILE (1202) on the doorbell's channel: the value is the
+seconds to sound, 0 stops it. It is sent in the library's legacy scalar form
 (``StationSession.async_send_ecb_scalar``) over the local P2P session.
-
-The Outdoor Siren takes the same command on its own channel: bropat's
-eufy-security-client sounds every device siren this way (``triggerDeviceAlarmSound``,
-1202 with the seconds and the device's channel). Not yet proven on hardware.
 
 The station sends no state back for it, so the siren shows on from an accepted start
 until its duration has passed or it is turned off.
@@ -30,14 +26,14 @@ from .const import DOMAIN, SIREN_KEY
 from .coordinator import StationCoordinator
 from .entity import EufyDeviceEntity, EufyPushAvailability
 
-DOORBELL_SIREN_MODELS: Final = frozenset({"T8214", "T8970"})
+DOORBELL_SIREN_MODELS: Final = frozenset({"T8214"})
 SET_DEVS_TONE_FILE: Final = 1202
 DEFAULT_SECONDS: Final = 10
 MAX_SECONDS: Final = 30
 
 
 def doorbell_sirens(coordinator: StationCoordinator) -> list[EufyDoorbellSiren]:
-    """A siren for each paired E340 doorbell and Outdoor Siren without one from the alarm table."""
+    """A siren for each paired E340 doorbell that has no siren from the alarm table."""
     station = coordinator.station
     covered = detections.siren_serials(station)
     return [

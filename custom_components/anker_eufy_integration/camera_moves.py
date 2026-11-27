@@ -10,7 +10,8 @@ camera's channel:
   ``{"curise_type": 10}`` (``Station.panAndTilt``, ``ROTATE360``). The camera turns once
   round.
 
-Neither is proven on this hardware yet. Calibrate sits under Configuration.
+Only a camera whose serial the library names "SoloCam S340" gets them. Neither is
+proven on this hardware yet. Calibrate sits under Configuration.
 """
 
 from __future__ import annotations
@@ -23,13 +24,16 @@ from homeassistant.exceptions import HomeAssistantError
 
 from anker_eufy_security import EufySecurityError
 from anker_eufy_security.devices.recipes import Recipe, RecipeCommand
+from anker_eufy_security.devices.types import product_name
 
 from . import errors
 from .const import DOMAIN, EXC_SESSION_REPLACED_SEE_REPAIRS
 from .coordinator import StationCoordinator
 from .entity import EufyDeviceEntity, EufyPushAvailability
 
-CAMERA_MOVE_MODELS: Final = frozenset({"T8170"})
+# The T8170 prefix also covers cameras that do not pan (SoloCam S3n, eufyCam Solo S3),
+# told apart by the serial: the library's serial rule names the S340.
+CAMERA_MOVE_PRODUCT: Final = "SoloCam S340"
 CALIBRATE_KEY: Final = "calibrate"
 ROTATE_360_KEY: Final = "rotate_360"
 OUTDOOR_PAN_CALIBRATION: Final = 6251
@@ -48,7 +52,7 @@ def camera_move_buttons(coordinator: StationCoordinator) -> list[EufyCameraMoveB
     return [
         EufyCameraMoveButton(coordinator, device.device_sn, device.channel, key)
         for device in station.devices
-        if device.device_sn[:5] in CAMERA_MOVE_MODELS
+        if product_name(device.device_sn) == CAMERA_MOVE_PRODUCT
         and device.device_sn != station.serial
         and device.channel is not None
         for key in (CALIBRATE_KEY, ROTATE_360_KEY)

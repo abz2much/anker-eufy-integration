@@ -203,9 +203,6 @@
     },
     "stop_recording": {
       "service": "mdi:stop-circle-outline"
-    },
-    "chime": {
-      "service": "mdi:bell-ring"
     }
   }
 }
