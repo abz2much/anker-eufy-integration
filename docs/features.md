@@ -23,6 +23,25 @@ set up. Arming Night switches the HomeBase to Custom 1, and a HomeBase in Custom
 as **armed night**. The arming event also reports `armed_night`. Schedule, geofencing and
 Custom 2 and 3 still show as custom bypass.
 
+## Entry and exit delays
+
+Each HomeBase has two sensors, **Entry delay ends** and **Exit delay ends**. While the
+alarm panel counts an entry delay or an exit delay, the sensor shows when it ends, and
+Home Assistant shows that as a countdown. Otherwise the sensor is unknown.
+
+The entry delay sensor clears when the alarm goes off, when you disarm, or about two
+seconds after the delay runs out, when the panel stops showing pending. The exit delay
+sensor clears when the delay runs out, even though the panel may show arming a little
+longer until the HomeBase confirms its mode. An exit delay running during a restart of
+Home Assistant is not shown again afterwards.
+
+The sensors follow the alarm panel, so a delay the panel does not show does not appear
+here either. If you disable the alarm panel, both sensors stay unknown.
+
+The length of each delay is set per mode in the eufy app or on the
+[HomeBase card](homebase-card.md). These sensors have not yet been seen with a real
+delay; the behaviour is covered by automated tests.
+
 ## Last visitor
 
 Each camera has a **Last visitor** sensor. It shows the name of the last person the camera
@@ -57,6 +76,14 @@ target:
 data:
   duration: 5
 ```
+
+## Doorbell night vision
+
+The E340 doorbell has a **Night vision** select under Configuration: Off, Infrared or
+Spotlight. It shows what the doorbell reports, and a change is sent over the local
+network as the eufy app sends it. As in the eufy app, a change also sets the doorbell's
+**Bottom spotlight** switch. If the doorbell takes only part of a change, Home Assistant
+says so; choose the setting again. It has not yet been tested on real hardware.
 
 ## Quick replies
 
@@ -93,3 +120,10 @@ data:
 Home Assistant opens the doorbell's live stream while the sound plays and closes it
 afterwards, which uses some battery. The HomeBase may report an alarm event as the sound
 starts; this does not sound an alarm.
+
+## Calibrate and turn 360°
+
+The SoloCam S340 has two more buttons. **Calibrate** re-centres the camera's pan and tilt;
+it is under Configuration on the camera's device page. **Turn 360°** turns the camera once
+round. Both are sent over the local network, as other eufy projects send them to this
+camera. They have not yet been tested on real hardware.

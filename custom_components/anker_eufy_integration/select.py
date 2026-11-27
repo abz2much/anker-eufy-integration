@@ -56,7 +56,7 @@ from anker_eufy_security import (
     redact_serial,
 )
 
-from . import detections, errors, presets, runtime
+from . import detections, doorbell_night_vision, errors, presets, runtime
 from .const import (
     DEFAULT_PRESET_KEY,
     LIVE_PRESET_CAMERA_DEFAULT,
@@ -132,6 +132,9 @@ async def async_setup_entry(
             if detections.has_preset_entities(coordinator.station, device_sn)
             and streams.has_camera(device_sn)
         )
+    # The E340 doorbell's night vision (doorbell_night_vision.py).
+    for coordinator in entry.runtime_data.coordinators.values():
+        entities.extend(doorbell_night_vision.night_vision_selects(coordinator))
     async_add_entities(entities)
 
 

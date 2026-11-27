@@ -56,6 +56,7 @@ from anker_eufy_security import (
 )
 
 from . import (
+    camera_moves,
     detections,
     errors,
     presets,
@@ -140,6 +141,9 @@ async def async_setup_entry(
     manager = entry.runtime_data.snapshots
     preset_manager = entry.runtime_data.presets
     entities: list[ButtonEntity] = [EufyRefreshDeviceListButton(entry)]
+    # The S340's Calibrate and Turn 360° buttons (camera_moves.py).
+    for coordinator in entry.runtime_data.coordinators.values():
+        entities.extend(camera_moves.camera_move_buttons(coordinator))
     # The doorbell's quick-response buttons (quick_response.py).
     for coordinator in entry.runtime_data.coordinators.values():
         entities.extend(quick_response.quick_response_buttons(coordinator))

@@ -563,6 +563,15 @@
     },
     "play_audio_failed": {
       "message": "{station} did not take the audio for the doorbell. Check that it is online and on the same network as Home Assistant, then try again."
+    },
+    "camera_move_failed": {
+      "message": "{station} did not take the camera command. Check that the camera is online and on the same network as Home Assistant."
+    },
+    "night_vision_failed": {
+      "message": "{station} did not take the night vision change. Check that the doorbell is online and on the same network as Home Assistant."
+    },
+    "night_vision_partly_applied": {
+      "message": "{station} took only part of the night vision change, so the doorbell may be half set. Choose the setting again."
     }
   },
   "entity": {
@@ -649,6 +658,12 @@
           "not_usable": "Not usable"
         }
       },
+      "entry_delay_ends": {
+        "name": "Entry delay ends"
+      },
+      "exit_delay_ends": {
+        "name": "Exit delay ends"
+      },
       "last_visitor": {
         "name": "Last visitor"
       }
@@ -665,6 +680,14 @@
       },
       "security_mode": {
         "name": "Security mode"
+      },
+      "doorbell_night_vision": {
+        "name": "Night vision",
+        "state": {
+          "off": "Off",
+          "infrared": "Infrared",
+          "spotlight": "Spotlight"
+        }
       }
     },
     "siren": {
@@ -802,6 +825,12 @@
       },
       "quick_response_3": {
         "name": "Quick response: We will be right there"
+      },
+      "calibrate": {
+        "name": "Calibrate"
+      },
+      "rotate_360": {
+        "name": "Turn 360°"
       }
     },
     "update": {

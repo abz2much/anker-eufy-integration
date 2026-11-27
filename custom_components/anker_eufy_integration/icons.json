@@ -79,6 +79,12 @@
       },
       "save_view": {
         "default": "mdi:content-save-outline"
+      },
+      "calibrate": {
+        "default": "mdi:crosshairs-gps"
+      },
+      "rotate_360": {
+        "default": "mdi:rotate-360"
       }
     },
     "image": {
@@ -104,6 +110,9 @@
           "schedule": "mdi:calendar-clock",
           "disarmed": "mdi:shield-off"
         }
+      },
+      "doorbell_night_vision": {
+        "default": "mdi:weather-night"
       }
     },
     "number": {

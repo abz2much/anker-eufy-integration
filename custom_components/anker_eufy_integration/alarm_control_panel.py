@@ -31,7 +31,7 @@ from anker_eufy_security import (
     StationState,
 )
 
-from . import detections, errors
+from . import delay_sensors, detections, errors
 from .const import (
     ATTR_DELAY_SECONDS,
     ATTR_DELAY_UNTIL,
@@ -237,6 +237,8 @@ class EufyGuardModePanel(EufyStationEntity, AlarmControlPanelEntity, RestoreEnti
         # The running entry delay's seconds and wall-clock end, for the attributes.
         self._delay_seconds: int | None = None
         self._delay_until: datetime | None = None
+        # The running exit delay's wall-clock end, for the delay sensors.
+        self._exit_until: datetime | None = None
 
     @property
     @override
@@ -317,8 +319,14 @@ class EufyGuardModePanel(EufyStationEntity, AlarmControlPanelEntity, RestoreEnti
             self.coordinator.async_add_mode_read_listener(self._async_on_mode_read)
         )
         self.async_on_remove(self._async_cancel_timers)
+        self.async_on_remove(
+            lambda: delay_sensors.forget(
+                self.coordinator.config_entry.entry_id, self.coordinator.station.serial
+            )
+        )
         if (last := await self.async_get_last_extra_data()) is not None:
             self._async_restore_lifecycle(last.as_dict())
+        self._async_publish_delays()
 
     @property
     @override
@@ -437,6 +445,7 @@ class EufyGuardModePanel(EufyStationEntity, AlarmControlPanelEntity, RestoreEnti
             self._async_begin_alarm(AlarmControlPanelState.TRIGGERED, second)
             self._async_restart_alarm_timeout()
             self.async_write_ha_state()
+            self._async_publish_delays()
         elif self._alarm_shown():
             self._async_end_lifecycle()
 
@@ -489,17 +498,31 @@ class EufyGuardModePanel(EufyStationEntity, AlarmControlPanelEntity, RestoreEnti
                     self._cancel_phase()
                 self._lifecycle = AlarmControlPanelState.ARMING
                 self._exit_delay_elapsed = False
+                self._exit_until = dt_util.utcnow() + timedelta(seconds=remaining)
                 self._cancel_phase = async_call_later(
                     self.hass, remaining, self._async_exit_delay_ended
                 )
                 self._async_restart_alarm_timeout()
         self.async_write_ha_state()
+        self._async_publish_delays()
 
     @callback
     def _async_exit_delay_ended(self, _now: datetime) -> None:
         """Mark the exit delay over; the next mode read ends arming."""
         self._cancel_phase = None
         self._exit_delay_elapsed = True
+        self._exit_until = None
+        self._async_publish_delays()
+
+    @callback
+    def _async_publish_delays(self) -> None:
+        """Hand the running delays' ends to the delay sensors (``delay_sensors.py``)."""
+        delay_sensors.publish(
+            self.hass,
+            self.coordinator.config_entry.entry_id,
+            self.coordinator.station.serial,
+            delay_sensors.DelayEnds(entry=self._delay_until, exit=self._exit_until),
+        )
 
     @callback
     def _async_on_mode_read(self, read: ModeRead) -> None:
@@ -647,6 +670,7 @@ class EufyGuardModePanel(EufyStationEntity, AlarmControlPanelEntity, RestoreEnti
         self._async_restart_alarm_timeout()
         if (self.alarm_state, self.extra_state_attributes) != shown:
             self.async_write_ha_state()
+        self._async_publish_delays()
 
     @callback
     def _async_entry_delay_ended(self, _now: datetime) -> None:
@@ -692,6 +716,7 @@ class EufyGuardModePanel(EufyStationEntity, AlarmControlPanelEntity, RestoreEnti
         self._phase_ends_at = None
         self._delay_seconds = None
         self._delay_until = None
+        self._exit_until = None
         self._exit_delay_elapsed = False
         self._lifecycle = state
         if second is not None:
@@ -731,6 +756,8 @@ class EufyGuardModePanel(EufyStationEntity, AlarmControlPanelEntity, RestoreEnti
         self._alarm_second = None
         self._mode_at_alarm = None
         self._exit_delay_elapsed = False
+        self._exit_until = None
+        self._async_publish_delays()
 
     @callback
     def _async_alarm_timed_out(self, _now: datetime) -> None:
