@@ -649,6 +649,12 @@
           "not_usable": "Not usable"
         }
       },
+      "entry_delay_ends": {
+        "name": "Entry delay ends"
+      },
+      "exit_delay_ends": {
+        "name": "Exit delay ends"
+      },
       "last_visitor": {
         "name": "Last visitor"
       }

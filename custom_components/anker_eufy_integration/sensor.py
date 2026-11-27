@@ -44,7 +44,7 @@ from anker_eufy_security import (
 )
 from anker_eufy_security.devices import SettingKind
 
-from . import detections, visitor_sensor
+from . import delay_sensors, detections, visitor_sensor
 from .const import (
     ATTR_VALUE,
     BATTERY_KEY,
@@ -486,9 +486,11 @@ async def async_setup_entry(
             for spec in setting_specs(coordinator.station)
             if spec.platform is Platform.SENSOR
         )
-    # The "Last visitor" sensor of each camera (visitor_sensor.py).
+    # The "Last visitor" sensor of each camera (visitor_sensor.py) and the entry and
+    # exit delay sensors of each station (delay_sensors.py).
     for coordinator in entry.runtime_data.coordinators.values():
         entities.extend(visitor_sensor.last_visitor_sensors(coordinator))
+        entities.extend(delay_sensors.delay_sensors(coordinator))
     async_add_entities(entities)
     for coordinator in entry.runtime_data.coordinators.values():
         # A readable setting of the same key already owns that unique id.

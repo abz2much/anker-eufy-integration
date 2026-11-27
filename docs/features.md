@@ -23,6 +23,25 @@ set up. Arming Night switches the HomeBase to Custom 1, and a HomeBase in Custom
 as **armed night**. The arming event also reports `armed_night`. Schedule, geofencing and
 Custom 2 and 3 still show as custom bypass.
 
+## Entry and exit delays
+
+Each HomeBase has two sensors, **Entry delay ends** and **Exit delay ends**. While the
+alarm panel counts an entry delay or an exit delay, the sensor shows when it ends, and
+Home Assistant shows that as a countdown. Otherwise the sensor is unknown.
+
+The entry delay sensor clears when the alarm goes off, when you disarm, or about two
+seconds after the delay runs out, when the panel stops showing pending. The exit delay
+sensor clears when the delay runs out, even though the panel may show arming a little
+longer until the HomeBase confirms its mode. An exit delay running during a restart of
+Home Assistant is not shown again afterwards.
+
+The sensors follow the alarm panel, so a delay the panel does not show does not appear
+here either. If you disable the alarm panel, both sensors stay unknown.
+
+The length of each delay is set per mode in the eufy app or on the
+[HomeBase card](homebase-card.md). These sensors have not yet been seen with a real
+delay; the behaviour is covered by automated tests.
+
 ## Last visitor
 
 Each camera has a **Last visitor** sensor. It shows the name of the last person the camera
