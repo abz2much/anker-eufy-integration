@@ -191,6 +191,9 @@ ATTR_OFFLINE_CODE: Final = "offline_code"
 ATTR_SUBSYSTEM_FIRMWARE: Final = "subsystem_firmware"
 # The raw per-mode siren action, by lower-case guard mode name.
 ATTR_SIREN_ACTIONS: Final = "siren_actions"
+# The update entity's secondary firmware and whether eufy forces the offered update.
+ATTR_SECONDARY_FIRMWARE: Final = "secondary_firmware"
+ATTR_FORCED: Final = "forced"
 
 # The detection event entity's translation key and unique-id key: one per camera,
 # fired once per detection the library delivers, and again for a more specific kind.

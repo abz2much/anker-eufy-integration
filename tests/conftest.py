@@ -258,7 +258,9 @@ _HOUSE: Final = re.compile(r"house:.+")
 
 
 def cloud_calls(cloud: FakeCloud) -> list[str]:
-    """``cloud.calls`` without the model scan (``things``) every first discovery makes.
+    """``cloud.calls`` without the model scan (``things``) every first discovery makes, and
+    without the firmware checks (``ota:<serial>``), which run on their own 12-hour schedule
+    (``firmware.py``, tested in ``test_firmware.py``).
 
     One device-list fetch reads as its ``devices`` call: the house list and the per-house
     lists the same fetch asks right after it (``houses``, then ``house:<id>``, in the
@@ -269,7 +271,7 @@ def cloud_calls(cloud: FakeCloud) -> list[str]:
     fetch: dict[str, str] = {}
     kept: list[str] = []
     for call in cloud.calls:
-        if call == "things":
+        if call == "things" or call.startswith("ota:"):
             continue
         name, _, region = call.partition("@")
         step = fetch.pop(region, None)
