@@ -19,6 +19,7 @@ import asyncio
 import contextlib
 import logging
 import os
+from collections import deque
 from collections.abc import AsyncGenerator, AsyncIterator, Callable, Sequence
 from typing import Final
 
@@ -53,6 +54,8 @@ _PROBE_BYTES: Final = "2000000"
 _PROBE_MICROSECONDS: Final = "1000000"
 # Bytes read from ffmpeg's output at a time.
 _READ_SIZE: Final = 65536
+# ffmpeg's last error lines kept for the warning when a conversion fails.
+_ERROR_LINES: Final = 5
 # Lower than Home Assistant (0), as Mega does.
 _NICENESS: Final = 10
 
@@ -212,21 +215,41 @@ async def convert(
     assert process.stdout is not None
     assert process.stderr is not None
     feeder = asyncio.create_task(_feed(process.stdin, first, rest))
-    errors = asyncio.create_task(process.stderr.read())
+    tail: deque[str] = deque(maxlen=_ERROR_LINES)
+    errors = asyncio.create_task(_drain(process.stderr, tail))
+    killed = False
     try:
         while chunk := await process.stdout.read(_READ_SIZE):
             yield chunk
     finally:
+        # The feeder leaves the stream's subscription before its owner closes it.
         feeder.cancel()
+        await asyncio.wait({feeder})
         if process.returncode is None:
             with contextlib.suppress(ProcessLookupError):
                 process.kill()
+                killed = True
         await process.wait()
-        with contextlib.suppress(asyncio.CancelledError):
-            await feeder
-        message = (await errors).decode(errors="replace").strip()
-        if message and process.returncode not in (0, -9):
-            _LOGGER.debug("Live view conversion ended (%s): %s", process.returncode, message[-500:])
+        # Unread output keeps the pipe open; the child is gone, so this ends at once.
+        with contextlib.suppress(OSError):
+            await process.stdout.read()
+        await asyncio.wait({errors})
+        if not feeder.cancelled() and (failure := feeder.exception()) is not None:
+            _LOGGER.debug("Live view conversion input ended: %s", type(failure).__name__)
+        if not killed and process.returncode != 0:
+            _LOGGER.warning(
+                "Live view conversion stopped (ffmpeg exit %s): %s",
+                process.returncode,
+                " | ".join(tail) or "no message",
+            )
+
+
+async def _drain(stderr: asyncio.StreamReader, tail: deque[str]) -> None:
+    """Keep ffmpeg's last error lines; the rest are dropped as they come."""
+    with contextlib.suppress(OSError):
+        while line := await stderr.readline():
+            if text := line.decode(errors="replace").strip():
+                tail.append(text)
 
 
 async def _feed(stdin: asyncio.StreamWriter, first: bytes, rest: AsyncIterator[bytes]) -> None:

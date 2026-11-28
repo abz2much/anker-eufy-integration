@@ -212,7 +212,10 @@ class EufyStreamView(HomeAssistantView):
         warning: a player that reads H.265 still gets a picture.
         """
         fmt = live_convert.read_format(request.query.get(STREAM_FORMAT_PARAM))
-        if not live_convert.converts(fmt) or not live_convert.is_hevc(first):
+        if not live_convert.converts(fmt):
+            return _passthrough(first, rest)
+        if not live_convert.is_hevc(first):
+            _LOGGER.debug("Live stream of %s: not H.265, sent unconverted", serial)
             return _passthrough(first, rest)
         command = live_convert.ffmpeg_command(request.app[KEY_HASS], fmt)
         converted = live_convert.convert(command, first, rest)

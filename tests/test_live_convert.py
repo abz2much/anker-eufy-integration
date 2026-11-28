@@ -117,7 +117,18 @@ async def test_the_conversion_pipes_every_chunk_through_the_converter() -> None:
     assert out == b"first-second-third"
 
 
-async def test_a_viewer_leaving_ends_the_converter(monkeypatch: pytest.MonkeyPatch) -> None:
+# Stand-ins that ignore stdin: one keeps writing, one writes a few error lines and fails.
+_FLOOD = [sys.executable, "-c", "import sys\nwhile True: sys.stdout.buffer.write(b'x' * 65536)"]
+_CRASH = [
+    sys.executable,
+    "-c",
+    "import sys\nfor i in range(100): print(f'error line {i}', file=sys.stderr)\nsys.exit(3)",
+]
+
+
+async def test_a_viewer_leaving_kills_a_converter_that_would_run_on(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     started: list[asyncio.subprocess.Process] = []
     real = asyncio.create_subprocess_exec
 
@@ -126,19 +137,27 @@ async def test_a_viewer_leaving_ends_the_converter(monkeypatch: pytest.MonkeyPat
         started.append(process)
         return process
 
-    async def endless() -> AsyncIterator[bytes]:
-        while True:
-            await asyncio.sleep(0.01)
-            yield b"x" * 1000
-
     monkeypatch.setattr(asyncio, "create_subprocess_exec", spy)
-    converted = live_convert.convert(_COPY, b"first", endless())
+    converted = live_convert.convert(_FLOOD, b"first", _chunks())
     assert await anext(converted)
-    await converted.aclose()
-    assert len(started) == 1
     async with asyncio.timeout(5):
-        await started[0].wait()
+        await converted.aclose()
+    assert len(started) == 1
     assert started[0].returncode is not None
+    assert started[0].stdout is not None
+    assert started[0].stdout.at_eof(), "the output pipe is left open"
+
+
+async def test_a_converter_that_fails_warns_with_its_last_lines(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    async with asyncio.timeout(10):
+        out = [chunk async for chunk in live_convert.convert(_CRASH, b"first", _chunks())]
+    assert out == []
+    warnings = [r for r in caplog.records if r.levelname == "WARNING"]
+    assert len(warnings) == 1
+    assert "error line 99" in warnings[0].getMessage()
+    assert "error line 0" not in warnings[0].getMessage(), "only the last lines are kept"
 
 
 async def test_a_missing_converter_raises_before_any_data() -> None:
