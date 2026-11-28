@@ -77,6 +77,8 @@ from .const import (
     STREAM_CONTENT_TYPE,
     STREAM_FORMAT_PARAM,
     STREAM_FORWARDING_HEADERS,
+    STREAM_LENS_MAIN,
+    STREAM_LENS_PARAM,
     STREAM_URL_PATH,
     STREAM_VIEW_NAME,
     STREAM_YIELD_TIMEOUT_SECONDS,
@@ -207,17 +209,20 @@ class EufyStreamView(HomeAssistantView):
     ) -> AsyncGenerator[bytes]:
         """What the viewer receives: the camera's chunks, or their H.264 conversion.
 
-        Converted only when the URL names an H.264 format and the stream's program map
-        declares H.265. A converter that cannot start leaves the view native, with a
-        warning: a player that reads H.265 still gets a picture.
+        Converted when the URL names an H.264 format and the stream's program map
+        declares H.265, or always for ``lens=main`` (cropped to the main lens). A
+        converter that cannot start leaves a format view native, with a warning (a
+        player that reads H.265 still gets a picture), and a main-lens view empty.
         """
         fmt = live_convert.read_format(request.query.get(STREAM_FORMAT_PARAM))
-        if not live_convert.converts(fmt):
-            return _passthrough(first, rest)
-        if not live_convert.is_hevc(first):
-            _LOGGER.debug("Live stream of %s: not H.265, sent unconverted", serial)
-            return _passthrough(first, rest)
-        command = live_convert.ffmpeg_command(request.app[KEY_HASS], fmt)
+        main_lens = request.query.get(STREAM_LENS_PARAM) == STREAM_LENS_MAIN
+        if not main_lens:
+            if not live_convert.converts(fmt):
+                return _passthrough(first, rest)
+            if not live_convert.is_hevc(first):
+                _LOGGER.debug("Live stream of %s: not H.265, sent unconverted", serial)
+                return _passthrough(first, rest)
+        command = live_convert.ffmpeg_command(request.app[KEY_HASS], fmt, main_lens=main_lens)
         converted = live_convert.convert(command, first, rest)
         try:
             head = await anext(converted)
@@ -226,6 +231,14 @@ class EufyStreamView(HomeAssistantView):
             return _nothing()
         except OSError as err:
             await converted.aclose()
+            if main_lens:
+                # Never the stacked picture under the main lens's name.
+                _LOGGER.warning(
+                    "Live stream of %s: ffmpeg could not start (%s); no main-lens view",
+                    serial,
+                    type(err).__name__,
+                )
+                return _nothing()
             _LOGGER.warning(
                 "Live stream of %s: ffmpeg could not start (%s); sending H.265 unconverted",
                 serial,
@@ -379,7 +392,11 @@ def async_register_view(hass: HomeAssistant) -> None:
 
 
 def stream_url(
-    hass: HomeAssistant, device_sn: str, fmt: LiveViewFormat = LiveViewFormat.NATIVE
+    hass: HomeAssistant,
+    device_sn: str,
+    fmt: LiveViewFormat = LiveViewFormat.NATIVE,
+    *,
+    main_lens: bool = False,
 ) -> str:
     """The camera's live stream URL: a pure string build, no I/O.
 
@@ -390,13 +407,16 @@ def stream_url(
     speaks only TLS; the certificate names another host, so the reader must not verify
     it (go2rtc skips verification for an IP host; HA's stream worker verifies only for a
     camera whose stream options set ``verify_ssl``). An H.264 ``fmt`` is named under
-    ``format``; the native one leaves the URL as it always was.
+    ``format``; the native one leaves the URL as it always was. ``main_lens`` adds
+    ``lens=main`` (the E340's main-lens camera, ``main_lens.py``).
     """
     api = hass.config.api
     scheme = "https" if api is not None and api.use_ssl else "http"
     params = {STREAM_AUTH_PARAM: stream_registry(hass).secret}
     if live_convert.converts(fmt):
         params[STREAM_FORMAT_PARAM] = fmt.value
+    if main_lens:
+        params[STREAM_LENS_PARAM] = STREAM_LENS_MAIN
     query = urlencode(params)
     path = STREAM_URL_PATH.format(device_sn=device_sn)
     return f"{scheme}://127.0.0.1:{hass.http.server_port}{path}?{query}"

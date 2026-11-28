@@ -202,3 +202,21 @@ lower the camera's streaming quality.
 The idea and the encoder settings follow the "Low-CPU H.265 live view conversion" of
 Eufy Mega Security. This was tested with ffmpeg on sample H.265 video, not yet on a
 camera.
+
+## Doorbell main lens
+
+Through a HomeBase 3, the E340 doorbell sends one tall picture: the main lens on top
+and the package lens underneath. The doorbell now has a second camera, **Main lens**,
+that shows only the top half as a normal landscape picture. The doorbell's own camera
+is unchanged.
+
+- Its still is the top half of the doorbell's latest picture. Showing it opens nothing.
+- Its live view cuts the top half out with Home Assistant's ffmpeg while it is open,
+  and sends H.264. This uses the processor, like the H.264 live view. The **Live view
+  format** option also applies: **H.264, low CPU** keeps every second picture, at most
+  720 lines high.
+- If the doorbell ever sends a picture of another shape, the Main lens camera shows
+  nothing rather than the wrong picture.
+
+The idea follows the "Main lens (Experimental)" camera of Eufy Mega Security. This was
+tested with ffmpeg on sample pictures of the doorbell's shape, not yet on the doorbell.

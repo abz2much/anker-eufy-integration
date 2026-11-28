@@ -448,6 +448,8 @@ ISSUE_LAN_REPLY_BLOCKED: Final = "lan_reply_blocked"
 # Camera snapshots. The camera entity's unique-id key; it has no name of its
 # own, the camera is its device.
 CAMERA_KEY: Final = "camera"
+# The E340 doorbell's main-lens camera (main_lens.py).
+MAIN_LENS_KEY: Final = "main_lens"
 # The per-camera "Capture live image" button's translation key and the key of its unique
 # id: one live keyframe on demand, which wakes a battery camera.
 CAPTURE_LIVE_IMAGE_KEY: Final = "capture_live_image"
@@ -613,6 +615,9 @@ STREAM_VIEW_NAME: Final = "api:anker_eufy_integration:stream"
 STREAM_AUTH_PARAM: Final = "auth"
 # The stream URL's query key for a converted live view (a LiveViewFormat value).
 STREAM_FORMAT_PARAM: Final = "format"
+# The stream URL's query key for one lens of a stacked picture; ``main`` is the only one.
+STREAM_LENS_PARAM: Final = "lens"
+STREAM_LENS_MAIN: Final = "main"
 # Headers a reverse proxy adds; a stream request carrying any of them is refused.
 STREAM_FORWARDING_HEADERS: Final = (
     "Forwarded",

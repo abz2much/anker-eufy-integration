@@ -57,6 +57,9 @@ _PROBE_MICROSECONDS: Final = "1000000"
 _READ_SIZE: Final = 65536
 # ffmpeg's last error lines kept for the warning when a conversion fails.
 _ERROR_LINES: Final = 5
+# The top half of an 8:11 picture (the E340's 1600x2200); a width of 0 for any other
+# shape fails the conversion. After Mega's ``e340MainLensArguments``.
+_MAIN_LENS_CROP: Final = "crop=w='if(eq(iw*11,ih*8),iw,0)':h='ih/2':x=0:y=0"
 # Lower than Home Assistant (0), as Mega does.
 _NICENESS: Final = 10
 
@@ -131,16 +134,23 @@ def _video_stream_type(pmt: bytes) -> int | None:
     return None
 
 
-def ffmpeg_arguments(fmt: LiveViewFormat) -> list[str]:
-    """ffmpeg's arguments after the binary: MPEG-TS on stdin to H.264 MPEG-TS on stdout."""
+def ffmpeg_arguments(fmt: LiveViewFormat, *, main_lens: bool = False) -> list[str]:
+    """ffmpeg's arguments after the binary: MPEG-TS on stdin to H.264 MPEG-TS on stdout.
+
+    ``main_lens`` keeps the top half of the E340's stacked 8:11 picture (``main_lens``);
+    a picture of another shape makes the crop, and so the conversion, fail rather than
+    show it under the main lens's name. ``native`` then converts at full rate.
+    """
     low_cpu = fmt is LiveViewFormat.H264_LOW_CPU
-    filters = (
-        # Every second picture, and every keyframe so a forced one has one to follow;
-        # no picture taller than 720 lines, and none enlarged.
-        ["-vf", "select='key+not(mod(n,2))',scale=-2:'min(720,ih)'", "-fps_mode", "passthrough"]
-        if low_cpu
-        else []
-    )
+    filters = [
+        # Every second picture, and every keyframe so a forced one has one to follow.
+        *(["select='key+not(mod(n,2))'"] if low_cpu else []),
+        *([_MAIN_LENS_CROP] if main_lens else []),
+        # No picture taller than 720 lines, and none enlarged.
+        *(["scale=-2:'min(720,ih)'"] if low_cpu else []),
+    ]
+    filter_args = ["-vf", ",".join(filters)] if filters else []
+    rate_args = ["-fps_mode", "passthrough"] if low_cpu else []
     return [
         "-hide_banner",
         "-loglevel",
@@ -171,7 +181,8 @@ def ffmpeg_arguments(fmt: LiveViewFormat) -> list[str]:
         "3M",
         "-bufsize",
         "1.5M",
-        *filters,
+        *filter_args,
+        *rate_args,
         # A viewer joins on a keyframe: one at least every half second or so, and one
         # wherever the camera sent one.
         "-x264-params",
@@ -190,10 +201,12 @@ def ffmpeg_arguments(fmt: LiveViewFormat) -> list[str]:
     ]
 
 
-def ffmpeg_command(hass: HomeAssistant, fmt: LiveViewFormat) -> list[str]:
+def ffmpeg_command(
+    hass: HomeAssistant, fmt: LiveViewFormat, *, main_lens: bool = False
+) -> list[str]:
     """The full conversion command with Home Assistant's ffmpeg."""
     binary = _ha_ffmpeg_binary(hass) if _ha_ffmpeg_binary is not None else "ffmpeg"
-    return [binary, *ffmpeg_arguments(fmt)]
+    return [binary, *ffmpeg_arguments(fmt, main_lens=main_lens)]
 
 
 async def convert(
