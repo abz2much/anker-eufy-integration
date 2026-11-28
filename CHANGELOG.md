@@ -5,6 +5,13 @@ All notable changes to this project. The project follows
 release may change entities, options or actions. From 0.1.0 on, release-please writes the
 entries from the conventional commits.
 
+## [0.8.7](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.6...v0.8.7) (2026-11-28)
+
+
+### Features
+
+* a Main lens camera for the E340 doorbell ([#25](https://github.com/abz2much/anker-eufy-integration/issues/25)) ([afd531d](https://github.com/abz2much/anker-eufy-integration/commit/afd531d2e8d3310c812b57b19553721b3c21f057))
+
 ## [0.8.6](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.5...v0.8.6) (2026-11-28)
 
 
