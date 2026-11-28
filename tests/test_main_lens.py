@@ -297,3 +297,57 @@ async def test_real_ffmpeg_refuses_a_picture_of_another_shape(tmp_path: Path) ->
         pytest.skip("no ffmpeg with libx264 and libx265 on this host")
     out = await _convert(binary, _sample(binary, tmp_path / "wide.ts", "1920x1080"))
     assert out == b""
+
+
+async def test_the_t8214c_doorbell_gets_no_main_lens_camera(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    fake_cloud: FakeCloud,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+) -> None:
+    """The T8214C is another product (Mega admits the T8214 only)."""
+    serial = "T8214C0000000001"
+    fake_cloud.devices.append(
+        camera_device(serial, station_sn=fake_station.serial, channel=1, name="Door C")
+    )
+    entry = await set_up_warm(hass, seed_warm_cache)
+    assert _camera_id(hass, serial, MAIN_LENS_KEY) is None
+    await hass.config_entries.async_unload(entry.entry_id)
+
+
+async def test_each_new_doorbell_image_is_a_new_main_lens_state(
+    hass: HomeAssistant,
+    fake_station: FakeStation,
+    fake_cloud: FakeCloud,
+    built_clients: list[EufySecurity],
+    seed_warm_cache: Callable[..., None],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A card refetches only on a new state: ``image_updated`` carries each image."""
+    from datetime import UTC, datetime
+
+    from homeassistant.helpers.dispatcher import async_dispatcher_send
+
+    from custom_components.anker_eufy_integration import snapshots
+
+    _add_doorbell(fake_station, fake_cloud)
+    entry = await set_up_warm(hass, seed_warm_cache)
+    manager = entry.runtime_data.snapshots
+    stored = {"at": datetime(2026, 11, 28, 9, 0, tzinfo=UTC)}
+    monkeypatch.setattr(manager, "stored_time_for", lambda serial: stored["at"])
+    entity_id = _camera_id(hass, _DOORBELL_SN, MAIN_LENS_KEY)
+    assert entity_id is not None
+    signal = snapshots.image_signal(entry.entry_id, _DOORBELL_SN)
+
+    async_dispatcher_send(hass, signal)
+    await hass.async_block_till_done()
+    first = hass.states.get(entity_id)
+    stored["at"] = datetime(2026, 11, 28, 9, 5, tzinfo=UTC)
+    async_dispatcher_send(hass, signal)
+    await hass.async_block_till_done()
+    second = hass.states.get(entity_id)
+
+    assert first is not None and second is not None
+    assert first.attributes["image_updated"] != second.attributes["image_updated"]
+    await hass.config_entries.async_unload(entry.entry_id)

@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import io
 import logging
-from typing import TYPE_CHECKING, Final, override
+from typing import TYPE_CHECKING, Any, Final, override
 
 from homeassistant.components.camera import Camera, CameraEntityFeature
 from homeassistant.core import callback
@@ -29,7 +29,12 @@ from PIL import Image, UnidentifiedImageError
 from anker_eufy_security import Station
 
 from . import detections, live_convert, snapshots, streaming
-from .const import CAMERA_FRAME_INTERVAL_SECONDS, CONF_LIVE_VIEW_FORMAT, MAIN_LENS_KEY
+from .const import (
+    ATTR_IMAGE_UPDATED,
+    CAMERA_FRAME_INTERVAL_SECONDS,
+    CONF_LIVE_VIEW_FORMAT,
+    MAIN_LENS_KEY,
+)
 from .coordinator import StationCoordinator
 from .entity import EufyDeviceEntity, EufyPushAvailability
 
@@ -41,6 +46,7 @@ _LOGGER = logging.getLogger(__name__)
 # The doorbell model and the station it sends the stacked picture through (Mega's rule).
 MAIN_LENS_MODELS: Final = frozenset({"T8214"})
 MAIN_LENS_STATIONS: Final = frozenset({"T8030"})
+_OTHER_PRODUCT: Final = "T8214C"
 _JPEG_QUALITY: Final = 90
 
 
@@ -48,6 +54,8 @@ def has_main_lens(station: Station, device_sn: str) -> bool:
     """Whether ``device_sn`` on ``station`` is an E340 behind a HomeBase 3 with a live stream."""
     return (
         device_sn[:5] in MAIN_LENS_MODELS
+        # The T8214C is another product; Mega admits the T8214 only.
+        and not device_sn.startswith(_OTHER_PRODUCT)
         and station.serial[:5] in MAIN_LENS_STATIONS
         and device_sn != station.serial
         and detections.has_live_stream(station, device_sn)
@@ -86,6 +94,9 @@ def main_lens_cameras(
 
 class EufyMainLensCamera(EufyPushAvailability, EufyDeviceEntity, Camera):
     """The top half of the doorbell's stacked picture, still and live."""
+
+    # A new value per image: history would store one attributes row per image.
+    _unrecorded_attributes = frozenset({ATTR_IMAGE_UPDATED})
 
     _attr_translation_key = MAIN_LENS_KEY
     _attr_brand = "eufy"
@@ -140,4 +151,17 @@ class EufyMainLensCamera(EufyPushAvailability, EufyDeviceEntity, Camera):
 
     @callback
     def _async_on_image(self, *_args: object) -> None:
+        """A new doorbell image: ``image_updated`` makes it a new state."""
         self.async_write_ha_state()
+
+    @property
+    @override
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """``image_updated``: when the doorbell's image was stored, as on its own camera.
+
+        It differs for every image, so a card fetches each new crop.
+        """
+        stored = self._manager.stored_time_for(self._serial)
+        if stored is None:
+            return {}
+        return {ATTR_IMAGE_UPDATED: stored.isoformat(timespec="milliseconds")}
