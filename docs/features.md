@@ -180,3 +180,25 @@ across restarts, so a restart does not cause another check.
 
 Home Assistant cannot install firmware here: eufy installs it, or you start it in the
 eufy app.
+
+## H.264 live view
+
+Most of these cameras send H.265 video. Some players cannot show it, such as Firefox
+and some Android phones. The **Live view format** option, under **Live view and
+recording** in the integration's options, converts it to H.264:
+
+- **Native** (the default) sends the camera's own video, untouched.
+- **H.264, low CPU** keeps every second picture, at most 720 lines high. Use this on a
+  small machine.
+- **H.264, full quality** keeps the camera's own size and picture rate. This uses much
+  more processor time, most of all on a 4K camera.
+
+The conversion uses Home Assistant's own ffmpeg and runs only while a live view is open.
+A camera that already sends H.264 is never converted. If ffmpeg cannot start, the view
+carries on in H.265 and the log says why. Changing the option ends running live views.
+It runs in software, so if a converted view falls behind, choose the low CPU choice or
+lower the camera's streaming quality.
+
+The idea and the encoder settings follow the "Low-CPU H.265 live view conversion" of
+Eufy Mega Security. This was tested with ffmpeg on sample H.265 video, not yet on a
+camera.

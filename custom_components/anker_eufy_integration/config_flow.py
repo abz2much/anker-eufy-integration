@@ -59,6 +59,7 @@ from .const import (
     CONF_EXTRA_COUNTRIES,
     CONF_FULL_RESOLUTION_CAPTURE,
     CONF_LIVE_SNAPSHOT,
+    CONF_LIVE_VIEW_FORMAT,
     CONF_MODE_HOLDS_DETECTIONS_REPAIR,
     CONF_RECORD_LENGTH,
     CONF_REFRESH_KEYFRAME,
@@ -70,6 +71,7 @@ from .const import (
     DEFAULT_CAMERA_IMAGE,
     DEFAULT_DETECTION_HOLD_SECONDS,
     DEFAULT_EVENT_HISTORY_DAYS,
+    DEFAULT_LIVE_VIEW_FORMAT,
     DEFAULT_RECORD_LENGTH_SECONDS,
     DEFAULT_REFRESH_KEYFRAME,
     DOMAIN,
@@ -98,6 +100,7 @@ from .const import (
     STEP_USER,
     STEP_VERIFY_CODE,
     CameraImageMode,
+    LiveViewFormat,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -144,7 +147,7 @@ def _whole(unit: UnitOfTime, low: int, high: int) -> NumberSelector:
     )
 
 
-# The entry's sixteen options, flat, in form order. Read once at setup, so a change
+# The entry's seventeen options, flat, in form order. Read once at setup, so a change
 # applies on the reload, except the recording length and the sessions per HomeBase.
 # Ranges and defaults of the sessions are the library's; an empty country means Home
 # Assistant's; each extra country is one more sign-in (a change of either country
@@ -183,6 +186,13 @@ OPTIONS_SCHEMA = vol.Schema(
         vol.Required(CONF_RECORD_LENGTH, default=DEFAULT_RECORD_LENGTH_SECONDS): _whole(
             UnitOfTime.SECONDS, MIN_RECORD_LENGTH_SECONDS, MAX_RECORD_LENGTH_SECONDS
         ),
+        vol.Required(CONF_LIVE_VIEW_FORMAT, default=DEFAULT_LIVE_VIEW_FORMAT.value): SelectSelector(
+            SelectSelectorConfig(
+                options=[fmt.value for fmt in LiveViewFormat],
+                translation_key=CONF_LIVE_VIEW_FORMAT,
+                mode=SelectSelectorMode.LIST,
+            )
+        ),
         vol.Required(CONF_EVENT_HISTORY_DAYS, default=DEFAULT_EVENT_HISTORY_DAYS): _whole(
             UnitOfTime.DAYS, 0, MAX_EVENT_HISTORY_DAYS
         ),
@@ -213,7 +223,11 @@ OPTIONS_SECTIONS: Mapping[str, tuple[str, ...]] = MappingProxyType(
             CONF_LIVE_SNAPSHOT,
             CONF_FULL_RESOLUTION_CAPTURE,
         ),
-        OPTIONS_SECTION_LIVE_VIEW: (CONF_STATION_SESSIONS, CONF_RECORD_LENGTH),
+        OPTIONS_SECTION_LIVE_VIEW: (
+            CONF_STATION_SESSIONS,
+            CONF_RECORD_LENGTH,
+            CONF_LIVE_VIEW_FORMAT,
+        ),
         OPTIONS_SECTION_HISTORY: (CONF_EVENT_HISTORY_DAYS, CONF_EVENT_VIDEOS),
         OPTIONS_SECTION_EUFY_ACCOUNT: (CONF_COUNTRY, CONF_SESSION_PROBE, CONF_CLOUD_PUSH),
         OPTIONS_SECTION_MORE_COUNTRIES: (CONF_EXTRA_COUNTRIES, CONF_SCAN_REGIONS),
@@ -787,7 +801,7 @@ class EufyHomeSecurityConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class EufyHomeSecurityOptionsFlow(OptionsFlowWithReload):
-    """The entry's sixteen options, in six collapsible sections, stored flat.
+    """The entry's seventeen options, in six collapsible sections, stored flat.
 
     Three things worth knowing about this class:
 
@@ -806,8 +820,8 @@ class EufyHomeSecurityOptionsFlow(OptionsFlowWithReload):
     """
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        """Show the options in their sections, and save exactly the sixteen they offer
-        flat: seven bools, six ints, a choice, a country and a country list.
+        """Show the options in their sections, and save exactly the seventeen they offer
+        flat: seven bools, six ints, two choices, a country and a country list.
 
         The saved mapping is rebuilt from those sixteen keys rather than passing
         ``user_input`` through, so a submission carrying more than the schema asked
@@ -834,6 +848,7 @@ class EufyHomeSecurityOptionsFlow(OptionsFlowWithReload):
                 CONF_FULL_RESOLUTION_CAPTURE: bool(flat[CONF_FULL_RESOLUTION_CAPTURE]),
                 CONF_STATION_SESSIONS: int(flat[CONF_STATION_SESSIONS] + 0.5),
                 CONF_RECORD_LENGTH: int(flat[CONF_RECORD_LENGTH] + 0.5),
+                CONF_LIVE_VIEW_FORMAT: LiveViewFormat(flat[CONF_LIVE_VIEW_FORMAT]).value,
                 CONF_EVENT_HISTORY_DAYS: int(flat[CONF_EVENT_HISTORY_DAYS] + 0.5),
                 CONF_EVENT_VIDEOS: bool(flat[CONF_EVENT_VIDEOS]),
                 CONF_COUNTRY: str(flat.get(CONF_COUNTRY) or ""),
