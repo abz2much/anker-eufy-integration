@@ -5,6 +5,13 @@ All notable changes to this project. The project follows
 release may change entities, options or actions. From 0.1.0 on, release-please writes the
 entries from the conventional commits.
 
+## [0.8.6](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.5...v0.8.6) (2026-11-28)
+
+
+### Features
+
+* optional H.264 live view for players that cannot show H.265 ([#23](https://github.com/abz2much/anker-eufy-integration/issues/23)) ([dee9137](https://github.com/abz2much/anker-eufy-integration/commit/dee913727d496d6b13aa2bc95df2820ceb7ad7f4))
+
 ## [0.8.5](https://github.com/abz2much/anker-eufy-integration/compare/v0.8.4...v0.8.5) (2026-11-27)
 
 
