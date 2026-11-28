@@ -19,6 +19,7 @@ import asyncio
 import contextlib
 import logging
 import os
+import signal
 from collections import deque
 from collections.abc import AsyncGenerator, AsyncIterator, Callable, Sequence
 from typing import Final
@@ -217,7 +218,6 @@ async def convert(
     feeder = asyncio.create_task(_feed(process.stdin, first, rest))
     tail: deque[str] = deque(maxlen=_ERROR_LINES)
     errors = asyncio.create_task(_drain(process.stderr, tail))
-    killed = False
     try:
         while chunk := await process.stdout.read(_READ_SIZE):
             yield chunk
@@ -228,7 +228,6 @@ async def convert(
         if process.returncode is None:
             with contextlib.suppress(ProcessLookupError):
                 process.kill()
-                killed = True
         await process.wait()
         # Unread output keeps the pipe open; the child is gone, so this ends at once.
         with contextlib.suppress(OSError):
@@ -236,7 +235,9 @@ async def convert(
         await asyncio.wait({errors})
         if not feeder.cancelled() and (failure := feeder.exception()) is not None:
             _LOGGER.debug("Live view conversion input ended: %s", type(failure).__name__)
-        if not killed and process.returncode != 0:
+        # Judged by the exit status: a child that ended by itself before the kill
+        # landed keeps its own status; only our kill reads as SIGKILL.
+        if process.returncode not in (0, -signal.SIGKILL):
             _LOGGER.warning(
                 "Live view conversion stopped (ffmpeg exit %s): %s",
                 process.returncode,
