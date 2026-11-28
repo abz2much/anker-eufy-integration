@@ -913,6 +913,11 @@
       "preset_image": {
         "name": "Preset {index} image"
       }
+    },
+    "camera": {
+      "main_lens": {
+        "name": "Main lens"
+      }
     }
   },
   "services": {

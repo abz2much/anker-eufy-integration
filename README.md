@@ -35,6 +35,7 @@ by side. Every change from that starting point is listed in
 - Connected sensors for each HomeBase and each paired device, battery health on every
   camera that reports it, and firmware update entities that show the version eufy offers.
 - An optional H.264 live view for players that cannot show H.265.
+- A Main lens camera for the E340 doorbell, without the package lens.
 - Motion, entry and smoke sensors, locks and keypads appear with the readings the
   library supports.
 
@@ -75,7 +76,7 @@ list** on the **eufy account** device.
 
 | Page | What it covers |
 |---|---|
-| [Added features](docs/features.md) | restart, Night arm, last visitor, packages, doorbell siren, quick replies, playing sound files, Connected, battery health, firmware updates, H.264 live view |
+| [Added features](docs/features.md) | restart, Night arm, last visitor, packages, doorbell siren, quick replies, playing sound files, Connected, battery health, firmware updates, H.264 live view, doorbell main lens |
 | [Usage](docs/usage.md) | options, the alarm panel, camera images, event history, live video, settings |
 | [Camera card](docs/card.md) | the dashboard card for one or more cameras |
 | [HomeBase card](docs/homebase-card.md) | the dashboard card for a HomeBase |

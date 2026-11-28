@@ -70,6 +70,7 @@ from . import (
     errors,
     history,
     live_convert,
+    main_lens,
     play_audio,
     presets,
     ptz,
@@ -157,6 +158,12 @@ async def async_setup_entry(
         for coordinator in entry.runtime_data.coordinators.values()
         for device_sn, kind in detections.paired_device_kinds(coordinator.station).items()
         if detections.has_detection_entities(kind)
+    )
+    # The E340's main lens, cut from its stacked picture (main_lens.py).
+    async_add_entities(
+        camera
+        for coordinator in entry.runtime_data.coordinators.values()
+        for camera in main_lens.main_lens_cameras(coordinator, manager)
     )
     # Once per platform load; each schema is the user input's only validation before
     # the manager's own checks.

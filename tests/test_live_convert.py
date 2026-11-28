@@ -266,7 +266,7 @@ async def test_the_view_converts_an_h265_stream_only_when_asked(
 ) -> None:
     commands: list[LiveViewFormat] = []
 
-    def copy_command(_hass: HomeAssistant, asked: LiveViewFormat) -> list[str]:
+    def copy_command(_hass: HomeAssistant, asked: LiveViewFormat, **_kw: object) -> list[str]:
         commands.append(asked)
         return _COPY
 
@@ -293,7 +293,9 @@ async def test_a_converter_that_cannot_start_leaves_the_view_native(
     hass_client_no_auth: ClientSessionGenerator,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(live_convert, "ffmpeg_command", lambda _hass, _fmt: ["/nonexistent/ffmpeg"])
+    monkeypatch.setattr(
+        live_convert, "ffmpeg_command", lambda _hass, _fmt, **_kw: ["/nonexistent/ffmpeg"]
+    )
     entry = await set_up_warm(
         hass, seed_warm_cache, options={CONF_LIVE_VIEW_FORMAT: LiveViewFormat.H264.value}
     )
