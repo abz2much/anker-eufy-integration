@@ -107,11 +107,13 @@
             "name": "Live view and recording",
             "data": {
               "station_sessions": "Sessions per HomeBase",
-              "record_length": "Recording length (seconds)"
+              "record_length": "Recording length (seconds)",
+              "live_view_format": "Live view format"
             },
             "data_description": {
               "station_sessions": "{min_sessions}–{max_sessions}, {default_sessions} by default. Connections held to each HomeBase: one for detections and the first live view, one for event images, one more per further live view, so {default_live} cameras at once by default. A HomeBase holds about {max_sessions} across all apps and Home Assistant instances and drops one past that, the eufy app's included; give a second instance a small value such as 2. A live view past the limit waits briefly, then is refused. Ends no running live view.",
-              "record_length": "5–300 s, 30 by default. Length of a Record clip when the action names none. Wakes a battery camera for that long."
+              "record_length": "5–300 s, 30 by default. Length of a Record clip when the action names none. Wakes a battery camera for that long.",
+              "live_view_format": "Native by default: the camera's own video, untouched. The H.264 choices convert an H.265 camera's live view with Home Assistant's ffmpeg, for players that cannot show H.265; it runs only while a view is open and uses the processor. Low CPU keeps every second picture at most 720 lines high. A camera that sends H.264 is never converted. Ends running live views."
             }
           },
           "history": {
@@ -162,6 +164,13 @@
         "hd": "Thumbnail, then HD",
         "thumbnail": "Thumbnail only",
         "hd_only": "HD only"
+      }
+    },
+    "live_view_format": {
+      "options": {
+        "native": "Native (no conversion)",
+        "h264_low_cpu": "H.264, low CPU",
+        "h264": "H.264, full quality"
       }
     },
     "pan_tilt_direction": {

@@ -1,4 +1,4 @@
-"""The entry's sixteen options, driven through the real options flow.
+"""The entry's seventeen options, driven through the real options flow.
 
 Each option but the recording length and the sessions per HomeBase is read once at
 setup, so the automatic reload is what applies a change.
@@ -43,6 +43,7 @@ from custom_components.anker_eufy_integration.const import (
     CONF_EXTRA_COUNTRIES,
     CONF_FULL_RESOLUTION_CAPTURE,
     CONF_LIVE_SNAPSHOT,
+    CONF_LIVE_VIEW_FORMAT,
     CONF_MODE_HOLDS_DETECTIONS_REPAIR,
     CONF_RECORD_LENGTH,
     CONF_REFRESH_KEYFRAME,
@@ -88,7 +89,7 @@ def _registered(hass: HomeAssistant, domain: str, serial: str, key: str) -> str 
     return er.async_get(hass).async_get_entity_id(domain, DOMAIN, entity_unique_id(serial, key))
 
 
-async def test_the_options_form_offers_its_sixteen_options_with_their_defaults(
+async def test_the_options_form_offers_its_seventeen_options_with_their_defaults(
     hass: HomeAssistant,
     fake_station: FakeStation,
     built_clients: list[EufySecurity],
@@ -139,6 +140,7 @@ async def test_the_options_form_offers_its_sixteen_options_with_their_defaults(
         CONF_FULL_RESOLUTION_CAPTURE,
         CONF_STATION_SESSIONS,
         CONF_RECORD_LENGTH,
+        CONF_LIVE_VIEW_FORMAT,
         CONF_EVENT_HISTORY_DAYS,
         CONF_EVENT_VIDEOS,
         CONF_COUNTRY,
@@ -146,7 +148,7 @@ async def test_the_options_form_offers_its_sixteen_options_with_their_defaults(
         CONF_CLOUD_PUSH,
         CONF_EXTRA_COUNTRIES,
         CONF_SCAN_REGIONS,
-    ], "the options form does not offer exactly its sixteen options, in order"
+    ], "the options form does not offer exactly its seventeen options, in order"
     (
         hold,
         timeout,
@@ -157,6 +159,7 @@ async def test_the_options_form_offers_its_sixteen_options_with_their_defaults(
         full_resolution,
         sessions,
         length,
+        live_view_format,
         history_days,
         videos,
         country,
@@ -186,6 +189,9 @@ async def test_the_options_form_offers_its_sixteen_options_with_their_defaults(
     assert history_days.default() == DEFAULT_EVENT_HISTORY_DAYS == 7
     assert videos.default() is False, "event videos take storage: opt-in only"
     assert length.default() == DEFAULT_RECORD_LENGTH_SECONDS == 30
+    assert live_view_format.default() == "native", (
+        "H.264 conversion uses the processor: opt-in only"
+    )
     assert sessions.default() == DEFAULT_STATION_SESSIONS
 
     assert await hass.config_entries.async_unload(entry.entry_id)
@@ -268,14 +274,14 @@ async def test_hold_and_timeout_outside_their_ranges_are_refused(
     await hass.async_block_till_done()
 
 
-async def test_the_saved_options_are_exactly_the_sixteen_offered(
+async def test_the_saved_options_are_exactly_the_seventeen_offered(
     hass: HomeAssistant,
     fake_station: FakeStation,
     built_clients: list[EufySecurity],
     seed_warm_cache: Callable[..., None],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """The save is rebuilt from the sixteen keys, seven bools, six ints, a choice, a
+    """The save is rebuilt from the seventeen keys, seven bools, six ints, two choices, a
     country and a country list; it reloads."""
 
     async def no_push(_eufy: EufySecurity) -> None:
@@ -304,6 +310,7 @@ async def test_the_saved_options_are_exactly_the_sixteen_offered(
             CONF_EVENT_HISTORY_DAYS: 29.6,
             CONF_EVENT_VIDEOS: True,
             CONF_RECORD_LENGTH: 44.5,
+            CONF_LIVE_VIEW_FORMAT: "h264_low_cpu",
             CONF_STATION_SESSIONS: 3.4,
         },
     )
@@ -324,6 +331,7 @@ async def test_the_saved_options_are_exactly_the_sixteen_offered(
         CONF_EVENT_HISTORY_DAYS: 30,
         CONF_EVENT_VIDEOS: True,
         CONF_RECORD_LENGTH: 45,
+        CONF_LIVE_VIEW_FORMAT: "h264_low_cpu",
         CONF_STATION_SESSIONS: 3,
     }
     assert type(entry.options[CONF_EVENT_HISTORY_DAYS]) is int

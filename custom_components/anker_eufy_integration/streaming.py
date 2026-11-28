@@ -5,9 +5,11 @@ one camera stream out to every viewer and handles slow readers. This module is t
 Home Assistant glue: one broadcast per camera, one HTTP view that serves them, and the
 arbitration that makes a live view release the station session's media slot.
 
-- **Nothing here decodes or re-encodes video.** The library's chunks are written
-  through untouched: decoding one 4K HEVC stream on a four-core board runs at 0.58x
-  realtime, remuxing it costs about 2% of one core.
+- **Nothing here decodes or re-encodes video by default.** The library's chunks are
+  written through untouched: decoding one 4K HEVC stream on a four-core ARM board runs
+  at 0.58x realtime, remuxing it costs about 2% of one core. A URL naming an H.264
+  format (the Live view format option) has an H.265 stream converted while the request
+  is open (``live_convert``); an H.264 stream is still passed through.
 - **A camera opens only on a real HTTP GET.** A broadcast is built per streamable
   camera at setup and costs nothing (no session, wake or task) until its first
   subscriber. Nothing polls or pre-warms, and an ended stream is not reopened here.
@@ -45,7 +47,7 @@ import hmac
 import ipaddress
 import logging
 import secrets
-from collections.abc import Awaitable, Callable
+from collections.abc import AsyncGenerator, AsyncIterator, Awaitable, Callable
 from dataclasses import dataclass, field
 from http import HTTPStatus
 from typing import TYPE_CHECKING
@@ -54,7 +56,7 @@ from urllib.parse import urlencode
 from aiohttp import ClientConnectionResetError, web
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_send
-from homeassistant.helpers.http import HomeAssistantView
+from homeassistant.helpers.http import KEY_HASS, HomeAssistantView
 from homeassistant.util.hass_dict import HassKey
 
 from anker_eufy_security import (
@@ -68,15 +70,17 @@ from anker_eufy_security import (
     redact_serial,
 )
 
-from . import detections, errors
+from . import detections, errors, live_convert
 from .const import (
     DOMAIN,
     STREAM_AUTH_PARAM,
     STREAM_CONTENT_TYPE,
+    STREAM_FORMAT_PARAM,
     STREAM_FORWARDING_HEADERS,
     STREAM_URL_PATH,
     STREAM_VIEW_NAME,
     STREAM_YIELD_TIMEOUT_SECONDS,
+    LiveViewFormat,
 )
 
 if TYPE_CHECKING:
@@ -198,6 +202,39 @@ class EufyStreamView(HomeAssistantView):
             return "missing or wrong stream secret"
         return None
 
+    async def _body(
+        self, request: web.Request, serial: str, first: bytes, rest: AsyncIterator[bytes]
+    ) -> AsyncGenerator[bytes]:
+        """What the viewer receives: the camera's chunks, or their H.264 conversion.
+
+        Converted only when the URL names an H.264 format and the stream's program map
+        declares H.265. A converter that cannot start leaves the view native, with a
+        warning: a player that reads H.265 still gets a picture.
+        """
+        fmt = live_convert.read_format(request.query.get(STREAM_FORMAT_PARAM))
+        if not live_convert.converts(fmt):
+            return _passthrough(first, rest)
+        if not live_convert.is_hevc(first):
+            _LOGGER.debug("Live stream of %s: not H.265, sent unconverted", serial)
+            return _passthrough(first, rest)
+        command = live_convert.ffmpeg_command(request.app[KEY_HASS], fmt)
+        converted = live_convert.convert(command, first, rest)
+        try:
+            head = await anext(converted)
+        except StopAsyncIteration:
+            _LOGGER.debug("Live stream of %s: the conversion ended before any output", serial)
+            return _nothing()
+        except OSError as err:
+            await converted.aclose()
+            _LOGGER.warning(
+                "Live stream of %s: ffmpeg could not start (%s); sending H.265 unconverted",
+                serial,
+                type(err).__name__,
+            )
+            return _passthrough(first, rest)
+        _LOGGER.debug("Live stream of %s: converting H.265 to H.264 (%s)", serial, fmt.value)
+        return _owned(head, converted)
+
     async def get(self, request: web.Request, device_sn: str) -> web.StreamResponse:
         """Subscribe to the camera's broadcast and write its chunks until it ends.
 
@@ -256,14 +293,16 @@ class EufyStreamView(HomeAssistantView):
                 watched = False
                 try:
                     if first is not None:
-                        await response.write(first)
-                        chunks += 1
-                        # Streaming from the first chunk the viewer received until it leaves.
-                        self._registry.watch(device_sn, 1)
-                        watched = True
-                        async for chunk in stream:
-                            await response.write(chunk)
-                            chunks += 1
+                        body = await self._body(request, serial, first, stream)
+                        async with contextlib.aclosing(body):
+                            async for chunk in body:
+                                await response.write(chunk)
+                                chunks += 1
+                                if not watched:
+                                    # Streaming from the first chunk the viewer received
+                                    # until it leaves.
+                                    self._registry.watch(device_sn, 1)
+                                    watched = True
                 except ConnectionResetError, ClientConnectionResetError:
                     # The viewer went away mid-write. Not an error, and not this module's to
                     # report: leaving the loop has already unsubscribed.
@@ -296,6 +335,26 @@ class EufyStreamView(HomeAssistantView):
         return response
 
 
+async def _passthrough(first: bytes, rest: AsyncIterator[bytes]) -> AsyncGenerator[bytes]:
+    """``first``, then ``rest``, which its owner closes."""
+    yield first
+    async for chunk in rest:
+        yield chunk
+
+
+async def _owned(first: bytes, rest: AsyncGenerator[bytes]) -> AsyncGenerator[bytes]:
+    """``first``, then ``rest``, closed with this generator (it ends the conversion)."""
+    async with contextlib.aclosing(rest):
+        yield first
+        async for chunk in rest:
+            yield chunk
+
+
+async def _nothing() -> AsyncGenerator[bytes]:
+    return
+    yield
+
+
 @callback
 def async_register_view(hass: HomeAssistant) -> None:
     """Register the stream view, once per Home Assistant instance.
@@ -319,7 +378,9 @@ def async_register_view(hass: HomeAssistant) -> None:
     _LOGGER.debug("The live stream view is registered for this Home Assistant instance")
 
 
-def stream_url(hass: HomeAssistant, device_sn: str) -> str:
+def stream_url(
+    hass: HomeAssistant, device_sn: str, fmt: LiveViewFormat = LiveViewFormat.NATIVE
+) -> str:
     """The camera's live stream URL: a pure string build, no I/O.
 
     Home Assistant asks for it on every WebRTC offer and every recording, under a
@@ -328,11 +389,15 @@ def stream_url(hass: HomeAssistant, device_sn: str) -> str:
     source URL. ``https`` when that server has a certificate, since its one port then
     speaks only TLS; the certificate names another host, so the reader must not verify
     it (go2rtc skips verification for an IP host; HA's stream worker verifies only for a
-    camera whose stream options set ``verify_ssl``).
+    camera whose stream options set ``verify_ssl``). An H.264 ``fmt`` is named under
+    ``format``; the native one leaves the URL as it always was.
     """
     api = hass.config.api
     scheme = "https" if api is not None and api.use_ssl else "http"
-    query = urlencode({STREAM_AUTH_PARAM: stream_registry(hass).secret})
+    params = {STREAM_AUTH_PARAM: stream_registry(hass).secret}
+    if live_convert.converts(fmt):
+        params[STREAM_FORMAT_PARAM] = fmt.value
+    query = urlencode(params)
     path = STREAM_URL_PATH.format(device_sn=device_sn)
     return f"{scheme}://127.0.0.1:{hass.http.server_port}{path}?{query}"
 

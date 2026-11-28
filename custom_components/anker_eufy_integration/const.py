@@ -81,6 +81,22 @@ CONF_EVENT_VIDEOS: Final = "event_videos"
 # Read at each call, so a change applies without a reload.
 CONF_RECORD_LENGTH: Final = "record_length"
 DEFAULT_RECORD_LENGTH_SECONDS: Final = 30
+# What a camera's live view sends its players (live_convert.py).
+CONF_LIVE_VIEW_FORMAT: Final = "live_view_format"
+
+
+class LiveViewFormat(StrEnum):
+    """The Live view format option's three choices; the stored option value."""
+
+    # The camera's own video, untouched: no decode, no encode.
+    NATIVE = "native"
+    # H.265 converted to H.264 at every second picture, at most 720 lines high.
+    H264_LOW_CPU = "h264_low_cpu"
+    # H.265 converted to H.264 at the camera's size and picture rate.
+    H264 = "h264"
+
+
+DEFAULT_LIVE_VIEW_FORMAT: Final = LiveViewFormat.NATIVE
 MIN_RECORD_LENGTH_SECONDS: Final = 5
 MAX_RECORD_LENGTH_SECONDS: Final = 300
 # P2P sessions held to each HomeBase (the library's ``Station.max_sessions``); its range
@@ -583,9 +599,10 @@ MAX_JPEG_BYTES: Final = 16 * 1024 * 1024
 CAMERA_FRAME_INTERVAL_SECONDS: Final = 30
 
 # Live video: the camera's MPEG-TS, served over Home Assistant's own
-# HTTP server and passed through untouched, because nothing on this host may decode or
-# re-encode video (measured on hardware: decoding one 4K HEVC stream is 0.58x
-# realtime with four cores saturated, remuxing it about 2% of one core).
+# HTTP server and passed through untouched by default (measured on a four-core ARM
+# board: decoding one 4K HEVC stream is 0.58x realtime with four cores saturated,
+# remuxing it about 2% of one core). Converting H.265 to H.264 is the opt-in Live view
+# format option (live_convert.py), run only while a view is open.
 #
 # The route the stream view answers on. The camera serial in the path is a deliberate
 # exception to the redaction rule (the library's guide advises a random token): the
@@ -594,6 +611,8 @@ STREAM_URL_PATH: Final = "/api/anker_eufy_integration/stream/{device_sn}"
 STREAM_VIEW_NAME: Final = "api:anker_eufy_integration:stream"
 # The stream URL's query key for the instance secret; the stream component redacts it.
 STREAM_AUTH_PARAM: Final = "auth"
+# The stream URL's query key for a converted live view (a LiveViewFormat value).
+STREAM_FORMAT_PARAM: Final = "format"
 # Headers a reverse proxy adds; a stream request carrying any of them is refused.
 STREAM_FORWARDING_HEADERS: Final = (
     "Forwarded",

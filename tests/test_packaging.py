@@ -683,8 +683,8 @@ def _option_texts(step: dict[str, Any], part: str) -> dict[str, str]:
     return {key: text for texts in step["sections"].values() for key, text in texts[part].items()}
 
 
-def test_the_options_flow_offers_exactly_its_sixteen_options() -> None:
-    """The entry's options are exactly these sixteen; a new one needs a deliberate change here.
+def test_the_options_flow_offers_exactly_its_seventeen_options() -> None:
+    """The entry's options are exactly these seventeen; a new one needs a deliberate change here.
 
     The detection hold (seconds) and the alarm safety-net timeout (minutes) default
     to 10. The mode-holds-detections repair shows by default. The live snapshot is
@@ -722,6 +722,7 @@ def test_the_options_flow_offers_exactly_its_sixteen_options() -> None:
         CONF_EXTRA_COUNTRIES,
         CONF_FULL_RESOLUTION_CAPTURE,
         CONF_LIVE_SNAPSHOT,
+        CONF_LIVE_VIEW_FORMAT,
         CONF_MODE_HOLDS_DETECTIONS_REPAIR,
         CONF_RECORD_LENGTH,
         CONF_REFRESH_KEYFRAME,
@@ -754,6 +755,7 @@ def test_the_options_flow_offers_exactly_its_sixteen_options() -> None:
         CONF_FULL_RESOLUTION_CAPTURE,
         CONF_STATION_SESSIONS,
         CONF_RECORD_LENGTH,
+        CONF_LIVE_VIEW_FORMAT,
         CONF_EVENT_HISTORY_DAYS,
         CONF_EVENT_VIDEOS,
         CONF_COUNTRY,
@@ -764,7 +766,7 @@ def test_the_options_flow_offers_exactly_its_sixteen_options() -> None:
     ]
     keys = [str(key) for key in OPTIONS_SCHEMA.schema]
     assert keys == expected, (
-        f"the options schema offers {keys}; this entry has exactly sixteen options, and "
+        f"the options schema offers {keys}; this entry has exactly seventeen options, and "
         f"another one added here without a decision would ship unannounced"
     )
     assert [key for keys in OPTIONS_SECTIONS.values() for key in keys] == expected, (
@@ -780,6 +782,7 @@ def test_the_options_flow_offers_exactly_its_sixteen_options() -> None:
         full_resolution,
         sessions,
         length,
+        live_view_format,
         history_days,
         videos,
         country,
@@ -797,6 +800,9 @@ def test_the_options_flow_offers_exactly_its_sixteen_options() -> None:
     assert history_days.default() == DEFAULT_EVENT_HISTORY_DAYS
     assert videos.default() is False, "event videos take storage: opt-in only"
     assert length.default() == DEFAULT_RECORD_LENGTH_SECONDS == 30
+    assert live_view_format.default() == "native", (
+        "H.264 conversion uses the processor: opt-in only"
+    )
     assert sessions.default() == DEFAULT_STATION_SESSIONS
     assert hold.default() == 10, "the detection hold does not default to 10 s"
     assert timeout.default() == 10, "the alarm timeout does not default to 10 min"

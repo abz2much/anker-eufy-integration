@@ -69,6 +69,7 @@ from . import (
     detections,
     errors,
     history,
+    live_convert,
     play_audio,
     presets,
     ptz,
@@ -90,6 +91,7 @@ from .const import (
     CAMERA_FRAME_INTERVAL_SECONDS,
     CAMERA_KEY,
     CLIP_REMUX_TIMEOUT_SECONDS,
+    CONF_LIVE_VIEW_FORMAT,
     CONF_RECORD_LENGTH,
     DEFAULT_RECORD_LENGTH_SECONDS,
     MAX_RECORD_LENGTH_SECONDS,
@@ -106,6 +108,7 @@ from .const import (
     ZOOM_ACTION_STEP,
     ZOOM_IN,
     ZOOM_OUT,
+    LiveViewFormat,
 )
 from .coordinator import StationCoordinator
 from .entity import EufyDeviceEntity, EufyPushAvailability
@@ -133,6 +136,11 @@ def _record_length(options: Mapping[str, Any]) -> int:
     ):
         return value
     return DEFAULT_RECORD_LENGTH_SECONDS
+
+
+def _live_view_format(options: Mapping[str, Any]) -> LiveViewFormat:
+    """The Live view format option; native for an unset or unknown value."""
+    return live_convert.read_format(options.get(CONF_LIVE_VIEW_FORMAT))
 
 
 async def async_setup_entry(
@@ -266,7 +274,9 @@ class EufyCamera(EufyPushAvailability, EufyDeviceEntity, small_images.SmallImage
         """
         if not self.supported_features & CameraEntityFeature.STREAM:
             return None
-        return streaming.stream_url(self.hass, self._serial)
+        return streaming.stream_url(
+            self.hass, self._serial, _live_view_format(self.coordinator.config_entry.options)
+        )
 
     async def async_capture_preset(self, preset: int) -> None:
         """The ``capture_preset`` action: start the preset capture and return at once.
